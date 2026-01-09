@@ -1,0 +1,30 @@
+{
+  "@@locale": "en",
+  "language_english": "English",
+  "language_french": "French",
+  "weekday_monday": "Monday",
+  "weekday_tuesday": "Tuesday",
+  "weekday_wednesday": "Wednesday",
+  "weekday_thursday": "Thursday",
+  "weekday_friday": "Friday",
+  "weekday_saturday": "Saturday",
+  "weekday_sunday": "Sunday",
+  "locale_popup_btn_tooltip": "Change Language",
+  "locale_popup_btn_label": "Language changed to {locale}",
+  "@locale_popup_btn_label": {
+    "description": "Indicates that the language has been successfully changed",
+    "placeholders": {
+      "locale": {
+        "type": "String",
+        "example": "French"
+      }
+    }
+  },
+  "backButton": "Back",
+  "continueButton": "Continue",
+  "imageBox_sizeLimit": "The image size should not be more than",
+  "imageBox_uploadError": "Error during image upload:",
+  "imageBox_loadingError": "Loading error",
+  "change": "Change",
+  "remove": "Remove"
+}

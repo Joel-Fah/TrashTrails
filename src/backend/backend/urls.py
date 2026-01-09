@@ -21,7 +21,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('core.urls', namespace='core')),
+    path('accounts/', include('allauth.urls')),
+    path('api/auth/', include('auth_service.urls', namespace='auth')),
+    path('api/map/', include('map_service.urls', namespace='map')),
+    path('api/ml/', include('ml_service.urls', namespace='ml')),
+    path('api/leaderboard/', include('leaderboard_service.urls', namespace='leaderboard')),
 ]
 
 # Serve static and media files in development

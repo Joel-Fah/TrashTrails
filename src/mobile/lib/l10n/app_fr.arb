@@ -1,0 +1,21 @@
+{
+  "@@locale": "fr",
+  "language_english": "Anglais",
+  "language_french": "Français",
+  "weekday_monday": "Lundi",
+  "weekday_tuesday": "Mardi",
+  "weekday_wednesday": "Mercredi",
+  "weekday_thursday": "Jeudi",
+  "weekday_friday": "Vendredi",
+  "weekday_saturday": "Samedi",
+  "weekday_sunday": "Dimanche",
+  "locale_popup_btn_tooltip": "Changez la langue",
+  "locale_popup_btn_label": "Langue changée en {locale}",
+  "backButton": "Retour",
+  "continueButton": "Continuer",
+  "imageBox_sizeLimit": "La taille de l'image ne doit pas dépasser",
+  "imageBox_uploadError": "Erreur lors du chargement de l'image :",
+  "imageBox_loadingError": "Erreur de chargement",
+  "change": "Changer",
+  "remove": "Retirer"
+}

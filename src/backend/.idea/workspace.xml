@@ -5,28 +5,95 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a14538a3-038d-410f-aae0-4e8c31caf270" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/backend.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/settings/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/settings/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/settings/development.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/settings/production.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/prod.env.example" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/core/images/.gitkeep" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/core/base.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/core/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitkeep" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/auth_service/services.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/auth_service/signals.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/auth_service/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/constants.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/permissions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/leaderboard_service/services.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/leaderboard_service/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/map_service/services.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/map_service/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ml_service/services.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ml_service/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/logo_text/black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/logo_text/black.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/logo_text/cyan.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/logo_text/cyan.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/logo_text/white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/logo_text/white.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/logomark/black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/logomark/black.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/logomark/cyan.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/logomark/cyan.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/logomark/white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/logomark/white.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/fonts/GeneralSans-Variable.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/fonts/GeneralSans-VariableItalic.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/app/branding.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/app/branding_dark.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/app/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/app/splash.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/app/splash_dark.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/camera.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/flags/france.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/flags/usa.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/icons/google.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/icons/google_color.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/logo/black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/logo/black.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/logo/cyan.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/logo/cyan.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/logo/white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/logo/white.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/onboarding1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/onboarding2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/onboarding3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/rank.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/trash.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/l10n.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/controllers/controllers.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/controllers/locale_controller.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/controllers/onboarding_controller.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/controllers/theme_controller.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/l10n/app_en.arb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/l10n/app_fr.arb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/l10n/l10n.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/main.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/models/onboarding.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/default_snack_bar.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/widgets/buttons/primary_button.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/widgets/buttons/secondary_button.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/widgets/buttons/tertiary_button.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/widgets/form_fields/select_image.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/widgets/form_fields/simple_text_field.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/home.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/onboarding/onboarding.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/utils/constants.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/utils/routes.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/utils/theme.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/utils/utils.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/backend.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/settings/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/settings/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/settings/development.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/settings/development.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/admin.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/apps.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/migrations/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/auth_service/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/tests.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/core/images/.gitkeep" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,8 +106,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
+        <option value="Dockerfile" />
       </list>
     </option>
   </component>
@@ -58,32 +126,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Django Server.backend.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.pycharm.django.structure.promotion.once.per.project": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "django.template.preview.state": "SHOW_EDITOR",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_interpreter_path": "C:/Program Files/nodejs/npm.cmd",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "settings.nodejs",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Django Server.backend.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.pycharm.django.structure.promotion.once.per.project&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ai.playground.ignore.import.keys.banner.in.settings&quot;: &quot;true&quot;,
+    &quot;django.template.preview.state&quot;: &quot;SHOW_EDITOR&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/ROG STRIX/Documents/GitHub/TrashTrails/src/backend/static/common/images/logomark&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\logomark" />
+      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common" />
       <recent name="C:\Users\joelf\Documents\GitHub\TrashTrails\src\backend" />
     </key>
   </component>
@@ -101,6 +177,7 @@
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="RUN_TOOL" value="" />
       <option name="launchJavascriptDebuger" value="false" />
       <option name="port" value="8000" />
       <option name="host" value="" />
@@ -116,8 +193,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-PY-252.27397.106" />
-        <option value="bundled-python-sdk-4e2b1448bda8-9a97661f3031-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.27397.106" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-PY-253.29346.142" />
+        <option value="bundled-python-sdk-f2b7a9f6281b-6e1f45a539f7-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-253.29346.142" />
       </set>
     </attachedChunks>
   </component>
@@ -134,6 +211,11 @@
       <workItem from="1763240114911" duration="301000" />
       <workItem from="1763240440032" duration="511000" />
       <workItem from="1763241018800" duration="2120000" />
+      <workItem from="1767761876533" duration="347000" />
+      <workItem from="1767891884267" duration="1212000" />
+      <workItem from="1767893152462" duration="4645000" />
+      <workItem from="1767898707097" duration="10193000" />
+      <workItem from="1767910365439" duration="3584000" />
     </task>
     <servers />
   </component>

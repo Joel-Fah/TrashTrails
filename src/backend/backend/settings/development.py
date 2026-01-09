@@ -1,12 +1,13 @@
 # Local development settings for TrashTrails
 import dj_database_url
 from dotenv import load_dotenv
+from datetime import timedelta
 
 from .base import *
 
 # Load prod env file
 load_dotenv(
-    os.path.join(BASE_DIR, 'dev.env')
+    os.path.join(BASE_DIR, '.env')
 )
 
 # Quick-start development settings - unsuitable for production
@@ -51,4 +52,13 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
         "LOCATION": MEDIA_ROOT,
     },
+}
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }

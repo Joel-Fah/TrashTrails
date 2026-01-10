@@ -11,6 +11,11 @@ const Color darkColor = Color(0xFF272727);
 const Color lightColor = Colors.white;
 const Color greyColor = Color(0xFF8D8D8D);
 
+// Leaderboard Colors
+const Color gold = Color(0xFFFFD700);
+const Color silver = Color(0xFFC0C0C0);
+const Color bronze = Color(0xFFCD7F32);
+
 // States Colors
 Color infoColor = themeController.isDark
     ? Colors.lightBlueAccent
@@ -84,6 +89,24 @@ const String onboarding3 = 'assets/images/onboarding3.jpg';
 const String trash = 'assets/images/trash.png';
 const String camera = 'assets/images/camera.png';
 const String rank = 'assets/images/rank.png';
+
+// Avatars
+const String avatar1 = 'assets/images/avatars/avatar1.png';
+const String avatar2 = 'assets/images/avatars/avatar2.png';
+const String avatar3 = 'assets/images/avatars/avatar3.png';
+const String avatar4 = 'assets/images/avatars/avatar4.png';
+
+// Trash
+const String trash1 = 'assets/images/trash/trash1.png';
+const String trash2 = 'assets/images/trash/trash2.png';
+const String trash3 = 'assets/images/trash/trash3.png';
+
+// Misc
+const String map = 'assets/images/map.png';
+const String report = 'assets/images/report.png';
+const String authBg = 'assets/images/auth_bg.png';
+
+
 
 /* ----------- Widgets ----------- */
 // BorderRadii

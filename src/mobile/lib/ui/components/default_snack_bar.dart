@@ -14,7 +14,7 @@ SnackBar buildSnackBar({
     shape: RoundedRectangleBorder(borderRadius: borderRadius * 2.25),
     backgroundColor: backgroundColor ?? infoColor,
     showCloseIcon: true,
-    closeIconColor: foregroundColor ?? null,
+    closeIconColor: foregroundColor,
     padding: const EdgeInsets.all(10.0),
     content: Material(
       textStyle: AppTextStyles.body.copyWith(

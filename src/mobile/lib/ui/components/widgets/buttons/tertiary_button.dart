@@ -40,8 +40,8 @@ class TertiaryButton extends StatelessWidget {
       onPressed: onPressed,
       onLongPress: onLongPress,
       bgColor: bgColor,
-      child: Text(label),
       enableHaptics: enableHaptics,
+      child: Text(label),
     );
   }
 
@@ -80,8 +80,8 @@ class TertiaryButton extends StatelessWidget {
       onPressed: onPressed,
       onLongPress: onLongPress,
       bgColor: bgColor,
-      child: child,
       enableHaptics: enableHaptics,
+      child: child,
     );
   }
 

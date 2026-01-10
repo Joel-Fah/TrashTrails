@@ -65,3 +65,4 @@ STORAGES = {
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+SWAGGER_ENABLED = False

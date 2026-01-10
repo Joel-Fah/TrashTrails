@@ -49,8 +49,8 @@ class PrimaryButton extends StatelessWidget {
       bgColor: bgColor,
       showDottedBorder: showDottedBorder,
       dottedColor: dottedColor,
-      child: Text(label),
       enableHaptics: enableHaptics,
+      child: Text(label),
     );
   }
 
@@ -97,8 +97,8 @@ class PrimaryButton extends StatelessWidget {
       bgColor: bgColor,
       showDottedBorder: showDottedBorder,
       dottedColor: dottedColor,
-      child: child,
       enableHaptics: enableHaptics,
+      child: child,
     );
   }
 

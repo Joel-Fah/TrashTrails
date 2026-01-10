@@ -1,39 +1,74 @@
-from dj_rest_auth.registration.views import SocialLoginView
-from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.models import User
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .serializers import UserProfileUpdateSerializer
-from .serializers import UserSerializer
 
-class GoogleLoginView(SocialLoginView):
-    adapter_class = GoogleOAuth2Adapter
-    client_class = OAuth2Client
+from .models import UserProfile
+from django.conf import settings
 
-    def get_response(self):
-        response = super().get_response()
-        response.data['user'] = UserSerializer(self.user).data
-        return response
+class GoogleAuthView(APIView):
+    authentication_classes = []
+    permission_classes = []
 
-class UserProfileUpdateView(APIView):
-    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        token = request.data.get("id_token")
 
-    def put(self, request):
-        profile = request.user.userprofile
-        serializer = UserProfileUpdateSerializer(
-            profile,
-            data=request.data,
-            partial=True
+        if not token:
+            return Response(
+                {"detail": "ID token required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            id_info = id_token.verify_oauth2_token(
+                token,
+                google_requests.Request(),
+                settings.GOOGLE_CLIENT_ID
+            )
+
+            email = id_info.get("email")
+            first_name = id_info.get("given_name", "")
+            last_name = id_info.get("family_name", "")
+            picture = id_info.get("picture")
+
+        except ValueError:
+            return Response(
+                {"detail": "Invalid Google token"},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        user, created = User.objects.get_or_create(
+            username=email,
+            defaults={
+                "email": email,
+                "first_name": first_name,
+                "last_name": last_name,
+            }
         )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+
+        profile, _ = UserProfile.objects.get_or_create(user=user)
+        profile.avatar = picture
+        profile.save()
+
+        refresh = RefreshToken.for_user(user)
 
         return Response({
-            "message": "Profile updated successfully",
-            "profile": serializer.data
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+            "user": {
+                "id": user.id,
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "avatar": profile.avatar,
+                "phone": profile.phone_number,
+                "address": profile.address,
+            }
         })
 
 class LogoutView(APIView):
@@ -42,11 +77,23 @@ class LogoutView(APIView):
     def post(self, request):
         try:
             refresh_token = request.data.get("refresh")
+
+            if not refresh_token:
+                return Response(
+                    {"detail": "Refresh token required"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
             token = RefreshToken(refresh_token)
             token.blacklist()
-            return Response({"message": "Logged out successfully"})
+
+            return Response(
+                {"detail": "Logged out successfully"},
+                status=status.HTTP_205_RESET_CONTENT
+            )
+
         except Exception:
             return Response(
-                {"error": "Invalid token"},
-                status=400
+                {"detail": "Invalid or expired token"},
+                status=status.HTTP_400_BAD_REQUEST
             )

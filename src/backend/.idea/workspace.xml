@@ -5,95 +5,67 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a14538a3-038d-410f-aae0-4e8c31caf270" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth_service/services.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth_service/signals.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth_service/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/constants.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/permissions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/leaderboard_service/services.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/leaderboard_service/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/map_service/services.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/map_service/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ml_service/services.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ml_service/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/common/images/logo_text/black.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/common/images/logo_text/black.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/common/images/logo_text/cyan.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/common/images/logo_text/cyan.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/common/images/logo_text/white.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/common/images/logo_text/white.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/common/images/logomark/black.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/common/images/logomark/black.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/common/images/logomark/cyan.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/common/images/logomark/cyan.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/common/images/logomark/white.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/common/images/logomark/white.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/fonts/GeneralSans-Variable.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/fonts/GeneralSans-VariableItalic.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/app/branding.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/app/branding_dark.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/app/icon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/app/splash.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/app/splash_dark.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/camera.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/flags/france.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/flags/usa.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/icons/google.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/icons/google_color.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/logo/black.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/logo/black.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/logo/cyan.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/logo/cyan.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/logo/white.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/logo/white.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/onboarding1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/onboarding2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/onboarding3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/rank.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/trash.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/l10n.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/controllers/controllers.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/controllers/locale_controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/controllers/onboarding_controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/controllers/theme_controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/l10n/app_en.arb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/l10n/app_fr.arb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/l10n/l10n.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/main.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/models/onboarding.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/default_snack_bar.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/widgets/buttons/primary_button.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/widgets/buttons/secondary_button.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/widgets/buttons/tertiary_button.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/widgets/form_fields/select_image.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/widgets/form_fields/simple_text_field.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/home.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/onboarding/onboarding.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/utils/constants.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/utils/routes.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/utils/theme.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/utils/utils.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/backend.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/report_service/serializers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/report_service/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/.env.example" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/auth_bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/avatars/avatar1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/avatars/avatar2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/avatars/avatar3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/avatars/avatar4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/map.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/report.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/trash/trash1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/trash/trash2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/trash/trash3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/controllers/auth_controller.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/controllers/home_controller.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/models/base/model_utils.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/models/endorsement.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/models/leaderboard.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/models/location.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/models/ml_result.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/models/models.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/models/report.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/models/report_image.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/models/user.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/services/api_service.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/services/auth_service.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/services/location_service.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/services/map_service.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/services/report_service.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/services/services.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/services/storage_service.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/home_actions.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/report_card.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/user_avatar.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/auth/auth.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth_service/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/auth_service/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth_service/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/auth_service/apps.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth_service/signals.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth_service/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/auth_service/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth_service/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/auth_service/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/settings/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/settings/base.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/settings/development.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/settings/development.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/settings/production.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/settings/production.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/migrations/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/auth_service/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/leaderboard_service/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/leaderboard_service/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/map_service/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/map_service/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml_service/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_service/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/core/images/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/ios/Runner/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/ios/Runner/Info.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/controllers/controllers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/controllers/controllers.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/controllers/onboarding_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/controllers/onboarding_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/ui/pages/home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/home.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/ui/pages/onboarding/onboarding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/onboarding/onboarding.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/utils/constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/utils/constants.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/utils/routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/utils/routes.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,8 +79,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
-        <option value="Python Script" />
         <option value="Dockerfile" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -173,6 +145,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.14 (backend)" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -180,7 +153,7 @@
       <option name="RUN_TOOL" value="" />
       <option name="launchJavascriptDebuger" value="false" />
       <option name="port" value="8000" />
-      <option name="host" value="" />
+      <option name="host" value="0.0.0.0" />
       <option name="additionalOptions" value="" />
       <option name="browserUrl" value="" />
       <option name="runTestServer" value="false" />
@@ -215,7 +188,9 @@
       <workItem from="1767891884267" duration="1212000" />
       <workItem from="1767893152462" duration="4645000" />
       <workItem from="1767898707097" duration="10193000" />
-      <workItem from="1767910365439" duration="3584000" />
+      <workItem from="1767910365439" duration="5876000" />
+      <workItem from="1767999752372" duration="952000" />
+      <workItem from="1768035706327" duration="10049000" />
     </task>
     <servers />
   </component>

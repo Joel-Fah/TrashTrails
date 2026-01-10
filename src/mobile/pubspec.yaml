@@ -56,6 +56,9 @@ dependencies:
   timeago: ^3.7.1
   dio: ^5.9.0
   dotted_border: ^3.1.0
+  mapbox_maps_flutter: ^2.17.0
+  flutter_card_swiper: ^7.2.0
+  google_sign_in: ^6.2.2
 
 dev_dependencies:
   flutter_test:
@@ -124,12 +127,15 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:
+    - .env
     - assets/fonts/
     - assets/images/
     - assets/images/app/
     - assets/images/icons/
     - assets/images/logo/
     - assets/images/flags/
+    - assets/images/avatars/
+    - assets/images/trash/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

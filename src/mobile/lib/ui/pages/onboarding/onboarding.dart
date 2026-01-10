@@ -6,7 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:trashtrails/ui/pages/home.dart';
+import 'package:trashtrails/ui/pages/auth/auth.dart';
 import 'package:trashtrails/utils/utils.dart';
 
 import '../../../controllers/onboarding_controller.dart';
@@ -422,7 +422,7 @@ class _CTAButton extends StatelessWidget {
   void _completeOnboarding(BuildContext context) async {
     await controller.completeOnboarding();
     if (context.mounted) {
-      context.goNamed(removeLeadingSlash(HomePage.routeName));
+      context.goNamed(removeLeadingSlash(AuthPage.routeName));
     }
   }
 }

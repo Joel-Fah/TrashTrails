@@ -53,10 +53,15 @@ class OnboardingController extends GetxController
 
   // Getters
   int get currentIndex => _currentIndex.value;
+
   bool get isAnimating => _isAnimating.value;
+
   bool get isLastPage => _currentIndex.value == pages.length - 1;
+
   bool get isFirstPage => _currentIndex.value == 0;
+
   OnboardingPageModel get currentPage => pages[_currentIndex.value];
+
   int get totalPages => pages.length;
 
   /// Check if onboarding was already completed
@@ -186,4 +191,3 @@ class OnboardingController extends GetxController
     animationController.value = 1.0;
   }
 }
-

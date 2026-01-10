@@ -55,9 +55,9 @@ class SecondaryButton extends StatelessWidget {
       foregroundColor: foregroundColor,
       showDottedBorder: showDottedBorder,
       dottedColor: dottedColor,
-      child: Text(label),
       enableHaptics: enableHaptics,
       borderWidth: borderWidth,
+      child: Text(label),
     );
   }
 
@@ -111,9 +111,9 @@ class SecondaryButton extends StatelessWidget {
       foregroundColor: foregroundColor,
       showDottedBorder: showDottedBorder,
       dottedColor: dottedColor,
-      child: child,
       enableHaptics: enableHaptics,
       borderWidth: borderWidth,
+      child: child,
     );
   }
 

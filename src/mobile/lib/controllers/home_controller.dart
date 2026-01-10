@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../models/location.dart';
 import '../models/report.dart';
 import '../models/user.dart';
 import '../services/services.dart';
@@ -18,6 +19,11 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   final RxInt _currentReportIndex = 0.obs;
   final RxDouble _sheetPosition = 0.15.obs;
   final RxBool _isInitialized = false.obs;
+  final RxBool _showMyLocationButton = false.obs;
+
+  // ─── Constants ───────────────────────────────────────────────────────────
+  /// Minimum distance (in meters) to show the "My Location" button
+  static const double _minDistanceToShowButton = 2.0;
 
   // ─── Draggable Sheet Controller ──────────────────────────────────────────
   final DraggableScrollableController sheetController =
@@ -42,6 +48,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   int get currentReportIndex => _currentReportIndex.value;
   double get sheetPosition => _sheetPosition.value;
   bool get isInitialized => _isInitialized.value;
+  bool get showMyLocationButton => _showMyLocationButton.value;
 
   ReportModel? get currentReport {
     if (!_reportService.hasNearbyReports) return null;
@@ -109,6 +116,9 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   void onMapCreated(mapboxMap) {
     _mapService.onMapCreated(mapboxMap);
 
+    // Listen to camera changes to show/hide My Location button
+    _mapService.onCameraChanged = _onCameraChanged;
+
     // Animate to user location after map is ready
     if (_locationService.hasValidLocation) {
       _mapService.animateToLocation(
@@ -118,6 +128,31 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
         durationMs: 2000,
       );
     }
+  }
+
+  /// Called when the camera position changes
+  void _onCameraChanged(double latitude, double longitude) {
+    if (!_locationService.hasValidLocation) return;
+
+    final userLocation = _locationService.currentLocation;
+    final cameraLocation = LocationModel(
+      latitude: latitude,
+      longitude: longitude,
+    );
+
+    final distance = userLocation.distanceTo(cameraLocation);
+
+    // Show button if camera is far enough from user location
+    _showMyLocationButton.value = distance >= _minDistanceToShowButton;
+  }
+
+  /// Called when the user scrolls/moves the map
+  void onCameraMove() {
+    // Debounce: Only check after the map has been created
+    if (!_mapService.isMapReady) return;
+
+    // Notify camera changed to check distance
+    _mapService.notifyCameraChanged();
   }
 
   /// Center map on user's current location
@@ -132,6 +167,8 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
         pitch: 45.0,
         durationMs: 1500,
       );
+      // Hide the button after centering
+      _showMyLocationButton.value = false;
     } else if (_locationService.hasValidLocation) {
       // Use cached location if getCurrentPosition fails
       await _mapService.animateToLocation(
@@ -140,6 +177,8 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
         pitch: 45.0,
         durationMs: 1500,
       );
+      // Hide the button after centering
+      _showMyLocationButton.value = false;
     }
   }
 

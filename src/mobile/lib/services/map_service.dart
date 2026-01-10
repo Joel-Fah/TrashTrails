@@ -14,6 +14,10 @@ class MapService extends GetxService {
   final RxBool _isMapReady = false.obs;
   final Rx<CameraOptions?> _currentCamera = Rx<CameraOptions?>(null);
 
+  // ─── Callbacks ───────────────────────────────────────────────────────────
+  /// Callback when camera position changes (latitude, longitude)
+  void Function(double latitude, double longitude)? onCameraChanged;
+
   // ─── Getters ─────────────────────────────────────────────────────────────
   MapboxMap? get mapboxMap => _mapboxMap;
   bool get isMapReady => _isMapReady.value;
@@ -33,6 +37,22 @@ class MapService extends GetxService {
     _isMapReady.value = true;
     _configureMapStyle();
     debugPrint('MapService: Map created and configured');
+  }
+
+  /// Notify camera changed callback with current camera center
+  Future<void> notifyCameraChanged() async {
+    if (_mapboxMap == null || onCameraChanged == null) return;
+
+    try {
+      final cameraState = await _mapboxMap!.getCameraState();
+      final center = cameraState.center;
+      onCameraChanged!(
+        center.coordinates.lat.toDouble(),
+        center.coordinates.lng.toDouble(),
+      );
+    } catch (e) {
+      debugPrint('MapService: Error getting camera state - $e');
+    }
   }
 
   /// Configure map style and hide default UI elements
@@ -99,6 +119,9 @@ class MapService extends GetxService {
     );
 
     _currentCamera.value = cameraOptions;
+
+    // Notify camera changed after animation
+    await notifyCameraChanged();
   }
 
   /// Animate camera to coordinates

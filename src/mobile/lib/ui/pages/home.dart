@@ -183,6 +183,10 @@ class _MapLayerState extends State<_MapLayer> {
       ),
       styleUri: MapboxStyles.MAPBOX_STREETS,
       onMapCreated: widget.controller.onMapCreated,
+      onCameraChangeListener: (cameraChangedEventData) {
+        // Notify controller when user scrolls the map
+        widget.controller.onCameraMove();
+      },
     );
   }
 }
@@ -235,13 +239,20 @@ class _TopLeftControls extends StatelessWidget {
                 .scale(begin: const Offset(0.5, 0.5), duration: 400.ms);
           }),
 
-          const Gap(12),
+          // My location button - only shown when user has moved away
+          Obx(() {
+            if (!controller.showMyLocationButton) {
+              return const SizedBox.shrink();
+            }
 
-          // My location button
-          MyLocationButton(onTap: controller.centerOnUserLocation)
-              .animate(controller: controller.avatarAnimationController)
-              .fadeIn(delay: 200.ms, duration: 400.ms)
-              .slideY(begin: -0.5, duration: 400.ms),
+            return Padding(
+              padding: const EdgeInsets.only(top: 12.0),
+              child: MyLocationButton(onTap: controller.centerOnUserLocation)
+                  .animate()
+                  .fadeIn(duration: 300.ms)
+                  .scale(begin: const Offset(0.8, 0.8), duration: 300.ms),
+            );
+          }),
         ],
       ),
     );

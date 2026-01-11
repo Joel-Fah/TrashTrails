@@ -1,0 +1,15 @@
+<a
+        {% if target %}target="{{ target }}"{% endif %}
+        href="{{ href|default:'#' }}"
+        class="inline-flex items-center justify-center px-8 py-4 rounded-3xl border border-primary text-primary
+    font-medium transition-all duration-300 ease-in-out hover:bg-primary-100 focus:outline-none focus:ring-2
+    focus:ring-primary-200 focus:ring-offset-2 {{ class|default:'' }}"
+>
+    {{ text|default:'Get Started' }}
+</a>
+
+{% comment %}
+Optional: class (extra classes), target (link target)
+Usage: {% include 'components/button_outlined.html' with href='/your-url/' text='Button Text' %}
+Outlined Button Component
+{% endcomment %}

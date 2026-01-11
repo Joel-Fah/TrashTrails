@@ -1,24 +1,28 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../../models/report.dart';
+import '../../models/models.dart';
 import '../../utils/constants.dart';
 
 /// Card widget displaying a report summary in the swiper
+/// Adapts to different sizes based on the draggable sheet snap position
 class ReportCard extends StatelessWidget {
   const ReportCard({
     super.key,
     required this.report,
     this.onTap,
-    this.isExpanded = false,
+    this.distanceAway,
   });
 
   final ReportModel report;
   final VoidCallback? onTap;
-  final bool isExpanded;
+
+  /// Distance from user's location (e.g., "1.2 km")
+  final String? distanceAway;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,8 @@ class ReportCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: lightColor,
-          borderRadius: borderRadius * 3.5,
+          borderRadius: borderRadius * 3.0,
+          border: Border.all(color: lightColor, width: 4.0),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.1),
@@ -40,159 +45,150 @@ class ReportCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Compact header (always visible)
-            _buildCompactHeader(),
+            // Image with stacked info (severity, status)
+            Expanded(child: _buildImageSection()),
 
-            // Expanded content
-            if (isExpanded) ...[
-              const Divider(height: 1),
-              _buildExpandedContent(),
-            ],
+            // Title and metadata
+            _buildInfoSection(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildCompactHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          // Status indicator
-          _StatusBadge(status: report.status),
-          const Gap(12),
+  /// Builds the image section with stacked badges
+  Widget _buildImageSection() {
+    return ClipRRect(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(borderRadius.topLeft.x * 2.5),
+        topRight: Radius.circular(borderRadius.topRight.x * 2.5),
+      ),
+      child: SizedBox(
+        height: 160.0,
+        width: double.infinity,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Background image
+            if (report.hasImages)
+              CachedNetworkImage(
+                imageUrl: report.thumbnailUrl ?? '',
+                fit: BoxFit.cover,
+                placeholder: (context, url) => _buildImagePlaceholder(),
+                errorWidget: (context, url, error) => _buildImagePlaceholder(),
+              )
+            else
+              _buildImagePlaceholder(),
 
-          // Title and location
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  report.title,
-                  style: AppTextStyles.h4.copyWith(color: seedColor),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+            // Gradient overlay for better text readability
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0.4),
+                      Colors.transparent,
+                      Colors.transparent,
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                  ),
                 ),
-                const Gap(2),
-                Row(
-                  children: [
-                    HugeIcon(
-                      icon: HugeIcons.strokeRoundedLocation01,
-                      color: greyColor,
-                      size: 14,
-                    ),
-                    const Gap(4),
-                    Expanded(
-                      child: Text(
-                        report.streetName,
-                        style: AppTextStyles.small.copyWith(color: greyColor),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          // Distance and time
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              _SeverityBadge(severity: report.severity),
-              const Gap(4),
-              Text(
-                timeago.format(report.createdAt, locale: 'en_short'),
-                style: AppTextStyles.small.copyWith(color: greyColor),
               ),
-            ],
-          ),
-        ],
+            ),
+
+            // Top row: Severity badge + Status (if pending/rejected)
+            Positioned(
+              top: 8,
+              left: 8,
+              right: 8,
+              child: Row(
+                children: [
+                  // Severity badge
+                  _SeverityBadge(severity: report.severity),
+
+                  const Spacer(),
+
+                  // Status badge (only for pending or rejected)
+                  if (_shouldShowStatus) _StatusBadge(status: report.status),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildExpandedContent() {
+  /// Whether to show the status badge
+  bool get _shouldShowStatus {
+    return report.status == ReportStatus.pending ||
+        report.status == ReportStatus.rejected;
+  }
+
+  /// Builds the image placeholder
+  Widget _buildImagePlaceholder() {
+    return Container(
+      color: seedPalette.shade100,
+      child: Center(
+        child: HugeIcon(
+          icon: HugeIcons.strokeRoundedImage01,
+          color: seedPalette.shade300,
+          size: 32,
+        ),
+      ),
+    );
+  }
+
+  /// Builds the info section below the image
+  Widget _buildInfoSection() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+      padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // Description
-          if (report.description != null && report.description!.isNotEmpty) ...[
-            Text(
-              report.description!,
-              style: AppTextStyles.body.copyWith(color: darkColor),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const Gap(12),
-          ],
-
-          // Stats row
-          Row(
-            children: [
-              _StatItem(
-                icon: HugeIcons.strokeRoundedThumbsUp,
-                value: report.endorsementCount.toString(),
-                label: 'Endorsements',
-              ),
-              const Gap(24),
-              _StatItem(
-                icon: HugeIcons.strokeRoundedView,
-                value: report.viewCount.toString(),
-                label: 'Views',
-              ),
-              const Gap(24),
-              _StatItem(
-                icon: HugeIcons.strokeRoundedImage01,
-                value: report.imageCount.toString(),
-                label: 'Photos',
-              ),
-            ],
+          // Title (max 2 lines)
+          Text(
+            report.title,
+            style: AppTextStyles.h4.copyWith(color: darkColor),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
 
-          const Gap(16),
+          const Gap(8),
 
-          // Category and tags
+          // Metadata wrap: distance, category, author
           Wrap(
             spacing: 8,
-            runSpacing: 8,
+            runSpacing: 6,
             children: [
-              _CategoryChip(category: report.category),
-              ...report.tags.take(3).map((tag) => _TagChip(tag: tag)),
-            ],
-          ),
-
-          const Gap(16),
-
-          // Action buttons
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () {},
-                  icon: HugeIcon(
-                    icon: HugeIcons.strokeRoundedThumbsUp,
-                    color: seedColor,
-                    size: 18,
-                  ),
-                  label: const Text('Endorse'),
+              // Distance away
+              if (distanceAway != null && distanceAway!.isNotEmpty)
+                _MetadataChip(
+                  icon: HugeIcons.strokeRoundedLocation06,
+                  label: distanceAway!,
                 ),
+
+              // Category
+              _MetadataChip(
+                icon: HugeIcons.strokeRoundedDelete02,
+                label: report.categoryDisplayName,
               ),
-              const Gap(12),
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: () {},
-                  icon: HugeIcon(
-                    icon: HugeIcons.strokeRoundedNavigation01,
-                    color: lightColor,
-                    size: 18,
-                  ),
-                  label: const Text('Navigate'),
+
+              // Author
+              if (report.hasAuthor)
+                _MetadataChip(
+                  icon: HugeIcons.strokeRoundedUser,
+                  label: report.authorDisplayName ?? 'Unknown',
+                  avatarUrl: report.authorAvatarUrl,
                 ),
+
+              // Time ago
+              _MetadataChip(
+                icon: HugeIcons.strokeRoundedClock01,
+                label: timeago.format(report.createdAt, locale: 'en_short'),
               ),
             ],
           ),
@@ -202,7 +198,49 @@ class ReportCard extends StatelessWidget {
   }
 }
 
-/// Status badge with color coding
+/// Severity badge with color coding
+class _SeverityBadge extends StatelessWidget {
+  const _SeverityBadge({required this.severity});
+
+  final ReportSeverityModel severity;
+
+  Color get _color {
+    return switch (severity.level) {
+      1 => const Color(0xFF4CAF50),
+      2 => const Color(0xFFFFA726),
+      3 => const Color(0xFFFF7043),
+      4 => const Color(0xFFF44336),
+      _ => const Color(0xFFFFA726),
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: _color,
+        borderRadius: borderRadius,
+        boxShadow: [
+          BoxShadow(
+            color: _color.withValues(alpha: 0.4),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Text(
+        severity.name,
+        style: AppTextStyles.small.copyWith(
+          color: lightColor,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}
+
+/// Status badge (only for pending/rejected)
 class _StatusBadge extends StatelessWidget {
   const _StatusBadge({required this.status});
 
@@ -211,160 +249,91 @@ class _StatusBadge extends StatelessWidget {
   Color get _color {
     return switch (status) {
       ReportStatus.pending => const Color(0xFFFFA726),
-      ReportStatus.verified => const Color(0xFF4CAF50),
-      ReportStatus.inProgress => const Color(0xFF2196F3),
-      ReportStatus.resolved => const Color(0xFF9E9E9E),
       ReportStatus.rejected => const Color(0xFFF44336),
-      ReportStatus.duplicate => const Color(0xFF9E9E9E),
+      _ => greyColor,
     };
   }
 
   IconData get _icon {
     return switch (status) {
       ReportStatus.pending => Icons.schedule,
-      ReportStatus.verified => Icons.verified,
-      ReportStatus.inProgress => Icons.engineering,
-      ReportStatus.resolved => Icons.check_circle,
       ReportStatus.rejected => Icons.cancel,
-      ReportStatus.duplicate => Icons.content_copy,
+      _ => Icons.info,
     };
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: _color.withValues(alpha: 0.15),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        _icon,
-        color: _color,
-        size: 20,
-      ),
-    );
-  }
-}
-
-/// Severity badge
-class _SeverityBadge extends StatelessWidget {
-  const _SeverityBadge({required this.severity});
-
-  final ReportSeverity severity;
-
-  Color get _color {
-    return switch (severity) {
-      ReportSeverity.low => const Color(0xFF4CAF50),
-      ReportSeverity.medium => const Color(0xFFFFA726),
-      ReportSeverity.high => const Color(0xFFFF7043),
-      ReportSeverity.critical => const Color(0xFFF44336),
-    };
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: _color.withValues(alpha: 0.15),
+        color: lightColor.withValues(alpha: 0.9),
         borderRadius: borderRadius,
       ),
-      child: Text(
-        severity.displayName,
-        style: AppTextStyles.small.copyWith(
-          color: _color,
-          fontWeight: FontWeight.w600,
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(_icon, color: _color, size: 14),
+          const Gap(4),
+          Text(
+            status.displayName,
+            style: AppTextStyles.small.copyWith(
+              color: _color,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-/// Stat item for the expanded view
-class _StatItem extends StatelessWidget {
-  const _StatItem({
+/// Small metadata chip for info display
+class _MetadataChip extends StatelessWidget {
+  const _MetadataChip({
     required this.icon,
-    required this.value,
     required this.label,
+    this.avatarUrl,
   });
 
   final List<List<dynamic>> icon;
-  final String value;
   final String label;
+  final String? avatarUrl;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            HugeIcon(
-              icon: icon,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: seedPalette.shade50,
+        borderRadius: borderRadius,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Avatar or icon
+          if (avatarUrl != null && avatarUrl!.isNotEmpty)
+            ClipOval(
+              child: CachedNetworkImage(
+                imageUrl: avatarUrl!,
+                width: 14,
+                height: 14,
+                fit: BoxFit.cover,
+                errorWidget: (_, __, ___) =>
+                    HugeIcon(icon: icon, color: seedColor, size: 14),
+              ),
+            )
+          else
+            HugeIcon(icon: icon, color: seedColor, size: 14),
+          const Gap(4),
+          Text(
+            label,
+            style: AppTextStyles.small.copyWith(
               color: seedColor,
-              size: 16,
+              fontWeight: FontWeight.w500,
             ),
-            const Gap(4),
-            Text(
-              value,
-              style: AppTextStyles.h4.copyWith(color: seedColor),
-            ),
-          ],
-        ),
-        Text(
-          label,
-          style: AppTextStyles.small.copyWith(color: greyColor),
-        ),
-      ],
-    );
-  }
-}
-
-/// Category chip
-class _CategoryChip extends StatelessWidget {
-  const _CategoryChip({required this.category});
-
-  final TrashCategory category;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: seedPalette.shade100,
-        borderRadius: borderRadius,
-      ),
-      child: Text(
-        category.displayName,
-        style: AppTextStyles.small.copyWith(
-          color: seedColor,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-}
-
-/// Tag chip
-class _TagChip extends StatelessWidget {
-  const _TagChip({required this.tag});
-
-  final String tag;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: greyColor.withValues(alpha: 0.1),
-        borderRadius: borderRadius,
-      ),
-      child: Text(
-        '#$tag',
-        style: AppTextStyles.small.copyWith(
-          color: greyColor,
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -377,45 +346,135 @@ class NoReportsNearby extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: lightColor,
-        borderRadius: borderRadius * 2.5,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
+          margin: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: lightColor,
+            borderRadius: borderRadius * 2.5,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.eco,
-            size: 64,
-            color: seedPalette.shade300,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.eco, size: 64, color: seedPalette.shade300),
+              const Gap(16),
+              Text(
+                'No trash reports nearby!',
+                style: AppTextStyles.h3.copyWith(color: seedColor),
+                textAlign: TextAlign.center,
+              ),
+              const Gap(8),
+              Text(
+                'Your area looks clean. Be the first to report if you spot any trash dumps.',
+                style: AppTextStyles.body.copyWith(color: greyColor),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-          const Gap(16),
-          Text(
-            'No trash reports nearby!',
-            style: AppTextStyles.h3.copyWith(color: seedColor),
-            textAlign: TextAlign.center,
-          ),
-          const Gap(8),
-          Text(
-            'Your area looks clean. Be the first to report if you spot any trash dumps.',
-            style: AppTextStyles.body.copyWith(color: greyColor),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    )
+        )
         .animate()
         .fadeIn(duration: 500.ms)
         .scale(begin: const Offset(0.9, 0.9), duration: 500.ms);
   }
 }
 
+/// Compact report card for lists
+class ReportListItem extends StatelessWidget {
+  const ReportListItem({super.key, required this.report, this.onTap});
+
+  final ReportModel report;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: borderRadius * 2,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: lightColor,
+          borderRadius: borderRadius * 2,
+          border: Border.all(color: seedPalette.shade100, width: 1),
+        ),
+        child: Row(
+          children: [
+            // Image thumbnail
+            ClipRRect(
+              borderRadius: borderRadius,
+              child: SizedBox(
+                width: 60,
+                height: 60,
+                child: report.hasImages
+                    ? CachedNetworkImage(
+                        imageUrl: report.thumbnailUrl ?? '',
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => _buildPlaceholder(),
+                        errorWidget: (context, url, error) =>
+                            _buildPlaceholder(),
+                      )
+                    : _buildPlaceholder(),
+              ),
+            ),
+            const Gap(12),
+
+            // Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    report.title,
+                    style: AppTextStyles.body.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: darkColor,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const Gap(4),
+                  Row(
+                    children: [
+                      _SeverityBadge(severity: report.severity),
+                      const Gap(8),
+                      Text(
+                        report.categoryDisplayName,
+                        style: AppTextStyles.small.copyWith(color: greyColor),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // Arrow
+            HugeIcon(
+              icon: HugeIcons.strokeRoundedArrowRight01,
+              color: greyColor,
+              size: 20,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPlaceholder() {
+    return Container(
+      color: seedPalette.shade100,
+      child: Center(
+        child: HugeIcon(
+          icon: HugeIcons.strokeRoundedImage01,
+          color: seedPalette.shade300,
+          size: 24,
+        ),
+      ),
+    );
+  }
+}

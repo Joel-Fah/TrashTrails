@@ -6,6 +6,7 @@ from unfold.admin import ModelAdmin
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 from rest_framework.authtoken.models import TokenProxy
 from django.contrib.sites.models import Site
+from django.utils.html import format_html
 
 # Register your models here.
 admin.site.unregister(User)
@@ -18,6 +19,15 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
     change_password_form = AdminPasswordChangeForm
+    list_display = ('username_with_role', 'email', 'first_name', 'last_name', 'is_staff')
+
+    @admin.display(description='Username')
+    def username_with_role(self, obj):
+        if obj.is_superuser:
+            return format_html('{} <span style="color: #dc2626; font-weight: bold;">&lt;superadmin&gt;</span>', obj.username)
+        elif obj.is_staff:
+            return format_html('{} <span style="color: #2563eb; font-weight: bold;">&lt;admin&gt;</span>', obj.username)
+        return obj.username
 
 
 @admin.register(Group)

@@ -1,15 +1,16 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
-
+from django.conf import settings
 
 from .models import UserProfile
-from django.conf import settings
+from .serializers import UserPublicSerializer
 
 class GoogleAuthView(APIView):
     authentication_classes = []
@@ -97,3 +98,13 @@ class LogoutView(APIView):
                 {"detail": "Invalid or expired token"},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+
+class UserPublicView(RetrieveAPIView):
+    """Get public info for a user by ID"""
+    queryset = User.objects.all()
+    serializer_class = UserPublicSerializer
+    permission_classes = [AllowAny]
+    lookup_field = 'pk'
+
+

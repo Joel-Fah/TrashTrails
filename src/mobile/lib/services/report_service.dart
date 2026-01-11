@@ -1,320 +1,330 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
-import '../models/location.dart';
-import '../models/report.dart';
-import '../models/report_image.dart';
+import '../models/models.dart';
+import 'api_service.dart';
 
-/// Service for handling reports data and API calls
+/// Service for handling reports API calls
 class ReportService extends GetxService {
-  // ─── State ───────────────────────────────────────────────────────────────
-  final RxList<ReportModel> _nearbyReports = <ReportModel>[].obs;
-  final RxList<ReportModel> _userReports = <ReportModel>[].obs;
-  final RxBool _isLoading = false.obs;
-  final RxString _error = ''.obs;
+  // ─── Dependencies ────────────────────────────────────────────────────────
+  ApiService get _apiService => Get.find<ApiService>();
 
-  // ─── Getters ─────────────────────────────────────────────────────────────
-  List<ReportModel> get nearbyReports => _nearbyReports;
-  List<ReportModel> get userReports => _userReports;
-  bool get isLoading => _isLoading.value;
-  String get error => _error.value;
-  bool get hasNearbyReports => _nearbyReports.isNotEmpty;
+  // ─── Constants ─────────────────────────────────────────────────────────
+  static const String _reportsEndpoint = '/api/reports/';
+  static const String _myReportsEndpoint = '/api/reports/me/';
+  static const String _categoriesEndpoint = '/api/reports/trash-categories/';
+  static const String _severitiesEndpoint = '/api/reports/report-severities/';
 
-  // ─── Public Methods ──────────────────────────────────────────────────────
+  // ─── Categories ──────────────────────────────────────────────────────────
 
-  /// Load reports near a location
-  Future<List<ReportModel>> loadNearbyReports(
-    LocationModel location, {
-    double radiusKm = 5.0,
-  }) async {
-    if (!location.isValid) {
-      _error.value = 'Invalid location';
-      return [];
-    }
-
-    _isLoading.value = true;
-    _error.value = '';
-
+  /// Fetch all trash categories
+  /// GET /api/trash-categories/
+  Future<List<TrashCategoryModel>?> fetchCategories() async {
     try {
-      // TODO: Replace with actual API call
-      await Future.delayed(const Duration(milliseconds: 500));
+      final result = await _apiService.get<List<TrashCategoryModel>>(
+        _categoriesEndpoint,
+        parser: (data) => TrashCategoryModel.listFromJson(data),
+      );
 
-      final reports = _getMockReports(location);
-      _nearbyReports.value = reports;
-
-      return reports;
+      if (result.isSuccess && result.data != null) {
+        debugPrint('ReportService: Fetched ${result.data!.length} categories');
+        return result.data;
+      } else {
+        debugPrint('ReportService: Failed to fetch categories - ${result.error}');
+        return null;
+      }
     } catch (e) {
-      _error.value = 'Failed to load nearby reports';
-      debugPrint('ReportService loadNearbyReports error: $e');
-      return [];
-    } finally {
-      _isLoading.value = false;
-    }
-  }
-
-  /// Load reports by user ID
-  Future<List<ReportModel>> loadUserReports(String userId) async {
-    _isLoading.value = true;
-    _error.value = '';
-
-    try {
-      // TODO: Replace with actual API call
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      final reports = <ReportModel>[]; // Mock empty for now
-      _userReports.value = reports;
-
-      return reports;
-    } catch (e) {
-      _error.value = 'Failed to load user reports';
-      debugPrint('ReportService loadUserReports error: $e');
-      return [];
-    } finally {
-      _isLoading.value = false;
-    }
-  }
-
-  /// Get a single report by ID
-  Future<ReportModel?> getReportById(String id) async {
-    try {
-      // Check cache first
-      final cached = _nearbyReports.firstWhereOrNull((r) => r.id == id);
-      if (cached != null) return cached;
-
-      // TODO: Replace with actual API call
-      await Future.delayed(const Duration(milliseconds: 300));
-
+      debugPrint('ReportService: Error fetching categories - $e');
       return null;
+    }
+  }
+
+  // ─── Severities ──────────────────────────────────────────────────────────
+
+  /// Fetch all report severity levels
+  /// GET /api/report-severities/
+  Future<List<ReportSeverityModel>?> fetchSeverities() async {
+    try {
+      final result = await _apiService.get<List<ReportSeverityModel>>(
+        _severitiesEndpoint,
+        parser: (data) => ReportSeverityModel.listFromJson(data),
+      );
+
+      if (result.isSuccess && result.data != null) {
+        debugPrint('ReportService: Fetched ${result.data!.length} severities');
+        return result.data;
+      } else {
+        debugPrint('ReportService: Failed to fetch severities - ${result.error}');
+        return null;
+      }
     } catch (e) {
-      debugPrint('ReportService getReportById error: $e');
+      debugPrint('ReportService: Error fetching severities - $e');
+      return null;
+    }
+  }
+
+  // ─── Reports CRUD ────────────────────────────────────────────────────────
+
+  /// Fetch paginated list of reports
+  /// GET /api/reports/?page=1&search=query&ordering=-created_at
+  Future<PaginatedResponse<ReportModel>?> fetchReports({
+    int page = 1,
+    String? search,
+    String? ordering,
+  }) async {
+    try {
+      final queryParams = <String, dynamic>{
+        'page': page,
+        if (search != null && search.isNotEmpty) 'search': search,
+        if (ordering != null && ordering.isNotEmpty) 'ordering': ordering,
+      };
+
+      final result = await _apiService.get<PaginatedResponse<ReportModel>>(
+        _reportsEndpoint,
+        queryParameters: queryParams,
+        parser: (data) {
+          if (data is Map<String, dynamic>) {
+            return PaginatedResponse.fromJson(data, ReportModel.fromListJson);
+          }
+          return PaginatedResponse.empty();
+        },
+      );
+
+      if (result.isSuccess && result.data != null) {
+        debugPrint('ReportService: Fetched ${result.data!.results.length} reports (page $page, total: ${result.data!.count})');
+        return result.data;
+      } else {
+        debugPrint('ReportService: Failed to fetch reports - ${result.error}');
+        return null;
+      }
+    } catch (e) {
+      debugPrint('ReportService: Error fetching reports - $e');
+      return null;
+    }
+  }
+
+  /// Fetch paginated list of current user's reports
+  /// GET /api/reports/me/?page=1&search=query&ordering=-created_at
+  Future<PaginatedResponse<ReportModel>?> fetchMyReports({
+    int page = 1,
+    String? search,
+    String? ordering,
+  }) async {
+    try {
+      final queryParams = <String, dynamic>{
+        'page': page,
+        if (search != null && search.isNotEmpty) 'search': search,
+        if (ordering != null && ordering.isNotEmpty) 'ordering': ordering,
+      };
+
+      final result = await _apiService.get<PaginatedResponse<ReportModel>>(
+        _myReportsEndpoint,
+        queryParameters: queryParams,
+        parser: (data) {
+          if (data is Map<String, dynamic>) {
+            return PaginatedResponse.fromJson(data, ReportModel.fromListJson);
+          }
+          return PaginatedResponse.empty();
+        },
+      );
+
+      if (result.isSuccess && result.data != null) {
+        debugPrint('ReportService: Fetched ${result.data!.results.length} user reports (page $page, total: ${result.data!.count})');
+        return result.data;
+      } else {
+        debugPrint('ReportService: Failed to fetch user reports - ${result.error}');
+        return null;
+      }
+    } catch (e) {
+      debugPrint('ReportService: Error fetching user reports - $e');
+      return null;
+    }
+  }
+
+  /// Fetch a single report by ID
+  /// GET /api/reports/{report_id}/
+  Future<ReportModel?> fetchReport(String reportId) async {
+    if (reportId.isEmpty) {
+      debugPrint('ReportService: Invalid report ID');
+      return null;
+    }
+
+    try {
+      final result = await _apiService.get<ReportModel>(
+        '$_reportsEndpoint$reportId/',
+        parser: (data) {
+          if (data is Map<String, dynamic>) {
+            return ReportModel.fromJson(data);
+          }
+          throw Exception('Invalid response format');
+        },
+      );
+
+      if (result.isSuccess && result.data != null) {
+        debugPrint('ReportService: Fetched report $reportId');
+        return result.data;
+      } else {
+        debugPrint('ReportService: Failed to fetch report $reportId - ${result.error}');
+        return null;
+      }
+    } catch (e) {
+      debugPrint('ReportService: Error fetching report $reportId - $e');
       return null;
     }
   }
 
   /// Create a new report
-  Future<ReportModel?> createReport(ReportModel report) async {
-    _isLoading.value = true;
-
+  /// POST /api/reports/
+  Future<ReportModel?> createReport({
+    required String title,
+    String? observation,
+    required String severityId,
+    required String categoryId,
+    String? locationId,
+  }) async {
     try {
-      // TODO: Replace with actual API call
-      await Future.delayed(const Duration(milliseconds: 1000));
+      final data = <String, dynamic>{
+        'title': title,
+        if (observation != null && observation.isNotEmpty) 'observation': observation,
+        'severity': severityId,
+        'category': categoryId,
+        if (locationId != null && locationId.isNotEmpty) 'location': locationId,
+      };
 
-      // Simulate created report with ID
-      final created = report.copyWith(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        createdAt: DateTime.now(),
+      final result = await _apiService.post<ReportModel>(
+        _reportsEndpoint,
+        data: data,
+        parser: (responseData) {
+          if (responseData is Map<String, dynamic>) {
+            return ReportModel.fromJson(responseData);
+          }
+          throw Exception('Invalid response format');
+        },
       );
 
-      _nearbyReports.insert(0, created);
-      return created;
+      if (result.isSuccess && result.data != null) {
+        debugPrint('ReportService: Created report ${result.data!.id}');
+        return result.data;
+      } else {
+        debugPrint('ReportService: Failed to create report - ${result.error}');
+        return null;
+      }
     } catch (e) {
-      _error.value = 'Failed to create report';
-      debugPrint('ReportService createReport error: $e');
+      debugPrint('ReportService: Error creating report - $e');
       return null;
-    } finally {
-      _isLoading.value = false;
     }
   }
 
-  /// Endorse a report
-  Future<bool> endorseReport(String reportId) async {
-    try {
-      // TODO: Replace with actual API call
-      await Future.delayed(const Duration(milliseconds: 300));
+  /// Update an existing report
+  /// PATCH /api/reports/{report_id}/
+  Future<ReportModel?> updateReport(
+    String reportId, {
+    String? title,
+    String? observation,
+    String? severityId,
+    String? categoryId,
+  }) async {
+    if (reportId.isEmpty) {
+      debugPrint('ReportService: Invalid report ID');
+      return null;
+    }
 
-      // Update local cache
-      final index = _nearbyReports.indexWhere((r) => r.id == reportId);
-      if (index != -1) {
-        _nearbyReports[index] = _nearbyReports[index].markAsEndorsed();
+    try {
+      final data = <String, dynamic>{
+        if (title != null && title.isNotEmpty) 'title': title,
+        if (observation != null) 'observation': observation,
+        if (severityId != null && severityId.isNotEmpty) 'severity': severityId,
+        if (categoryId != null && categoryId.isNotEmpty) 'category': categoryId,
+      };
+
+      if (data.isEmpty) {
+        debugPrint('ReportService: No data to update');
+        return null;
       }
 
-      return true;
+      final result = await _apiService.patch<ReportModel>(
+        '$_reportsEndpoint$reportId/',
+        data: data,
+        parser: (responseData) {
+          if (responseData is Map<String, dynamic>) {
+            return ReportModel.fromJson(responseData);
+          }
+          throw Exception('Invalid response format');
+        },
+      );
+
+      if (result.isSuccess && result.data != null) {
+        debugPrint('ReportService: Updated report $reportId');
+        return result.data;
+      } else {
+        debugPrint('ReportService: Failed to update report $reportId - ${result.error}');
+        return null;
+      }
     } catch (e) {
-      debugPrint('ReportService endorseReport error: $e');
+      debugPrint('ReportService: Error updating report $reportId - $e');
+      return null;
+    }
+  }
+
+  /// Delete a report
+  /// DELETE /api/reports/{report_id}/
+  Future<bool> deleteReport(String reportId) async {
+    if (reportId.isEmpty) {
+      debugPrint('ReportService: Invalid report ID');
+      return false;
+    }
+
+    try {
+      final result = await _apiService.delete<void>(
+        '$_reportsEndpoint$reportId/',
+      );
+
+      if (result.isSuccess) {
+        debugPrint('ReportService: Deleted report $reportId');
+        return true;
+      } else {
+        debugPrint('ReportService: Failed to delete report $reportId - ${result.error}');
+        return false;
+      }
+    } catch (e) {
+      debugPrint('ReportService: Error deleting report $reportId - $e');
       return false;
     }
   }
 
-  /// Remove endorsement from a report
-  Future<bool> removeEndorsement(String reportId) async {
-    try {
-      // TODO: Replace with actual API call
-      await Future.delayed(const Duration(milliseconds: 300));
+  // ─── Helper Methods ──────────────────────────────────────────────────────
 
-      // Update local cache
-      final index = _nearbyReports.indexWhere((r) => r.id == reportId);
-      if (index != -1) {
-        _nearbyReports[index] = _nearbyReports[index].markAsNotEndorsed();
-      }
-
-      return true;
-    } catch (e) {
-      debugPrint('ReportService removeEndorsement error: $e');
-      return false;
+  /// Get a user-friendly error message
+  String getErrorMessage(String? error) {
+    if (error == null || error.isEmpty) {
+      return 'An unexpected error occurred. Please try again.';
     }
-  }
 
-  /// Refresh nearby reports
-  Future<void> refreshNearbyReports(LocationModel location) async {
-    await loadNearbyReports(location);
-  }
+    if (error.contains('connection') || error.contains('network')) {
+      return 'Unable to connect. Please check your internet connection.';
+    }
 
-  /// Clear all cached data
-  void clearCache() {
-    _nearbyReports.clear();
-    _userReports.clear();
-    _error.value = '';
-  }
+    if (error.contains('timeout')) {
+      return 'Request timed out. Please try again.';
+    }
 
-  // ─── Mock Data ───────────────────────────────────────────────────────────
+    if (error.contains('unauthorized') || error.contains('401')) {
+      return 'Your session has expired. Please log in again.';
+    }
 
-  List<ReportModel> _getMockReports(LocationModel userLocation) {
-    final userLat = userLocation.latitude;
-    final userLng = userLocation.longitude;
+    if (error.contains('forbidden') || error.contains('403')) {
+      return 'You don\'t have permission to perform this action.';
+    }
 
-    return [
-      ReportModel(
-        id: '1',
-        title: 'Large trash dump near park',
-        description: 'Illegal dumping site with mixed waste including plastic bags, cardboard boxes, and household items. Located near the children\'s playground.',
-        streetName: 'Rue de la Paix',
-        status: ReportStatus.verified,
-        severity: ReportSeverity.high,
-        category: TrashCategory.mixed,
-        location: LocationModel(
-          latitude: userLat + 0.002,
-          longitude: userLng + 0.001,
-          address: 'Rue de la Paix, Paris',
-          city: 'Paris',
-        ),
-        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-        endorsementCount: 15,
-        viewCount: 48,
-        images: [
-          ReportImageModel(
-            id: 'img_1_1',
-            imageUrl: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400',
-            thumbnailUrl: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=200',
-            uploadedAt: DateTime.now().subtract(const Duration(hours: 2)),
-            isProcessed: true,
-          ),
-          ReportImageModel(
-            id: 'img_1_2',
-            imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
-            thumbnailUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200',
-            uploadedAt: DateTime.now().subtract(const Duration(hours: 2)),
-            isProcessed: true,
-          ),
-        ],
-        tags: ['urgent', 'near-playground'],
-        username: 'eco_warrior',
-        userId: 'user_123',
-      ),
-      ReportModel(
-        id: '2',
-        title: 'Construction debris on sidewalk',
-        description: 'Construction waste blocking the sidewalk. Includes concrete pieces, metal bars, and broken tiles.',
-        streetName: 'Avenue des Champs',
-        status: ReportStatus.pending,
-        severity: ReportSeverity.medium,
-        category: TrashCategory.construction,
-        location: LocationModel(
-          latitude: userLat - 0.001,
-          longitude: userLng + 0.003,
-          address: 'Avenue des Champs, Paris',
-          city: 'Paris',
-        ),
-        createdAt: DateTime.now().subtract(const Duration(hours: 5)),
-        endorsementCount: 8,
-        viewCount: 23,
-        images: [
-          ReportImageModel(
-            id: 'img_2_1',
-            imageUrl: 'https://images.unsplash.com/photo-1604187351574-c75ca79f5807?w=400',
-            thumbnailUrl: 'https://images.unsplash.com/photo-1604187351574-c75ca79f5807?w=200',
-            uploadedAt: DateTime.now().subtract(const Duration(hours: 5)),
-            isProcessed: true,
-          ),
-        ],
-        tags: ['sidewalk', 'construction'],
-        username: 'green_citizen',
-        userId: 'user_456',
-      ),
-      ReportModel(
-        id: '3',
-        title: 'Illegal e-waste dumping',
-        description: 'Electronic waste including old monitors, keyboards, and cables dumped behind the building. Hazardous materials present.',
-        streetName: 'Boulevard Victor Hugo',
-        status: ReportStatus.inProgress,
-        severity: ReportSeverity.critical,
-        category: TrashCategory.electronic,
-        location: LocationModel(
-          latitude: userLat + 0.001,
-          longitude: userLng - 0.002,
-          address: 'Boulevard Victor Hugo, Paris',
-          city: 'Paris',
-        ),
-        createdAt: DateTime.now().subtract(const Duration(days: 1)),
-        endorsementCount: 23,
-        viewCount: 87,
-        images: [
-          ReportImageModel(
-            id: 'img_3_1',
-            imageUrl: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=400',
-            thumbnailUrl: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=200',
-            uploadedAt: DateTime.now().subtract(const Duration(days: 1)),
-            isProcessed: true,
-          ),
-          ReportImageModel(
-            id: 'img_3_2',
-            imageUrl: 'https://images.unsplash.com/photo-1526951521990-620dc14c214b?w=400',
-            thumbnailUrl: 'https://images.unsplash.com/photo-1526951521990-620dc14c214b?w=200',
-            uploadedAt: DateTime.now().subtract(const Duration(days: 1)),
-            isProcessed: true,
-          ),
-          ReportImageModel(
-            id: 'img_3_3',
-            imageUrl: 'https://images.unsplash.com/photo-1495556650867-99590cea3657?w=400',
-            thumbnailUrl: 'https://images.unsplash.com/photo-1495556650867-99590cea3657?w=200',
-            uploadedAt: DateTime.now().subtract(const Duration(days: 1)),
-            isProcessed: true,
-          ),
-        ],
-        tags: ['hazardous', 'e-waste', 'urgent'],
-        username: 'trash_hunter',
-        userId: 'user_789',
-      ),
-      ReportModel(
-        id: '4',
-        title: 'Plastic bottles near river bank',
-        description: 'Large amount of plastic bottles and packaging near the river. Risk of water pollution.',
-        streetName: 'Quai de Seine',
-        status: ReportStatus.verified,
-        severity: ReportSeverity.high,
-        category: TrashCategory.plastic,
-        location: LocationModel(
-          latitude: userLat - 0.003,
-          longitude: userLng - 0.001,
-          address: 'Quai de Seine, Paris',
-          city: 'Paris',
-        ),
-        createdAt: DateTime.now().subtract(const Duration(hours: 8)),
-        endorsementCount: 31,
-        viewCount: 102,
-        images: [
-          ReportImageModel(
-            id: 'img_4_1',
-            imageUrl: 'https://images.unsplash.com/photo-1621451537084-482c73073a0f?w=400',
-            thumbnailUrl: 'https://images.unsplash.com/photo-1621451537084-482c73073a0f?w=200',
-            uploadedAt: DateTime.now().subtract(const Duration(hours: 8)),
-            isProcessed: true,
-          ),
-        ],
-        tags: ['river', 'plastic', 'pollution'],
-        username: 'river_guardian',
-        userId: 'user_101',
-      ),
-    ];
+    if (error.contains('not found') || error.contains('404')) {
+      return 'The requested resource was not found.';
+    }
+
+    if (error.contains('server') || error.contains('500')) {
+      return 'Server error. Please try again later.';
+    }
+
+    return error;
   }
 }
 

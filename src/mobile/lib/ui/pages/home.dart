@@ -7,10 +7,13 @@ import 'package:get/get.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 import '../../controllers/home_controller.dart';
+import '../../controllers/map_controller.dart';
 import '../../models/location.dart';
 import '../../utils/constants.dart';
 import '../components/home_actions.dart';
 import '../components/report_card.dart';
+import '../components/report_card_shimmer.dart';
+import '../components/report_details_modal.dart';
 import '../components/user_avatar.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,6 +28,32 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final HomeController controller = Get.find<HomeController>();
   final CardSwiperController swiperController = CardSwiperController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Set up pin tap callback
+    _setupPinTapCallback();
+  }
+
+  void _setupPinTapCallback() {
+    final mapController = Get.find<MapController>();
+    mapController.onReportPinTapped = (report) {
+      ReportDetailsModal.show(
+        context,
+        report: report,
+        distanceAway: controller.getDistanceToReport(report),
+        onNavigate: () {
+          // TODO: Open navigation app
+          Navigator.pop(context);
+        },
+        onShare: () {
+          // TODO: Share report
+          Navigator.pop(context);
+        },
+      );
+    };
+  }
 
   @override
   void dispose() {
@@ -315,9 +344,9 @@ class _BottomSheet extends StatelessWidget {
     return DraggableScrollableSheet(
       initialChildSize: 0.22,
       minChildSize: 0.22,
-      maxChildSize: 0.35,
+      maxChildSize: 0.5,
       snap: true,
-      snapSizes: const [0.22, 0.35],
+      snapSizes: const [0.22, 0.50],
       controller: controller.sheetController,
       builder: (context, scrollController) {
         return Container(
@@ -331,59 +360,69 @@ class _BottomSheet extends StatelessWidget {
                 // Top row: Drag handle + New Report button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child:
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Recently in the area", style: AppTextStyles.h2.copyWith(color: seedColor)),
-                              Text("Some closest trails", style: AppTextStyles.body.copyWith(color: seedColor, fontStyle: FontStyle.italic)),
-                            ],
-                          ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Recent Trails",
+                              style: AppTextStyles.h2.copyWith(
+                                color: seedColor,
+                              ),
+                            ),
+                            Text(
+                              "From the community",
+                              style: AppTextStyles.body.copyWith(
+                                color: seedColor,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ],
                         ),
-                          NewReportActionWidget(
-                                onTap: () {
-                                  // TODO: Navigate to new report page
-                                },
-                              )
-                              .animate(
-                                controller: controller.actionsAnimationController,
-                              )
-                              .fadeIn(delay: 300.ms, duration: 400.ms)
-                              .slideX(begin: 0.5, duration: 400.ms),
-                        ],
                       ),
+                      NewReportActionWidget(
+                            onTap: () {
+                              // TODO: Navigate to new report page
+                            },
+                          )
+                          .animate(
+                            controller: controller.actionsAnimationController,
+                          )
+                          .fadeIn(delay: 300.ms, duration: 400.ms)
+                          .slideX(begin: 0.5, duration: 400.ms),
+                    ],
+                  ),
                 ),
 
                 const Gap(8),
 
                 // Report cards swiper
                 Obx(() {
-                  final reportService = controller.reportService;
+                  final reportController = controller.reportController;
 
-                  if (reportService.isLoading) {
-                    return SizedBox(
-                      height: 120,
-                      child: Center(
-                        child: CircularProgressIndicator(color: seedColor),
-                      ),
+                  if (reportController.isLoadingReports.value) {
+                    return const SizedBox(
+                      height: 300,
+                      child: ReportCardsShimmerLoading(),
                     );
                   }
 
-                  if (!reportService.hasNearbyReports) {
+                  if (!reportController.hasReports) {
                     return const NoReportsNearby();
                   }
 
                   return SizedBox(
-                    height: 160.0,
+                    height: 300.0,
                     child: CardSwiper(
                       controller: swiperController,
-                      cardsCount: reportService.nearbyReports.length,
-                      numberOfCardsDisplayed: reportService.nearbyReports.length
+                      cardsCount: reportController.nearbyReports.length,
+                      numberOfCardsDisplayed: reportController
+                          .nearbyReports
+                          .length
                           .clamp(1, 3),
                       scale: 0.9,
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -404,10 +443,13 @@ class _BottomSheet extends StatelessWidget {
                             percentThresholdX,
                             percentThresholdY,
                           ) {
-                            final report = reportService.nearbyReports[index];
+                            final report =
+                                reportController.nearbyReports[index];
                             return ReportCard(
                               report: report,
-                              isExpanded: false,
+                              distanceAway: controller.getDistanceToReport(
+                                report,
+                              ),
                               onTap: () {
                                 // TODO: Navigate to report details
                               },

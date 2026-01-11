@@ -1,0 +1,154 @@
+{% comment %}
+Header/Navigation Component
+Responsive navbar with logo, nav tabs, and CTA button
+{% endcomment %}
+{% load static %}
+{% load tailwind_tags %}
+
+{% with request.resolver_match.url_name as url_name %}
+    <header class="w-full  bg-white/80 backdrop-blur-md sticky top-0 z-50">
+        <nav class="w-[90%] mx-auto border-b border-primary px-6 py-4">
+            <div class="flex items-center justify-between h-16 md:h-20">
+
+                {# Logo Section #}
+                <a href="{% url 'core:home' %}" class="flex items-center gap-2 group">
+                    {# Logo Image #}
+                    <div class="w-2/3 flex items-center justify-center">
+                        <img
+                                src="{% static 'common/images/logo_text/cyan.svg' %}"
+                                alt="TrashTrails Logo"
+                                class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                        >
+                    </div>
+                </a>
+
+                {# Desktop Navigation #}
+                <div class="hidden md:flex items-center gap-2">
+                    {# Nav Tabs #}
+                    <a
+                            href="{% if url_name == 'about' %} #hero {% else %} {% url 'core:about' %} {% endif %}"
+                            class="px-8 py-4 rounded-3xl text-darkColor transition-all duration-300 ease-in-out hover:bg-primary-50 hover:text-primary {% if url_name == 'about' %}bg-primary-50 text-primary{% endif %}"
+                    >
+                        About
+                    </a>
+                    <a
+                            href="{% if url_name == 'why_not' %} #hero {% else %} {% url 'core:why_not' %} {% endif %}"
+                            class="px-8 py-4 rounded-3xl text-darkColor transition-all duration-300 ease-in-out hover:bg-primary-50 hover:text-primary {% if url_name == 'why_not' %}bg-primary-50 text-primary{% endif %}"
+                    >
+                        Why not?
+                    </a>
+
+                    {# CTA Button #}
+                    <div class="ml-4">
+                        {% include 'components/button_outlined.html' with href='#' text='Get Started' %}
+                    </div>
+                </div>
+
+                {# Mobile Menu Button #}
+                <button
+                        type="button"
+                        id="mobile-menu-btn"
+                        class="md:hidden inline-flex items-center justify-center p-2 rounded-lg text-darkColor hover:bg-primary-50 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                        aria-controls="mobile-menu"
+                        aria-expanded="false"
+                >
+                    <span class="sr-only">Open main menu</span>
+                    {# Hamburger Icon (shown when menu is closed) #}
+                    <span id="menu-icon-open" class="block">
+                    {% include 'components/icons/menu.html' %}
+                </span>
+                    {# Close Icon (shown when menu is open) #}
+                    <span id="menu-icon-close" class="hidden">
+                    {% include 'components/icons/close.html' %}
+                </span>
+                </button>
+            </div>
+
+            {# Mobile Menu #}
+            <div
+                    id="mobile-menu"
+                    class="md:hidden overflow-hidden transition-all duration-300 ease-in-out max-h-0 opacity-0"
+            >
+                <div class="py-4 space-y-2">
+                    {# Mobile Nav Tabs #}
+                    <a
+                            href="{% if url_name == 'about' %} #hero {% else %} {% url 'core:about' %} {% endif %}"
+                            class="flex items-center justify-between px-8 py-4 rounded-3xl text-darkColor font-medium transition-all duration-300 ease-in-out hover:bg-primary-50 hover:text-primary {% if url_name == 'about' %}bg-primary-50 text-primary{% endif %}"
+                    >
+                        About
+                        {% include 'components/icons/arrow_up_right.html' %}
+                    </a>
+                    <a
+                            href="{% if url_name == 'why_not' %} #hero {% else %} {% url 'core:why_not' %} {% endif %}"
+                            class="flex items-center justify-between px-8 py-4 rounded-3xl text-darkColor font-medium transition-all duration-300 ease-in-out hover:bg-primary-50 hover:text-primary {% if url_name == 'why_not' %}bg-primary-50 text-primary{% endif %}"
+                    >
+                        Why not?
+                        {% include 'components/icons/arrow_up_right.html' %}
+                    </a>
+
+                    {# Mobile CTA Button #}
+                    <div class="pt-2">
+                        {% include 'components/button_outlined.html' with href='#' text='Get Started' class='w-full text-center' %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    {# Mobile Menu Toggle Script #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIconOpen = document.getElementById('menu-icon-open');
+            const menuIconClose = document.getElementById('menu-icon-close');
+
+            let isMenuOpen = false;
+
+            mobileMenuBtn.addEventListener('click', function () {
+                isMenuOpen = !isMenuOpen;
+
+                if (isMenuOpen) {
+                    // Open menu
+                    mobileMenu.classList.remove('max-h-0', 'opacity-0');
+                    mobileMenu.classList.add('max-h-96', 'opacity-100');
+                    menuIconOpen.classList.add('hidden');
+                    menuIconClose.classList.remove('hidden');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'true');
+                } else {
+                    // Close menu
+                    mobileMenu.classList.add('max-h-0', 'opacity-0');
+                    mobileMenu.classList.remove('max-h-96', 'opacity-100');
+                    menuIconOpen.classList.remove('hidden');
+                    menuIconClose.classList.add('hidden');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function (event) {
+                if (isMenuOpen && !mobileMenuBtn.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    isMenuOpen = false;
+                    mobileMenu.classList.add('max-h-0', 'opacity-0');
+                    mobileMenu.classList.remove('max-h-96', 'opacity-100');
+                    menuIconOpen.classList.remove('hidden');
+                    menuIconClose.classList.add('hidden');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Close menu on window resize to desktop
+            window.addEventListener('resize', function () {
+                if (window.innerWidth >= 768 && isMenuOpen) {
+                    isMenuOpen = false;
+                    mobileMenu.classList.add('max-h-0', 'opacity-0');
+                    mobileMenu.classList.remove('max-h-96', 'opacity-100');
+                    menuIconOpen.classList.remove('hidden');
+                    menuIconClose.classList.add('hidden');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    </script>
+{% endwith %}
+

@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../models/location.dart';
 import '../models/report.dart';
 import '../models/user.dart';
 import '../services/services.dart';
+import 'map_controller.dart';
+import 'report_controller.dart';
 
 /// Controller for the Home page
-/// Uses LocationService, MapService, and ReportService for functionality
+/// Coordinates between MapController, ReportController, and other services
 class HomeController extends GetxController with GetTickerProviderStateMixin {
+  // ─── Controllers ─────────────────────────────────────────────────────────
+  MapController get mapController => Get.find<MapController>();
+  ReportController get reportController => Get.find<ReportController>();
+
   // ─── Services ────────────────────────────────────────────────────────────
-  final LocationService _locationService = Get.find<LocationService>();
-  final MapService _mapService = Get.find<MapService>();
-  final ReportService _reportService = Get.find<ReportService>();
   final AuthService _authService = Get.find<AuthService>();
 
   // ─── UI State ────────────────────────────────────────────────────────────
   final RxInt _currentReportIndex = 0.obs;
   final RxDouble _sheetPosition = 0.15.obs;
   final RxBool _isInitialized = false.obs;
-  final RxBool _showMyLocationButton = false.obs;
-
-  // ─── Constants ───────────────────────────────────────────────────────────
-  /// Minimum distance (in meters) to show the "My Location" button
-  static const double _minDistanceToShowButton = 2.0;
 
   // ─── Draggable Sheet Controller ──────────────────────────────────────────
   final DraggableScrollableController sheetController =
@@ -33,11 +30,9 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   late AnimationController avatarAnimationController;
   late AnimationController actionsAnimationController;
 
-  // ─── Service Getters (proxy) ─────────────────────────────────────────────
-  LocationService get locationService => _locationService;
-  MapService get mapService => _mapService;
-  ReportService get reportService => _reportService;
-  AuthService get authService => _authService;
+  // ─── Getters (Proxies) ───────────────────────────────────────────────────
+  LocationService get locationService => mapController.locationService;
+  bool get showMyLocationButton => mapController.showMyLocationButton;
 
   // ─── User Getters ────────────────────────────────────────────────────────
   UserModel? get currentUser => _authService.currentUser;
@@ -48,14 +43,17 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   int get currentReportIndex => _currentReportIndex.value;
   double get sheetPosition => _sheetPosition.value;
   bool get isInitialized => _isInitialized.value;
-  bool get showMyLocationButton => _showMyLocationButton.value;
+
+  /// Get nearby reports from the controller
+  List<ReportModel> get nearbyReports => reportController.nearbyReports;
+  bool get hasNearbyReports => reportController.hasReports;
 
   ReportModel? get currentReport {
-    if (!_reportService.hasNearbyReports) return null;
-    if (_currentReportIndex.value >= _reportService.nearbyReports.length) {
+    if (!hasNearbyReports) return null;
+    if (_currentReportIndex.value >= nearbyReports.length) {
       return null;
     }
-    return _reportService.nearbyReports[_currentReportIndex.value];
+    return nearbyReports[_currentReportIndex.value];
   }
 
   @override
@@ -88,13 +86,13 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
 
   Future<void> _initialize() async {
     // Wait for location to be ready
-    if (!_locationService.hasValidLocation) {
-      await _locationService.initLocation();
+    if (!locationService.hasValidLocation) {
+      await locationService.initLocation();
     }
 
-    if (_locationService.hasValidLocation) {
+    if (locationService.hasValidLocation) {
       // Load nearby reports
-      await _reportService.loadNearbyReports(_locationService.currentLocation);
+      await reportController.loadReports(refresh: true);
 
       // Start animations
       _startAnimations();
@@ -110,102 +108,53 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     });
   }
 
-  // ─── Map Methods ─────────────────────────────────────────────────────────
+  // ─── Map Methods (Delegated to MapController) ────────────────────────────
 
   /// Called when the map is created
-  void onMapCreated(mapboxMap) {
-    _mapService.onMapCreated(mapboxMap);
+  Future<void> onMapCreated(dynamic mapboxMap) async {
+    await mapController.onMapCreated(mapboxMap);
 
-    // Listen to camera changes to show/hide My Location button
-    _mapService.onCameraChanged = _onCameraChanged;
-
-    // Animate to user location after map is ready
-    if (_locationService.hasValidLocation) {
-      _mapService.animateToLocation(
-        _locationService.currentLocation,
-        zoom: 15.0,
-        pitch: 45.0,
-        durationMs: 2000,
-      );
+    // Update map pins when reports are loaded
+    if (reportController.hasReports) {
+      await mapController.updateReportPins(nearbyReports);
     }
-  }
-
-  /// Called when the camera position changes
-  void _onCameraChanged(double latitude, double longitude) {
-    if (!_locationService.hasValidLocation) return;
-
-    final userLocation = _locationService.currentLocation;
-    final cameraLocation = LocationModel(
-      latitude: latitude,
-      longitude: longitude,
-    );
-
-    final distance = userLocation.distanceTo(cameraLocation);
-
-    // Show button if camera is far enough from user location
-    _showMyLocationButton.value = distance >= _minDistanceToShowButton;
   }
 
   /// Called when the user scrolls/moves the map
   void onCameraMove() {
-    // Debounce: Only check after the map has been created
-    if (!_mapService.isMapReady) return;
-
-    // Notify camera changed to check distance
-    _mapService.notifyCameraChanged();
+    mapController.onCameraMove();
   }
 
   /// Center map on user's current location
   Future<void> centerOnUserLocation() async {
-    // Don't use refresh() as it sets isLoading=true which rebuilds the map
-    // Just get the current position silently and animate to it
-    final location = await _locationService.getCurrentPosition();
-    if (location != null && location.isValid) {
-      await _mapService.animateToLocation(
-        location,
-        zoom: 15.0,
-        pitch: 45.0,
-        durationMs: 1500,
-      );
-      // Hide the button after centering
-      _showMyLocationButton.value = false;
-    } else if (_locationService.hasValidLocation) {
-      // Use cached location if getCurrentPosition fails
-      await _mapService.animateToLocation(
-        _locationService.currentLocation,
-        zoom: 15.0,
-        pitch: 45.0,
-        durationMs: 1500,
-      );
-      // Hide the button after centering
-      _showMyLocationButton.value = false;
-    }
+    await mapController.centerOnUserLocation();
   }
 
   // ─── Report Methods ──────────────────────────────────────────────────────
 
   /// Called when swiping to a new report card
   void onReportCardChanged(int index) {
-    if (index >= 0 && index < _reportService.nearbyReports.length) {
+    if (index >= 0 && index < nearbyReports.length) {
       _currentReportIndex.value = index;
 
-      // Animate map to the new report's location
-      final report = _reportService.nearbyReports[index];
-      _mapService.animateToLocation(
-        report.location,
-        zoom: 16.0,
-        pitch: 60.0,
-        durationMs: 1500,
-      );
+      // Animate map to report location
+      final report = nearbyReports[index];
+      mapController.animateToReport(report);
     }
   }
 
-  /// Refresh nearby reports
+  /// Calculate distance from user to a report
+  String? getDistanceToReport(ReportModel report) {
+    return mapController.getDistanceToReport(report);
+  }
+
+  /// Refresh nearby reports and update map pins
   Future<void> refreshReports() async {
-    if (_locationService.hasValidLocation) {
-      await _reportService.loadNearbyReports(_locationService.currentLocation);
-      _currentReportIndex.value = 0;
-    }
+    await reportController.refreshReports();
+    _currentReportIndex.value = 0;
+
+    // Update map pins
+    await mapController.updateReportPins(nearbyReports);
   }
 
   // ─── Sheet Methods ───────────────────────────────────────────────────────

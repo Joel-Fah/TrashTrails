@@ -34,10 +34,12 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('core.urls', namespace='core')),
     path('api/auth/', include('auth_service.urls', namespace='auth')),
     path('api/map/', include('map_service.urls', namespace='map')),
     path('api/ml/', include('ml_service.urls', namespace='ml')),
     path('api/leaderboard/', include('leaderboard_service.urls', namespace='leaderboard')),
+    path('api/reports/', include('report_service.urls', namespace='reports')),
 ]
 
 if settings.SWAGGER_ENABLED:

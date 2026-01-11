@@ -100,6 +100,7 @@ const String avatar4 = 'assets/images/avatars/avatar4.png';
 const String trash1 = 'assets/images/trash/trash1.png';
 const String trash2 = 'assets/images/trash/trash2.png';
 const String trash3 = 'assets/images/trash/trash3.png';
+const String trash4 = 'assets/images/trash/trash4.png';
 
 // Misc
 const String map = 'assets/images/map.png';

@@ -1,0 +1,57 @@
+{% load static %}
+{% load i18n %}
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+{# Meta Titles #}
+<meta name="title"
+      content="
+              {% trans 'Introducing TrashMap — Ready to Clear the Path?' %}"/>
+<meta property="og:title"
+      content="
+              {% trans 'Introducing TrashMap — Ready to Clear the Path?' %}"/>
+<meta property="twitter:title"
+      content="
+              {% trans 'Introducing TrashMap — Ready to Clear the Path?' %}"/>
+
+{# Meta Images #}
+<meta property="og:image" content="
+        {% if img_url %}{{ img_url }}{% else %}https://raw.githubusercontent.com/Joel-Fah/images/refs/heads/main/trashtrails_meta_img.png{% endif %}"/>
+<meta property="twitter:image" content="
+        {% if img_url %}{{ img_url }}{% else %}https://raw.githubusercontent.com/Joel-Fah/images/refs/heads/main/trashtrails_meta_img.png{% endif %}"/>
+
+<!-- Primary Meta Tags -->
+<meta name="description" content="
+{% blocktrans %}
+    A smarter, more organized way to map, analyze, and manage waste data — something that empowers both users and systems to work together toward cleaner cities.
+{% endblocktrans %}
+"/>
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website"/>
+<meta property="og:url" content=""/>
+<meta property="og:description" content="
+{% blocktrans %}
+    A smarter, more organized way to map, analyze, and manage waste data — something that empowers both users and systems to work together toward cleaner cities.
+{% endblocktrans %}"
+/>
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image"/>
+<meta property="twitter:url" content=""/>
+<meta property="twitter:description" content="
+{% blocktrans %}
+    A smarter, more organized way to map, analyze, and manage waste data — something that empowers both users and systems to work together toward cleaner cities.
+{% endblocktrans %}"/>
+
+
+<!-- Additional Meta Tags -->
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#366A91">
+
+<!-- Canonical Link -->
+<link rel="canonical" href="">
+
+{# Favicon #}
+<link rel="shortcut icon" href="{% static 'common/images/favicon.ico' %}" type="image/x-icon">

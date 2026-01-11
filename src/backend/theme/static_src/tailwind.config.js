@@ -49,24 +49,23 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                // TODO: add custom fonts here
-                // sans: [''],
+                sans: ['General Sans', 'sans-serif'],
             },
             colors: {
                 // TODO: customize the color palette here
                 primary: {
-                    DEFAULT: '#2b2b2b',
-                    50: '#f6f6f6',
-                    100: '#e7e7e7',
-                    200: '#d1d1d1',
-                    300: '#b0b0b0',
-                    400: '#888888',
-                    500: '#6d6d6d',
-                    600: '#5d5d5d',
-                    700: '#4f4f4f',
-                    800: '#454545',
-                    900: '#3d3d3d',
-                    950: '#2b2b2b',
+                    DEFAULT: '#366a91',
+                    50: '#f4f7fb',
+                    100: '#e8eff6',
+                    200: '#ccddeb',
+                    300: '#9fc2da',
+                    400: '#6ba1c5',
+                    500: '#4886af',
+                    600: '#366a91',
+                    700: '#2d5677',
+                    800: '#294a63',
+                    900: '#263f54',
+                    950: '#192938',
                 },
 
                 // Neutrals

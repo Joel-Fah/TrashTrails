@@ -4,7 +4,7 @@ import 'base/model_utils.dart';
 
 /// Model representing a report severity level from the backend API
 ///
-/// Example JSON from /api/report-severities/:
+/// Example JSON from /api/reports/report-severities/:
 /// ```json
 /// {
 ///   "id": "uuid",

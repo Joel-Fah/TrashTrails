@@ -34,9 +34,9 @@ double mediaHeight(BuildContext context) {
   return MediaQuery.of(context).size.height;
 }
 
-String addThousandSeparator(String price) {
+String addThousandSeparator(String value) {
   /// Add a thousand separator to a given number
-  return price.replaceAllMapped(
+  return value.replaceAllMapped(
     RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
     (Match m) => '${m[1]},',
   );

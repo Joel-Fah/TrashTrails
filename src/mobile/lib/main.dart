@@ -65,6 +65,7 @@ Future<void> main() async {
   Get.put(LocationService(), permanent: true);
   Get.put(MapService(), permanent: true);
   Get.put(ReportService(), permanent: true);
+  Get.put(PointsService(), permanent: true);
 
   // ─── Initialize Controllers ──────────────────────────────────────────────
   Get.put(LocaleController());
@@ -74,7 +75,9 @@ Future<void> main() async {
   Get.put(MapController());
   Get.put(HomeController());
   Get.put(ReportController());
+  Get.put(PointsController());
   Get.put(MapController());
+  Get.put(NewReportController());
 
   // locked orientation to portrait
   await SystemChrome.setPreferredOrientations([
@@ -100,7 +103,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: snackBarKey,
       theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      // darkTheme: AppTheme.darkTheme,
       themeMode: Get.find<ThemeController>().themeMode,
       locale: Get.find<LocaleController>().locale,
       localizationsDelegates: const [

@@ -17,6 +17,13 @@ class ReportServiceConfig(AppConfig):
             # DB not ready yet (e.g. during migrations)
             pass
 
+        # Import signals safely (don't break during migrations)
+        try:
+            from . import signals  # noqa: F401
+        except (OperationalError, ProgrammingError, ImportError):
+            # Signals may depend on DB tables or other modules not ready during migrate
+            pass
+
     def _seed_trash_categories(self, trash_category):
         categories = [
             ("household", "Household Waste", "Daily domestic waste"),

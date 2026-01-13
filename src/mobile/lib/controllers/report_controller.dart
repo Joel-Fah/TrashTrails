@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -300,9 +302,34 @@ class ReportController extends GetxController {
     String? observation,
     required String severityId,
     required String categoryId,
-    String? locationId,
+    LocationModel? location,
+    required List<String> imagePaths,
   }) async {
     if (isCreatingReport.value) return null;
+
+    // Ensure at least one image is provided
+    if (imagePaths.isEmpty) {
+      createError.value = 'Please attach at least one image before submitting.';
+      debugPrint('ReportController: Aborting createReport - no images provided');
+      return null;
+    }
+
+    // Validate that all image files exist
+    final validPaths = <String>[];
+    for (final path in imagePaths) {
+      final file = File(path);
+      if (file.existsSync()) {
+        validPaths.add(path);
+      } else {
+        debugPrint('ReportController: Image file not found at $path');
+      }
+    }
+
+    if (validPaths.isEmpty) {
+      createError.value = 'No valid images found. Please try again.';
+      debugPrint('ReportController: Aborting createReport - no valid image files');
+      return null;
+    }
 
     isCreatingReport.value = true;
     createError.value = '';
@@ -313,7 +340,8 @@ class ReportController extends GetxController {
         observation: observation,
         severityId: severityId,
         categoryId: categoryId,
-        locationId: locationId,
+        location: location,
+        imagePaths: validPaths,
       );
 
       if (result != null) {
@@ -329,6 +357,68 @@ class ReportController extends GetxController {
     } catch (e) {
       createError.value = 'Error creating report';
       debugPrint('ReportController: Error creating report - $e');
+      return null;
+    } finally {
+      isCreatingReport.value = false;
+    }
+  }
+
+  /// Create a new report and return both report and points data
+  /// This method is used for the new report flow where we need to show points
+  Future<ReportCreationResult?> createReportWithPoints({
+    required String title,
+    String? observation,
+    required String severityId,
+    required String categoryId,
+    LocationModel? location,
+    required List<String> imagePaths,
+  }) async {
+    if (isCreatingReport.value) return null;
+
+    // Ensure at least one image is provided
+    if (imagePaths.isEmpty) {
+      createError.value = 'Please attach at least one image before submitting.';
+      debugPrint('ReportController: Aborting createReport - no images provided');
+      return null;
+    }
+
+    // Validate that all image files exist
+    final validPaths = <String>[];
+    for (final path in imagePaths) {
+      final file = File(path);
+      if (file.existsSync()) {
+        validPaths.add(path);
+      } else {
+        debugPrint('ReportController: Image file not found at $path');
+      }
+    }
+
+    isCreatingReport.value = true;
+    createError.value = '';
+
+    try {
+      final result = await _reportService.createReportWithPoints(
+        title: title,
+        observation: observation,
+        severityId: severityId,
+        categoryId: categoryId,
+        location: location,
+        imagePaths: imagePaths,
+      );
+
+      if (result != null) {
+        // Add to the beginning of the list
+        nearbyReports.insert(0, result.report);
+        debugPrint('ReportController: Created report ${result.report.id} with points: ${result.hasPoints}');
+        return result;
+      } else {
+        createError.value = 'Failed to create report';
+        debugPrint('ReportController: Failed to create report with points');
+        return null;
+      }
+    } catch (e) {
+      createError.value = 'Error creating report with points';
+      debugPrint('ReportController: Error creating report with points - $e');
       return null;
     } finally {
       isCreatingReport.value = false;
@@ -459,4 +549,3 @@ class ReportController extends GetxController {
     return severities.firstWhereOrNull((s) => s.level == level);
   }
 }
-

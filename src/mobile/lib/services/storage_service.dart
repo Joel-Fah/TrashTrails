@@ -11,6 +11,7 @@ class StorageService extends GetxService {
   static const String _userKey = 'user_data';
   static const String _authSkippedKey = 'auth_skipped';
   static const String _isAuthenticatedKey = 'is_authenticated';
+  static const String _sessionExpiredKey = 'session_expired';
 
   late final GetStorage _box;
 
@@ -105,6 +106,22 @@ class StorageService extends GetxService {
     await _box.write(_isAuthenticatedKey, false);
     await _box.write(_authSkippedKey, false);
     debugPrint('StorageService: All auth data cleared');
+  }
+
+  // ─── Session Expired ─────────────────────────────────────────────────────
+
+  /// Check if the session has expired (token refresh failed)
+  bool get isSessionExpired => _box.read<bool>(_sessionExpiredKey) ?? false;
+
+  /// Set the session expired flag
+  Future<void> setSessionExpired(bool expired) async {
+    await _box.write(_sessionExpiredKey, expired);
+    debugPrint('StorageService: Session expired flag set to $expired');
+  }
+
+  /// Clear the session expired flag
+  Future<void> clearSessionExpired() async {
+    await _box.remove(_sessionExpiredKey);
   }
 
   // ─── Utility Methods ─────────────────────────────────────────────────────

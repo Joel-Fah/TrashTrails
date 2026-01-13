@@ -30,7 +30,7 @@ class MapController extends GetxController {
 
   // Pin sizes based on severity (base sizes - will scale with zoom)
   static const Map<int, double> _severityPinSizes = {
-    1: 0.75, // Low
+    1: 0.2, // Low
     2: 0.8, // Medium
     3: 0.9, // High
     4: 1.0, // Critical

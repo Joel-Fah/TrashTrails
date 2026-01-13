@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:hugeicons/styles/stroke_rounded.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:trashtrails/services/storage_service.dart';
 import 'package:trashtrails/ui/components/default_snack_bar.dart';
 import 'package:trashtrails/ui/pages/home.dart';
 import 'package:trashtrails/utils/utils.dart';
@@ -18,15 +19,69 @@ import 'package:trashtrails/utils/utils.dart';
 import '../../../controllers/auth_controller.dart';
 import '../../../utils/constants.dart';
 
-class AuthPage extends StatelessWidget {
+class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
 
   static const String routeName = '/auth';
 
   @override
-  Widget build(BuildContext context) {
-    final AuthController authController = Get.find<AuthController>();
+  State<AuthPage> createState() => _AuthPageState();
+}
 
+class _AuthPageState extends State<AuthPage> {
+  final AuthController authController = Get.find<AuthController>();
+  final StorageService storageService = Get.find<StorageService>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Check if session expired and show message
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkSessionExpired();
+    });
+  }
+
+  void _checkSessionExpired() {
+    if (storageService.isSessionExpired) {
+      // Clear the flag
+      storageService.clearSessionExpired();
+
+      // Show the session expired message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          buildSnackBar(
+            prefixIcon: HugeIcon(
+              icon: warningIcon,
+              color: lightColor,
+              size: 24.0,
+            ),
+            label: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Session Expired',
+                  style: AppTextStyles.body.copyWith(
+                    color: lightColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  'Your session has expired. Please sign in again.',
+                  style: AppTextStyles.small.copyWith(color: lightColor),
+                ),
+              ],
+            ),
+            backgroundColor: warningColor,
+            foregroundColor: lightColor,
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
@@ -355,7 +410,7 @@ class _GoogleAuthButton extends StatelessWidget {
                       height: 24.0,
                       width: 24.0,
                       child: LoadingAnimationWidget.staggeredDotsWave(
-                        color: seedColor,
+                        color: seedPalette.shade300,
                         size: 32.0,
                       ),
                     )

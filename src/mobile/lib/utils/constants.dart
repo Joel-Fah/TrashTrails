@@ -20,9 +20,7 @@ const Color bronze = Color(0xFFCD7F32);
 Color infoColor = themeController.isDark
     ? Colors.lightBlueAccent
     : Color(0xFF4285F4);
-Color successColor = themeController.isDark
-    ? Colors.green
-    : Color(0xFF0F9D58);
+Color successColor = themeController.isDark ? Colors.green : Color(0xFF0F9D58);
 Color errorColor = themeController.isDark
     ? Colors.redAccent
     : Color(0xFFDB4437);
@@ -106,8 +104,9 @@ const String trash4 = 'assets/images/trash/trash4.png';
 const String map = 'assets/images/map.png';
 const String report = 'assets/images/report.png';
 const String authBg = 'assets/images/auth_bg.png';
-
-
+const String recycle = 'assets/images/recycle.png';
+const String recyclePaper = 'assets/images/recycle_paper.png';
+const String recycleImg = 'assets/images/recycle_img.png';
 
 /* ----------- Widgets ----------- */
 // BorderRadii
@@ -124,6 +123,7 @@ class AppTextStyles {
   static const TextStyle title = TextStyle(
     fontFamily: textFont,
     fontSize: 34.0,
+    color: seedColor,
     height: 40.0 / 34.0,
     fontWeight: FontWeight.w900,
     fontVariations: [FontVariation('wght', 900)],
@@ -133,6 +133,7 @@ class AppTextStyles {
     fontFamily: textFont,
     fontSize: 28.0,
     height: 36.0 / 28.0,
+    color: seedColor,
     fontWeight: FontWeight.bold,
     fontVariations: [FontVariation('wght', 700)],
   );
@@ -141,6 +142,7 @@ class AppTextStyles {
     fontFamily: textFont,
     fontSize: 24.0,
     height: 32.0 / 24.0,
+    color: seedColor,
     fontWeight: FontWeight.w600,
     fontVariations: [FontVariation('wght', 600)],
   );
@@ -149,6 +151,7 @@ class AppTextStyles {
     fontFamily: textFont,
     fontSize: 20.0,
     height: 28.0 / 20.0,
+    color: seedColor,
     fontWeight: FontWeight.w500,
     fontVariations: [FontVariation('wght', 500)],
   );
@@ -157,6 +160,7 @@ class AppTextStyles {
     fontFamily: textFont,
     fontSize: 18.0,
     height: 24.0 / 18.0,
+    color: seedColor,
     fontWeight: FontWeight.w500,
     fontVariations: [FontVariation('wght', 500)],
   );

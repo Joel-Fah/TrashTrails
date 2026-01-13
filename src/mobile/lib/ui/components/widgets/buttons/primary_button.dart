@@ -105,6 +105,7 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = ButtonStyle(
+      elevation: WidgetStatePropertyAll<double>(0.0),
       iconAlignment: iconAlignment,
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {

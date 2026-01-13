@@ -5,6 +5,8 @@ import 'package:trashtrails/controllers/onboarding_controller.dart';
 import 'package:trashtrails/services/auth_service.dart';
 import 'package:trashtrails/ui/pages/auth/auth.dart';
 import 'package:trashtrails/ui/pages/home.dart';
+import 'package:trashtrails/ui/pages/reports/new_report.dart';
+import 'package:trashtrails/ui/pages/reports/report_points.dart';
 import 'package:trashtrails/ui/pages/onboarding/onboarding.dart';
 import 'package:trashtrails/utils/utils.dart';
 
@@ -72,6 +74,18 @@ final router = GoRouter(
       name: removeLeadingSlash(HomePage.routeName),
       path: HomePage.routeName,
       builder: (context, state) => const HomePage(),
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      name: removeLeadingSlash(NewReportPage.routeName),
+      path: NewReportPage.routeName,
+      builder: (context, state) => const NewReportPage(),
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      name: removeLeadingSlash(ReportPointsPage.routeName),
+      path: ReportPointsPage.routeName,
+      builder: (context, state) => const ReportPointsPage(),
     ),
   ],
 );

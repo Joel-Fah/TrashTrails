@@ -12,24 +12,6 @@ class Report(models.Model):
         REJECTED = "REJECTED", "Rejected"
         CLEANED = "CLEANED", "Cleaned"
 
-    # class ReportSeverity(models.IntegerChoices):
-    #     LOW = 1, "Low"
-    #     MEDIUM = 2, "Medium"
-    #     HIGH = 3, "High"
-    #     CRITICAL = 4, "Critical"
-    #
-    # class TrashCategory(models.TextChoices):
-    #     HOUSEHOLD = "household", "Household Waste"
-    #     CONSTRUCTION = "construction", "Construction Debris"
-    #     ELECTRONIC = "electronic", "E-Waste"
-    #     HAZARDOUS = "hazardous", "Hazardous Materials"
-    #     ORGANIC = "organic", "Organic Waste"
-    #     PLASTIC = "plastic", "Plastic"
-    #     METAL = "metal", "Metal"
-    #     GLASS = "glass", "Glass"
-    #     MIXED = "mixed", "Mixed Waste"
-    #     OTHER = "other", "Other"
-
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE

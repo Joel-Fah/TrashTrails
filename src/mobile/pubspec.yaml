@@ -59,6 +59,7 @@ dependencies:
   mapbox_maps_flutter: ^2.17.0
   flutter_card_swiper: ^7.2.0
   google_sign_in: ^6.2.2
+  gallery_saver_plus: ^3.2.9
 
 dev_dependencies:
   flutter_test:

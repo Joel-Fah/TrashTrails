@@ -4,56 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a14538a3-038d-410f-aae0-4e8c31caf270" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/leaderboard_service/serializers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/report_service/management/commands/add_image_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/report_service/management/commands/create_report_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/report_service/management/commands/test_award.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/report_service/signals.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tmp_run.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tmp_test_award.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/recycle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/recycle_img.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/recycle_paper.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/controllers/new_report_controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/controllers/points_controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/models/report_points.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/services/points_service.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/reports/new_report.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/reports/report_points.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leaderboard_service/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/leaderboard_service/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leaderboard_service/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/leaderboard_service/apps.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leaderboard_service/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/leaderboard_service/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/leaderboard_service/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leaderboard_service/services.py" beforeDir="false" afterPath="$PROJECT_DIR$/leaderboard_service/services.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leaderboard_service/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/leaderboard_service/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leaderboard_service/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/leaderboard_service/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/report_service/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/report_service/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/report_service/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/report_service/apps.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/report_service/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/report_service/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/report_service/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/report_service/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/report_service/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/report_service/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/assets/images/camera.png" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/assets/images/camera.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/assets/images/map.png" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/assets/images/map.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/assets/images/rank.png" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/assets/images/rank.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/controllers/controllers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/controllers/controllers.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/controllers/report_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/controllers/report_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/models/models.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/models/models.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/models/report_severity.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/models/report_severity.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/services/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/services/api_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/services/report_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/services/report_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/services/services.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/services/services.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/services/storage_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/services/storage_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/ui/components/report_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/report_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/ui/components/widgets/buttons/primary_button.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/widgets/buttons/primary_button.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/ui/pages/auth/auth.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/auth/auth.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/ui/pages/home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/home.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/utils/constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/utils/constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/utils/routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/utils/routes.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/utils/theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/utils/theme.dart" afterDir="false" />
-    </list>
+    <list default="true" id="a14538a3-038d-410f-aae0-4e8c31caf270" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -85,35 +36,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;Django Server.backend.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.pycharm.django.structure.promotion.once.per.project&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;ai.playground.ignore.import.keys.banner.in.settings&quot;: &quot;true&quot;,
-    &quot;django.template.preview.state&quot;: &quot;SHOW_EDITOR&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;joelfah&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;24.11.1&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;24.10.7&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ROG STRIX/Documents/GitHub/TrashTrails/src/backend/static/common/images&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Django Server.backend.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.pycharm.django.structure.promotion.once.per.project": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ai.playground.ignore.import.keys.banner.in.settings": "true",
+    "django.template.preview.state": "SHOW_EDITOR",
+    "git-widget-placeholder": "Merging joelfah",
+    "ignore.virus.scanning.warn.message": "true",
+    "javascript.nodejs.core.library.configured.version": "24.11.1",
+    "javascript.nodejs.core.library.typings.version": "24.10.7",
+    "last_opened_file_path": "C:/Users/ROG STRIX/Documents/GitHub/TrashTrails/src/backend/static/common/images",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "node",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "settings.nodejs",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images" />

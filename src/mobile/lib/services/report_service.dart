@@ -1,5 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide MultipartFile, FormData;
+import 'dart:io';
+import 'dart:convert';
+import 'package:dio/dio.dart';
+import 'package:gallery_saver_plus/gallery_saver.dart';
 
 import '../models/models.dart';
 import 'api_service.dart';
@@ -23,14 +27,23 @@ class ReportService extends GetxService {
     try {
       final result = await _apiService.get<List<TrashCategoryModel>>(
         _categoriesEndpoint,
-        parser: (data) => TrashCategoryModel.listFromJson(data),
+        parser: (data) {
+          // Handle paginated response: {count, next, previous, results}
+          if (data is Map<String, dynamic> && data.containsKey('results')) {
+            return TrashCategoryModel.listFromJson(data['results']);
+          }
+          // Handle direct list response
+          return TrashCategoryModel.listFromJson(data);
+        },
       );
 
       if (result.isSuccess && result.data != null) {
         debugPrint('ReportService: Fetched ${result.data!.length} categories');
         return result.data;
       } else {
-        debugPrint('ReportService: Failed to fetch categories - ${result.error}');
+        debugPrint(
+          'ReportService: Failed to fetch categories - ${result.error}',
+        );
         return null;
       }
     } catch (e) {
@@ -47,14 +60,23 @@ class ReportService extends GetxService {
     try {
       final result = await _apiService.get<List<ReportSeverityModel>>(
         _severitiesEndpoint,
-        parser: (data) => ReportSeverityModel.listFromJson(data),
+        parser: (data) {
+          // Handle paginated response: {count, next, previous, results}
+          if (data is Map<String, dynamic> && data.containsKey('results')) {
+            return ReportSeverityModel.listFromJson(data['results']);
+          }
+          // Handle direct list response
+          return ReportSeverityModel.listFromJson(data);
+        },
       );
 
       if (result.isSuccess && result.data != null) {
         debugPrint('ReportService: Fetched ${result.data!.length} severities');
         return result.data;
       } else {
-        debugPrint('ReportService: Failed to fetch severities - ${result.error}');
+        debugPrint(
+          'ReportService: Failed to fetch severities - ${result.error}',
+        );
         return null;
       }
     } catch (e) {
@@ -91,7 +113,9 @@ class ReportService extends GetxService {
       );
 
       if (result.isSuccess && result.data != null) {
-        debugPrint('ReportService: Fetched ${result.data!.results.length} reports (page $page, total: ${result.data!.count})');
+        debugPrint(
+          'ReportService: Fetched ${result.data!.results.length} reports (page $page, total: ${result.data!.count})',
+        );
         return result.data;
       } else {
         debugPrint('ReportService: Failed to fetch reports - ${result.error}');
@@ -129,10 +153,14 @@ class ReportService extends GetxService {
       );
 
       if (result.isSuccess && result.data != null) {
-        debugPrint('ReportService: Fetched ${result.data!.results.length} user reports (page $page, total: ${result.data!.count})');
+        debugPrint(
+          'ReportService: Fetched ${result.data!.results.length} user reports (page $page, total: ${result.data!.count})',
+        );
         return result.data;
       } else {
-        debugPrint('ReportService: Failed to fetch user reports - ${result.error}');
+        debugPrint(
+          'ReportService: Failed to fetch user reports - ${result.error}',
+        );
         return null;
       }
     } catch (e) {
@@ -164,7 +192,9 @@ class ReportService extends GetxService {
         debugPrint('ReportService: Fetched report $reportId');
         return result.data;
       } else {
-        debugPrint('ReportService: Failed to fetch report $reportId - ${result.error}');
+        debugPrint(
+          'ReportService: Failed to fetch report $reportId - ${result.error}',
+        );
         return null;
       }
     } catch (e) {
@@ -173,27 +203,73 @@ class ReportService extends GetxService {
     }
   }
 
-  /// Create a new report
+  /// Create a new report with file uploads
   /// POST /api/reports/
   Future<ReportModel?> createReport({
     required String title,
     String? observation,
     required String severityId,
     required String categoryId,
-    String? locationId,
+    LocationModel? location,
+    required List<String> imagePaths,
   }) async {
+    if (imagePaths.isEmpty) {
+      debugPrint('ReportService: At least one image is required');
+      return null;
+    }
+
     try {
-      final data = <String, dynamic>{
-        'title': title,
-        if (observation != null && observation.isNotEmpty) 'observation': observation,
-        'severity': severityId,
-        'category': categoryId,
-        if (locationId != null && locationId.isNotEmpty) 'location': locationId,
-      };
+      final formData = FormData();
+
+      // Add text fields
+      formData.fields.add(MapEntry('title', title));
+      formData.fields.add(MapEntry('severity', severityId));
+      formData.fields.add(MapEntry('category', categoryId));
+
+      if (observation != null && observation.isNotEmpty) {
+        formData.fields.add(MapEntry('observation', observation));
+      }
+
+      // Add location as JSON string if provided
+      if (location != null && location.isValid) {
+        formData.fields.add(
+          MapEntry(
+            'location',
+            jsonEncode({
+              'latitude': location.latitude,
+              'longitude': location.longitude,
+              'street_name': location.address ?? location.city ?? '',
+            }),
+          ),
+        );
+      }
+
+      // Add image files
+      for (final path in imagePaths) {
+        final file = File(path);
+        if (file.existsSync()) {
+          formData.files.add(
+            MapEntry(
+              'images',
+              await MultipartFile.fromFile(
+                file.path,
+                filename: file.path.split('/').last,
+              ),
+            ),
+          );
+        } else {
+          debugPrint('ReportService: Image file not found at $path');
+        }
+      }
+
+      if (formData.files.isEmpty) {
+        debugPrint('ReportService: No valid image files found');
+        return null;
+      }
 
       final result = await _apiService.post<ReportModel>(
         _reportsEndpoint,
-        data: data,
+        data: formData,
         parser: (responseData) {
           if (responseData is Map<String, dynamic>) {
             return ReportModel.fromJson(responseData);
@@ -202,8 +278,10 @@ class ReportService extends GetxService {
         },
       );
 
+      // Save images to gallery after successful upload
       if (result.isSuccess && result.data != null) {
         debugPrint('ReportService: Created report ${result.data!.id}');
+        await _saveImagesToGallery(imagePaths);
         return result.data;
       } else {
         debugPrint('ReportService: Failed to create report - ${result.error}');
@@ -211,6 +289,99 @@ class ReportService extends GetxService {
       }
     } catch (e) {
       debugPrint('ReportService: Error creating report - $e');
+      return null;
+    }
+  }
+
+  /// Create a new report and return both report and points data
+  /// POST /api/reports/
+  /// Returns ReportCreationResult containing both report and points
+  Future<ReportCreationResult?> createReportWithPoints({
+    required String title,
+    String? observation,
+    required String severityId,
+    required String categoryId,
+    LocationModel? location,
+    required List<String> imagePaths,
+  }) async {
+    if (imagePaths.isEmpty) {
+      debugPrint('ReportService: At least one image is required');
+      return null;
+    }
+
+    try {
+      final formData = FormData();
+
+      // Add text fields
+      formData.fields.add(MapEntry('title', title));
+      formData.fields.add(MapEntry('severity', severityId));
+      formData.fields.add(MapEntry('category', categoryId));
+
+      if (observation != null && observation.isNotEmpty) {
+        formData.fields.add(MapEntry('observation', observation));
+      }
+
+      // Add location as JSON string if provided
+      if (location != null && location.isValid) {
+        formData.fields.add(
+          MapEntry(
+            'location',
+            jsonEncode({
+              'latitude': location.latitude,
+              'longitude': location.longitude,
+              'street_name': location.address ?? location.city ?? '',
+            }),
+          ),
+        );
+      }
+
+      // Add image files
+      for (final path in imagePaths) {
+        final file = File(path);
+        if (file.existsSync()) {
+          formData.files.add(
+            MapEntry(
+              'images',
+              await MultipartFile.fromFile(
+                file.path,
+                filename: file.path.split('/').last,
+              ),
+            ),
+          );
+        } else {
+          debugPrint('ReportService: Image file not found at $path');
+        }
+      }
+
+      if (formData.files.isEmpty) {
+        debugPrint('ReportService: No valid image files found');
+        return null;
+      }
+
+      final result = await _apiService.post<ReportCreationResult>(
+        _reportsEndpoint,
+        data: formData,
+        parser: (responseData) {
+          if (responseData is Map<String, dynamic>) {
+            return ReportCreationResult.fromJson(responseData);
+          }
+          throw Exception('Invalid response format');
+        },
+      );
+
+      // Save images to gallery after successful upload
+      if (result.isSuccess && result.data != null) {
+        debugPrint(
+          'ReportService: Created report ${result.data!.report.id} with points: ${result.data!.hasPoints}',
+        );
+        await _saveImagesToGallery(imagePaths);
+        return result.data;
+      } else {
+        debugPrint('ReportService: Failed to create report - ${result.error}');
+        return null;
+      }
+    } catch (e) {
+      debugPrint('ReportService: Error creating report with points - $e');
       return null;
     }
   }
@@ -257,7 +428,9 @@ class ReportService extends GetxService {
         debugPrint('ReportService: Updated report $reportId');
         return result.data;
       } else {
-        debugPrint('ReportService: Failed to update report $reportId - ${result.error}');
+        debugPrint(
+          'ReportService: Failed to update report $reportId - ${result.error}',
+        );
         return null;
       }
     } catch (e) {
@@ -283,7 +456,9 @@ class ReportService extends GetxService {
         debugPrint('ReportService: Deleted report $reportId');
         return true;
       } else {
-        debugPrint('ReportService: Failed to delete report $reportId - ${result.error}');
+        debugPrint(
+          'ReportService: Failed to delete report $reportId - ${result.error}',
+        );
         return false;
       }
     } catch (e) {
@@ -293,6 +468,22 @@ class ReportService extends GetxService {
   }
 
   // ─── Helper Methods ──────────────────────────────────────────────────────
+
+  /// Save images to device gallery
+  Future<void> _saveImagesToGallery(List<String> imagePaths) async {
+    try {
+      for (final path in imagePaths) {
+        final file = File(path);
+        if (file.existsSync()) {
+          await GallerySaver.saveImage(path, albumName: 'Trash Trails');
+          debugPrint('ReportService: Saved image to gallery: $path');
+        }
+      }
+    } catch (e) {
+      debugPrint('ReportService: Error saving images to gallery - $e');
+      // Don't throw - saving to gallery is optional
+    }
+  }
 
   /// Get a user-friendly error message
   String getErrorMessage(String? error) {
@@ -327,4 +518,3 @@ class ReportService extends GetxService {
     return error;
   }
 }
-

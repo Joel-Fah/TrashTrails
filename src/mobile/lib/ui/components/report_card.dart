@@ -345,42 +345,63 @@ class NoReportsNearby extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-          margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: lightColor,
-            borderRadius: borderRadius * 2.5,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 16,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.eco, size: 64, color: seedPalette.shade300),
-              const Gap(16),
-              Text(
-                'No trash reports nearby!',
-                style: AppTextStyles.h3.copyWith(color: seedColor),
-                textAlign: TextAlign.center,
-              ),
-              const Gap(8),
-              Text(
-                'Your area looks clean. Be the first to report if you spot any trash dumps.',
-                style: AppTextStyles.body.copyWith(color: greyColor),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        )
-        .animate()
-        .fadeIn(duration: 500.ms)
-        .scale(begin: const Offset(0.9, 0.9), duration: 500.ms);
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Container(
+            padding: const EdgeInsets.all(24.0),
+            decoration: BoxDecoration(
+              color: lightColor,
+              borderRadius: borderRadius * 3.5,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 16,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                HugeIcon(icon: HugeIcons.strokeRoundedEcoPower, size: 64, color: seedPalette.shade300),
+                const Gap(16),
+                Text(
+                  'No trash reports nearby!',
+                  style: AppTextStyles.h3.copyWith(color: seedColor),
+                  textAlign: TextAlign.center,
+                ),
+                const Gap(8),
+                Text(
+                  'Your area looks clean. Be the first to report if you spot any trash dumps.',
+                  style: AppTextStyles.body.copyWith(color: greyColor),
+                  textAlign: TextAlign.center,
+                ),
+                const Gap(16.0),
+                // refresh text button
+                TextButton(
+                  onPressed: () {
+                    // TODO: Implement refresh functionality
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: seedColor,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    shape: RoundedRectangleBorder(borderRadius: borderRadius * 2.5),
+                  ),
+                  child: Text(
+                    'Refresh',
+                    style: AppTextStyles.body.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: seedColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+          .animate()
+          .fadeIn(duration: 500.ms)
+          .scale(begin: const Offset(0.9, 0.9), duration: 500.ms),
+    );
   }
 }
 

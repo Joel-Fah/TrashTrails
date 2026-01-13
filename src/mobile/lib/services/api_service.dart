@@ -4,6 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
+import 'package:go_router/go_router.dart';
+import 'package:trashtrails/ui/pages/auth/auth.dart';
+import 'package:trashtrails/utils/utils.dart';
 
 import 'storage_service.dart';
 
@@ -92,9 +95,17 @@ class ApiService extends GetxService {
     Map<String, dynamic>? queryParameters,
     T Function(dynamic)? parser,
     bool requiresAuth = true,
+    bool isMultipart = false,
   }) async {
     return _request<T>(
-      () => _dio.post(path, data: data, queryParameters: queryParameters),
+      () => _dio.post(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: isMultipart
+            ? Options(contentType: 'multipart/form-data')
+            : null,
+      ),
       parser: parser,
       requiresAuth: requiresAuth,
     );
@@ -327,11 +338,36 @@ class ApiService extends GetxService {
   void clearAuth() {
     _storageService.clearAuth();
   }
+
+  /// Handle authentication failure - clear tokens and redirect to login
+  void _handleAuthFailure() {
+    // Set session expired flag before clearing auth
+    _storageService.setSessionExpired(true);
+    clearAuth();
+
+    debugPrint('ApiService: Authentication failed, redirecting to login');
+
+    // Navigate to auth page using go_router
+    // We need to use a small delay to ensure the storage is cleared first
+    Future.delayed(const Duration(milliseconds: 100), () {
+      try {
+        // Get the router context and navigate to auth
+        final context = Get.context;
+        if (context != null && context.mounted) {
+          GoRouter.of(context).goNamed(removeLeadingSlash(AuthPage.routeName));
+        }
+      } catch (e) {
+        debugPrint('ApiService: Could not navigate to auth page - $e');
+      }
+    });
+  }
 }
 
-/// Interceptor to add auth token to requests
-class _AuthInterceptor extends Interceptor {
+/// Interceptor to add auth token to requests and handle token refresh
+/// Uses QueuedInterceptor to properly handle concurrent requests during token refresh
+class _AuthInterceptor extends QueuedInterceptor {
   final ApiService apiService;
+  bool _isRefreshing = false;
 
   _AuthInterceptor(this.apiService);
 
@@ -346,27 +382,53 @@ class _AuthInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    // Handle 401 Unauthorized - try to refresh token
-    if (err.response?.statusCode == 401) {
-      final success = await apiService.refreshAccessToken();
-      if (success) {
-        // Retry the request with new token
-        try {
-          final options = err.requestOptions;
-          options.headers['Authorization'] = 'Bearer ${apiService.accessToken}';
-
-          final response = await Dio().fetch(options);
-          return handler.resolve(response);
-        } catch (e) {
-          // If retry fails, clear auth and return original error
-          apiService.clearAuth();
-        }
-      } else {
-        // Refresh failed, clear auth
-        apiService.clearAuth();
-      }
+    // Only handle 401 Unauthorized errors
+    if (err.response?.statusCode != 401) {
+      return handler.next(err);
     }
-    handler.next(err);
+
+    // Skip if we're already refreshing or if this is the refresh endpoint itself
+    final requestPath = err.requestOptions.path;
+    if (_isRefreshing ||
+        requestPath.contains('/auth/refresh') ||
+        requestPath.contains('/auth/google')) {
+      return handler.next(err);
+    }
+
+    _isRefreshing = true;
+
+    try {
+      final success = await apiService.refreshAccessToken();
+
+      if (success) {
+        debugPrint(
+          'ApiService: Token refreshed successfully, retrying request',
+        );
+
+        // Retry the original request with new token
+        final options = err.requestOptions;
+        options.headers['Authorization'] = 'Bearer ${apiService.accessToken}';
+
+        // Use apiService's internal dio to retry (maintains base URL and other config)
+        final response = await apiService._dio.fetch(options);
+        _isRefreshing = false;
+        return handler.resolve(response);
+      } else {
+        debugPrint('ApiService: Token refresh failed, redirecting to login');
+        _isRefreshing = false;
+
+        // Clear auth and notify app to redirect to login
+        apiService._handleAuthFailure();
+        return handler.next(err);
+      }
+    } catch (e) {
+      debugPrint('ApiService: Error during token refresh - $e');
+      _isRefreshing = false;
+
+      // Clear auth and notify app to redirect to login
+      apiService._handleAuthFailure();
+      return handler.next(err);
+    }
   }
 }
 
@@ -376,9 +438,36 @@ class _LoggingInterceptor extends Interceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     debugPrint('┌──────────────────────────────────────────────────────────');
     debugPrint('│ 🌐 ${options.method} ${options.uri}');
+
     if (options.data != null) {
-      debugPrint('│ 📦 Body: ${options.data}');
+      if (options.data is FormData) {
+        final formData = options.data as FormData;
+        debugPrint('│ 📦 Body (FormData):');
+
+        // Log form fields
+        if (formData.fields.isNotEmpty) {
+          debugPrint('│   Fields:');
+          for (final field in formData.fields) {
+            debugPrint('│     - ${field.key}: ${field.value}');
+          }
+        }
+
+        // Log files
+        if (formData.files.isNotEmpty) {
+          debugPrint('│   Files:');
+          for (final file in formData.files) {
+            final multipartFile = file.value;
+            debugPrint(
+              '│     - ${file.key}: ${multipartFile.filename} (${_formatBytes(multipartFile.length)})',
+            );
+          }
+        }
+      } else {
+        // For regular JSON or other data
+        debugPrint('│ 📦 Body: ${options.data}');
+      }
     }
+
     debugPrint('└──────────────────────────────────────────────────────────');
     handler.next(options);
   }
@@ -404,5 +493,18 @@ class _LoggingInterceptor extends Interceptor {
     }
     debugPrint('└──────────────────────────────────────────────────────────');
     handler.next(err);
+  }
+
+  /// Format bytes to human readable format
+  String _formatBytes(int? bytes) {
+    if (bytes == null || bytes == 0) return '0 B';
+    const suffixes = ['B', 'KB', 'MB', 'GB'];
+    var i = 0;
+    var size = bytes.toDouble();
+    while (size >= 1024 && i < suffixes.length - 1) {
+      size /= 1024;
+      i++;
+    }
+    return '${size.toStringAsFixed(2)} ${suffixes[i]}';
   }
 }

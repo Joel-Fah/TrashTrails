@@ -365,6 +365,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  gallery_saver_plus:
+    dependency: "direct main"
+    description:
+      name: gallery_saver_plus
+      sha256: fd4a50eb7b90b1dd8d926ab34dc62abd428feb72f780d4aaf17dcaae12f6743f
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.9"
   gap:
     dependency: "direct main"
     description:

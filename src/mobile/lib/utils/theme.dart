@@ -17,7 +17,7 @@ class AppTheme {
     ),
     textTheme: Typography().black.apply(
       fontFamily: textFont,
-      bodyColor: seedColor,
+      bodyColor: darkColor,
       displayColor: seedColor,
     ),
     bottomSheetTheme: BottomSheetThemeData(

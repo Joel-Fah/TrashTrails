@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 import '../../controllers/home_controller.dart';
@@ -15,6 +16,7 @@ import '../components/report_card.dart';
 import '../components/report_card_shimmer.dart';
 import '../components/report_details_modal.dart';
 import '../components/user_avatar.dart';
+import 'reports/new_report.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -386,7 +388,7 @@ class _BottomSheet extends StatelessWidget {
                       ),
                       NewReportActionWidget(
                             onTap: () {
-                              // TODO: Navigate to new report page
+                              context.push(NewReportPage.routeName);
                             },
                           )
                           .animate(

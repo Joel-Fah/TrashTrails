@@ -2,6 +2,8 @@ export 'auth_controller.dart';
 export 'home_controller.dart';
 export 'locale_controller.dart';
 export 'map_controller.dart';
+export 'new_report_controller.dart';
 export 'onboarding_controller.dart';
+export 'points_controller.dart';
 export 'report_controller.dart';
 export 'theme_controller.dart';

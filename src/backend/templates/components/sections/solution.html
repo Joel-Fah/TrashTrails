@@ -1,0 +1,79 @@
+{% load static %}
+
+<section class="w-[90%] lg:w-[80%] h-screen mx-auto pt-8 md:pt-12 pb-16 md:pb-24">
+
+    <div class="relative flex items-end">
+        {# Content #}
+        <div class="flex flex-col gap-4 max-w-lg ms-auto items-start">
+            <div class="flex justify-center">
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 rounded-2xl">
+                    <span class="text-sm text-primary">
+                        <span class="font-semibold">The Solution </span> (The Trail Map)
+                    </span>
+                </div>
+            </div>
+
+            <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-primary leading-tight">
+                Welcome to TrashTrails: Where Trash Becomes Treasure (Data-Wise)
+            </h2>
+
+            <p class="mb-4">
+                We built a system that doesn't just collect data—it actually makes sense of it—and rewards you for your
+                eagle eyes.
+            </p>
+        </div>
+
+        {# Main Image #}
+        <img
+                src="{% static 'common/images/solution_img.png' %}"
+                alt="Problem Illustration"
+                class="absolute z-0 top-8 right-20 w-full h-auto object-contain select-none pointer-events-none"
+        >
+    </div>
+
+    <div class="flex gap-10 justify-between mt-80">
+        <div class="flex gap-4">
+            <div class="flex items-center justify-center p-4 h-min rounded-3xl bg-primary-100 border border-primary text-primary">
+                {% include 'components/icons/hold_phone.html' %}
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <h3 class="text-md sm:text-lg md:text-xl lg:text-2xl font-semibold text-primary">Report & Score</h3>
+                <p class="text-sm">
+                    Spot a dump site? Snap a photo, drop a pin, and instantly log the incident. Earn points and climb
+                    the local leaderboard for being a Citizen MVP (Most Valuable Picker-upper)
+                </p>
+            </div>
+        </div>
+
+        <div class="flex gap-4">
+            <div class="flex items-center justify-center p-4 h-min rounded-3xl bg-primary-100 border border-primary text-primary">
+                {% include 'components/icons/cells.html' %}
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <h3 class="text-md sm:text-lg md:text-xl lg:text-2xl font-semibold text-primary">Modular &
+                    Maintainable</h3>
+                <p class="text-sm">
+                    Our system is designed with a layered architecture, meaning it won't collapse under a digital pile
+                    of garbage. It's scalable, ready for smarter AI, and built to handle the future of waste analytics.
+                    Basically, we're serious about the software, so you can be playful with the trash
+                </p>
+            </div>
+        </div>
+
+        <div class="flex gap-4">
+            <div class="flex items-center justify-center p-4 h-min rounded-3xl bg-primary-100 border border-primary text-primary">
+                {% include 'components/icons/city.html' %}
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <h3 class="text-md sm:text-lg md:text-xl lg:text-2xl font-semibold text-primary">Clearer City Skies</h3>
+                <p class="text-sm">
+                    Every report fuels a robust data engine, giving authorities a clear, map-based view of where to
+                    deploy resources, track trends, and finally manage the waste problem efficiently
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

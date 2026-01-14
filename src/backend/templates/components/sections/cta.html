@@ -1,0 +1,24 @@
+{% load static %}
+
+<section class="w-[90%] lg:w-[80%] mx-auto pt-8 md:pt-12 pb-16 md:pb-24">
+    <div class="flex flex-col gap-4 items-center justify-center text-center">
+        <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-primary leading-tight">
+            Ready to Clear the Path?
+        </h2>
+
+        <p class="text-lg text-primary max-w-xl">
+            The era of messy data and ignored complaints is over. Let's make our cities cleaner, one satisfying report
+            at a time.
+        </p>
+
+        <div class="rotate-3 mt-4">
+            {% include 'components/button_solid.html' with href='#' text='Start your trail' class='w-64 border-8 rounded-[32px] border-white' %}
+        </div>
+
+        <img
+                src="{% static 'common/images/cta_img.png' %}"
+                alt="Call to Action Illustration"
+                class="w-1/4 h-auto object-contain select-none pointer-events-none mt-8"
+        >
+    </div>
+</section>

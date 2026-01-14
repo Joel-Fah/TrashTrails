@@ -14,4 +14,21 @@
 {% block content %}
 	{# Hero Section #}
 	{% include 'components/sections/hero.html' %}
+
+    {# Problem Statement Section #}
+    {% include 'components/sections/problem.html' %}
+
+    {# Ice Breaker Section #}
+    {% include 'components/sections/breaker.html' %}
+
+    {# Solution Section #}
+    {% include 'components/sections/solution.html' %}
+
+    {# Call to Action Section #}
+    {% include 'components/sections/cta.html' %}
+{% endblock %}
+
+{# Footer #}
+{% block footer %}
+	{% include 'components/sections/footer.html' %}
 {% endblock %}

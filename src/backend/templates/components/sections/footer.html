@@ -1,0 +1,21 @@
+{# Footer component: border-top, left = logo + small copyright, right = Policy/Terms links #}
+{% load static %}
+<footer class="w-[90%] mx-auto border-t px-6 py-6 border-primary bg-transparent">
+    <div class="mx-auto px-4 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+            {# logo: replace with image or text as needed #}
+            <a href="#" class="flex items-center gap-3 group">
+                <img
+                        src="{% static 'common/images/logo_text/cyan.svg' %}"
+                        alt="TrashTrails Logo"
+                        class="w-32 object-contain transition-transform duration-300 group-hover:scale-105"/>
+            </a>
+            <small class="text-xs text-slate-500">©2025 - TrashTrails - All rights reserved</small>
+        </div>
+
+        <div class="flex items-center gap-10">
+            <a href="#" class="text-sm font-medium text-primary hover:text-primary-500 duration-300">Policy</a>
+            <a href="#" class="text-sm font-medium text-primary hover:text-primary-500 duration-300">Terms</a>
+        </div>
+    </div>
+</footer>

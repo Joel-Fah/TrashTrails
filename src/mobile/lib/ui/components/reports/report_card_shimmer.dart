@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../utils/constants.dart';
+import '../../../utils/constants.dart';
 
 /// Shimmer loading placeholder for report cards
 /// Matches the size and layout of ReportCard for seamless loading UX

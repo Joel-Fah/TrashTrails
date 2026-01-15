@@ -12,7 +12,7 @@ class AppTheme {
     pageTransitionsTheme: PageTransitionsTheme(
       builders: Map<TargetPlatform, PageTransitionsBuilder>.fromIterable(
         TargetPlatform.values,
-        value: (_) => const CupertinoPageTransitionsBuilder(),
+        value: (_) => const FadeForwardsPageTransitionsBuilder(backgroundColor: lightColor),
       ),
     ),
     textTheme: Typography().black.apply(
@@ -148,33 +148,6 @@ class AppTheme {
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
     ),
-    actionIconTheme: ActionIconThemeData(
-      backButtonIconBuilder: (context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Container(
-            width: 32.0,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: borderRadius * 8.0,
-              gradient: LinearGradient(
-                colors: [
-                  seedColor.withValues(alpha: 0.4),
-                  seedColor.withValues(alpha: 0.1),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: HugeIcon(
-              icon: HugeIcons.strokeRoundedArrowLeft01,
-              size: 20.0,
-              color: seedColor,
-            ),
-          ),
-        );
-      },
-    ),
     tooltipTheme: TooltipThemeData(
       decoration: BoxDecoration(
         color: greyColor,
@@ -190,12 +163,11 @@ class AppTheme {
       backgroundColor: lightColor,
       systemOverlayStyle: SystemUiOverlayStyle.dark,
       foregroundColor: seedColor,
-      titleTextStyle: AppTextStyles.title.copyWith(
+      titleTextStyle: AppTextStyles.h1.copyWith(
         color: seedColor,
         fontWeight: FontWeight.w600,
-        fontSize: 48.0,
+        fontVariations: [FontVariation('wght', 600)]
       ),
-      toolbarHeight: 80.0,
       actionsPadding: EdgeInsets.only(right: 16.0),
     ),
     iconTheme: IconThemeData(color: seedColor),
@@ -536,33 +508,6 @@ class AppTheme {
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
     ),
-    actionIconTheme: ActionIconThemeData(
-      backButtonIconBuilder: (context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Container(
-            width: 32.0,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: borderRadius * 8.0,
-              gradient: LinearGradient(
-                colors: [
-                  lightColor.withValues(alpha: 0.4),
-                  lightColor.withValues(alpha: 0.1),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: HugeIcon(
-              icon: HugeIcons.strokeRoundedArrowLeft01,
-              size: 20.0,
-              color: lightColor,
-            ),
-          ),
-        );
-      },
-    ),
     tooltipTheme: TooltipThemeData(
       decoration: BoxDecoration(
         color: Colors.grey.shade700,
@@ -578,12 +523,11 @@ class AppTheme {
       backgroundColor: seedColor,
       systemOverlayStyle: SystemUiOverlayStyle.light,
       foregroundColor: lightColor,
-      titleTextStyle: AppTextStyles.title.copyWith(
+      titleTextStyle: AppTextStyles.h1.copyWith(
         color: lightColor,
         fontWeight: FontWeight.w600,
-        fontSize: 48.0,
+        fontVariations: [FontVariation('wght', 600)]
       ),
-      toolbarHeight: 80.0,
       actionsPadding: EdgeInsets.only(right: 16.0),
     ),
     iconTheme: IconThemeData(color: lightColor),

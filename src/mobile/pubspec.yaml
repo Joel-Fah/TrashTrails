@@ -60,6 +60,8 @@ dependencies:
   flutter_card_swiper: ^7.2.0
   google_sign_in: ^6.2.2
   gallery_saver_plus: ^3.2.9
+  flutter_html: ^3.0.0
+  html: ^0.15.6
 
 dev_dependencies:
   flutter_test:

@@ -235,6 +235,7 @@ class ReportModel {
       id: parseStringOrDefault(json['id'], ''),
       title: parseStringOrDefault(json['title'], ''),
       status: ReportStatus.fromString(parseString(json['status'])),
+      observation: parseString(json['observation']),
       severity: severity,
       category: category,
       location: location,
@@ -456,7 +457,11 @@ class ReportModel {
         'status: ${status.displayName}, '
         'severity: ${severity.name}, '
         'category: ${category.name}, '
-        'images: ${images.length})';
+        'images: ${images.length}, '
+        'observation: $observation, '
+        'createdAt: $createdAt, '
+        'updatedAt: $updatedAt)';
+
   }
 }
 

@@ -59,10 +59,10 @@ class PointsController extends GetxController {
   }
 
   /// Set points directly from a ReportPointsModel
-  void setPoints(ReportPointsModel points) {
+  void setPoints(ReportPointsModel points, int rank) {
     currentReportPoints.value = points;
     totalUserPoints.value = points.totalUserPoints;
-    userRank.value = points.userRank;
+    userRank.value = rank;
     debugPrint('PointsController: Points set directly - ${points.pointsAwarded} awarded');
   }
 

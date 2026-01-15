@@ -5,8 +5,9 @@ import 'package:gap/gap.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../../models/models.dart';
-import '../../utils/constants.dart';
+import '../../../models/models.dart';
+import '../../../utils/constants.dart';
+import '../metadata_chip.dart';
 
 /// Card widget displaying a report summary in the swiper
 /// Adapts to different sizes based on the draggable sheet snap position
@@ -166,27 +167,27 @@ class ReportCard extends StatelessWidget {
             children: [
               // Distance away
               if (distanceAway != null && distanceAway!.isNotEmpty)
-                _MetadataChip(
+                MetadataChip(
                   icon: HugeIcons.strokeRoundedLocation06,
                   label: distanceAway!,
                 ),
 
               // Category
-              _MetadataChip(
+              MetadataChip(
                 icon: HugeIcons.strokeRoundedDelete02,
                 label: report.categoryDisplayName,
               ),
 
               // Author
               if (report.hasAuthor)
-                _MetadataChip(
+                MetadataChip(
                   icon: HugeIcons.strokeRoundedUser,
                   label: report.authorDisplayName ?? 'Unknown',
                   avatarUrl: report.authorAvatarUrl,
                 ),
 
               // Time ago
-              _MetadataChip(
+              MetadataChip(
                 icon: HugeIcons.strokeRoundedClock01,
                 label: timeago.format(report.createdAt, locale: 'en_short'),
               ),
@@ -288,57 +289,6 @@ class _StatusBadge extends StatelessWidget {
   }
 }
 
-/// Small metadata chip for info display
-class _MetadataChip extends StatelessWidget {
-  const _MetadataChip({
-    required this.icon,
-    required this.label,
-    this.avatarUrl,
-  });
-
-  final List<List<dynamic>> icon;
-  final String label;
-  final String? avatarUrl;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: seedPalette.shade50,
-        borderRadius: borderRadius,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Avatar or icon
-          if (avatarUrl != null && avatarUrl!.isNotEmpty)
-            ClipOval(
-              child: CachedNetworkImage(
-                imageUrl: avatarUrl!,
-                width: 14,
-                height: 14,
-                fit: BoxFit.cover,
-                errorWidget: (_, __, ___) =>
-                    HugeIcon(icon: icon, color: seedColor, size: 14),
-              ),
-            )
-          else
-            HugeIcon(icon: icon, color: seedColor, size: 14),
-          const Gap(4),
-          Text(
-            label,
-            style: AppTextStyles.small.copyWith(
-              color: seedColor,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 /// Empty state when no reports are nearby
 class NoReportsNearby extends StatelessWidget {
   const NoReportsNearby({super.key});
@@ -347,60 +297,67 @@ class NoReportsNearby extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Container(
-            padding: const EdgeInsets.all(24.0),
-            decoration: BoxDecoration(
-              color: lightColor,
-              borderRadius: borderRadius * 3.5,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                HugeIcon(icon: HugeIcons.strokeRoundedEcoPower, size: 64, color: seedPalette.shade300),
-                const Gap(16),
-                Text(
-                  'No trash reports nearby!',
-                  style: AppTextStyles.h3.copyWith(color: seedColor),
-                  textAlign: TextAlign.center,
-                ),
-                const Gap(8),
-                Text(
-                  'Your area looks clean. Be the first to report if you spot any trash dumps.',
-                  style: AppTextStyles.body.copyWith(color: greyColor),
-                  textAlign: TextAlign.center,
-                ),
-                const Gap(16.0),
-                // refresh text button
-                TextButton(
-                  onPressed: () {
-                    // TODO: Implement refresh functionality
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor: seedColor,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    shape: RoundedRectangleBorder(borderRadius: borderRadius * 2.5),
-                  ),
-                  child: Text(
-                    'Refresh',
-                    style: AppTextStyles.body.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: seedColor,
+      child:
+          Container(
+                padding: const EdgeInsets.all(24.0),
+                decoration: BoxDecoration(
+                  color: lightColor,
+                  borderRadius: borderRadius * 3.5,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 16,
+                      offset: const Offset(0, 4),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          )
-          .animate()
-          .fadeIn(duration: 500.ms)
-          .scale(begin: const Offset(0.9, 0.9), duration: 500.ms),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    HugeIcon(
+                      icon: HugeIcons.strokeRoundedEcoPower,
+                      size: 64,
+                      color: seedPalette.shade300,
+                    ),
+                    const Gap(16),
+                    Text(
+                      'No trash reports nearby!',
+                      style: AppTextStyles.h3.copyWith(color: seedColor),
+                      textAlign: TextAlign.center,
+                    ),
+                    const Gap(8),
+                    Text(
+                      'Your area looks clean. Be the first to report if you spot any trash dumps.',
+                      style: AppTextStyles.body.copyWith(color: greyColor),
+                      textAlign: TextAlign.center,
+                    ),
+                    const Gap(16.0),
+                    // refresh text button
+                    TextButton(
+                      onPressed: () {
+                        // TODO: Implement refresh functionality
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: seedColor,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: borderRadius * 2.5,
+                        ),
+                      ),
+                      child: Text(
+                        'Refresh',
+                        style: AppTextStyles.body.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: seedColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+              .animate()
+              .fadeIn(duration: 500.ms)
+              .scale(begin: const Offset(0.9, 0.9), duration: 500.ms),
     );
   }
 }

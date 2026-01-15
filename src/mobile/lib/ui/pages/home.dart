@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' hide UndoDirection;
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:trashtrails/ui/pages/reports/reports.dart';
+import 'package:trashtrails/utils/utils.dart';
 
 import '../../controllers/home_controller.dart';
 import '../../controllers/map_controller.dart';
 import '../../models/location.dart';
 import '../../utils/constants.dart';
 import '../components/home_actions.dart';
-import '../components/report_card.dart';
-import '../components/report_card_shimmer.dart';
-import '../components/report_details_modal.dart';
+import '../components/reports/report_card.dart';
+import '../components/reports/report_card_shimmer.dart';
+import '../components/reports/report_details_modal.dart';
 import '../components/user_avatar.dart';
 import 'reports/new_report.dart';
 
@@ -319,7 +321,9 @@ class _TopRightActions extends StatelessWidget {
           // Trash Trails action
           TrashTrailsActionWidget(
                 onTap: () {
-                  // TODO: Navigate to trash trails page
+                  context.pushNamed(
+                    removeLeadingSlash(ReportsFeedPage.routeName),
+                  );
                 },
               )
               .animate(controller: controller.actionsAnimationController)
@@ -432,7 +436,35 @@ class _BottomSheet extends StatelessWidget {
                           const AllowedSwipeDirection.symmetric(
                             horizontal: true,
                           ),
+                      showBackCardOnUndo: true,
+                      undoDirection: UndoDirection.right,
                       onSwipe: (previousIndex, currentIndex, direction) {
+                        final isRight = direction
+                            .toString()
+                            .toLowerCase()
+                            .contains('right');
+
+                        if (isRight) {
+                          final prevBase = previousIndex;
+                          final prev = prevBase - 1;
+                          final maxIndex =
+                              (reportController.nearbyReports.length - 1).clamp(
+                                0,
+                                999999,
+                              );
+                          final safeIndex = prev < 0
+                              ? 0
+                              : (prev > maxIndex ? maxIndex : prev);
+
+                          Future.microtask(() {
+                            try {
+                              swiperController.undo();
+                            } catch (_) {}
+                            controller.onReportCardChanged(safeIndex);
+                          });
+                          return false;
+                        }
+
                         if (currentIndex != null) {
                           controller.onReportCardChanged(currentIndex);
                         }

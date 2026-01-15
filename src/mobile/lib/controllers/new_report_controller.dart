@@ -170,6 +170,16 @@ class NewReportController extends GetxController {
     };
   }
 
+  String getSeverityImage(int level) {
+    return switch (level) {
+      1 => trash4,  // Low
+      2 => trash1,  // Medium
+      3 => trash2,  // High
+      4 => trash3,  // Critical
+      _ => trash4,  // Default Medium
+    };
+  }
+
   Color get selectedSeverityColor => getSeverityColor(selectedSeverityLevel.value);
 
   // ─── Lifecycle ───────────────────────────────────────────────────────────

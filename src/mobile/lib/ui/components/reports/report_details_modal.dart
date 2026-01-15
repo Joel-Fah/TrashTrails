@@ -5,8 +5,8 @@ import 'package:gap/gap.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../../models/models.dart';
-import '../../utils/constants.dart';
+import '../../../models/models.dart';
+import '../../../utils/constants.dart';
 
 /// Modal bottom sheet to display report details when a pin is tapped
 class ReportDetailsModal extends StatelessWidget {

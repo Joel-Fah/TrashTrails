@@ -10,6 +10,8 @@ import 'package:trashtrails/ui/pages/reports/report_points.dart';
 import 'package:trashtrails/ui/pages/onboarding/onboarding.dart';
 import 'package:trashtrails/utils/utils.dart';
 
+import '../ui/pages/reports/reports.dart';
+
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final router = GoRouter(
@@ -87,5 +89,11 @@ final router = GoRouter(
       path: ReportPointsPage.routeName,
       builder: (context, state) => const ReportPointsPage(),
     ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      name: removeLeadingSlash(ReportsFeedPage.routeName),
+      path: ReportsFeedPage.routeName,
+      builder: (context, state) => const ReportsFeedPage(),
+    )
   ],
 );

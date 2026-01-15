@@ -15,7 +15,7 @@ from .serializers import (
     TrashCategorySerializer,
     ReportSeveritySerializer,
 )
-from leaderboard_service.services import score_service
+from leaderboard_service.services import score_service, get_user_ranks
 import logging
 
 logger = logging.getLogger(__name__)
@@ -70,6 +70,15 @@ class ReportViewSet(ModelViewSet):
         # Prepare response with report data and points
         response_serializer = ReportSerializer(report, context={'request': request})
         response_data = response_serializer.data
+
+        try:
+            ranks = get_user_ranks(request.user)
+            # placer le overall rank au top-level de la response
+            response_data['overall_rank'] = ranks.get('overall_rank')
+        except Exception:
+            logger.exception('Failed to compute overall rank for user=%s', getattr(request.user, 'id', None))
+            response_data['overall_rank'] = None
+
         response_data['points'] = {
             'points_awarded': points_result['points_awarded'],
             'breakdown': points_result['breakdown'],

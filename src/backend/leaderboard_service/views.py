@@ -128,41 +128,5 @@ class UserRankView(APIView):
         }
     )
     def get(self, request):
-        from .models import UserScore
-        from django.db.models import Count
-
-        try:
-            user_score = request.user.score
-        except UserScore.DoesNotExist:
-            return Response({
-                'overall_rank': None,
-                'weekly_rank': None,
-                'monthly_rank': None,
-                'yearly_rank': None,
-                'message': 'No score record yet. Submit a report to get started!'
-            })
-
-        # Calculate ranks
-        overall_rank = UserScore.objects.filter(
-            total_points__gt=user_score.total_points
-        ).count() + 1
-
-        weekly_rank = UserScore.objects.filter(
-            weekly_points__gt=user_score.weekly_points
-        ).count() + 1
-
-        monthly_rank = UserScore.objects.filter(
-            monthly_points__gt=user_score.monthly_points
-        ).count() + 1
-
-        yearly_rank = UserScore.objects.filter(
-            yearly_points__gt=user_score.yearly_points
-        ).count() + 1
-
-        return Response({
-            'overall_rank': overall_rank,
-            'weekly_rank': weekly_rank,
-            'monthly_rank': monthly_rank,
-            'yearly_rank': yearly_rank,
-            'total_users': UserScore.objects.count()
-        })
+        ranks = get_user_ranks(request.user)
+        return Response(ranks)

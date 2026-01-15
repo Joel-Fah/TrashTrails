@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -194,4 +195,26 @@ String? validateMatricule(String? value) {
   }
 
   return null;
+}
+
+/// Format a count number for display (e.g., 1234 -> 1.2K, 1234567 -> 1.2M)
+String formatCount(int count) {
+  if (count < 1000) {
+    return count.toString();
+  } else if (count < 1000000) {
+    final k = count / 1000;
+    return k % 1 == 0 ? '${k.toInt()}k' : '${k.toStringAsFixed(1)}k';
+  } else if (count < 1000000000) {
+    final m = count / 1000000;
+    return m % 1 == 0 ? '${m.toInt()}M' : '${m.toStringAsFixed(1)}M';
+  } else {
+    final b = count / 1000000000;
+    return b % 1 == 0 ? '${b.toInt()}b' : '${b.toStringAsFixed(1)}B';
+  }
+}
+
+String stripHtmlTags(String htmlString) {
+  final document = parse(htmlString);
+  final String parsedString = parse(document.body!.text).documentElement!.text;
+  return parsedString;
 }

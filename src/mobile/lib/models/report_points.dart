@@ -296,12 +296,16 @@ class ReportCreationResult {
   /// Points awarded for this report (may be null if backend doesn't return points)
   final ReportPointsModel? points;
 
+  /// User rank after creating this report
+  final int? overallRank;
+
   /// Raw response data for additional processing
   final Map<String, dynamic>? rawResponse;
 
   const ReportCreationResult({
     required this.report,
     this.points,
+    this.overallRank,
     this.rawResponse,
   });
 
@@ -332,10 +336,20 @@ class ReportCreationResult {
       pointsJson = json['points'] as Map<String, dynamic>;
     }
 
+    // Try multiple places for overall rank
+    int? overallRank;
+    if (payload.containsKey('overall_rank') && payload['overall_rank'] is int) {
+      overallRank = payload['overall_rank'] as int;
+    } else if (payload.containsKey('overallRank') && payload['overallRank'] is int) {
+      overallRank = payload['overallRank'] as int;
+    }
+
+
     // Build result
     return ReportCreationResult(
       report: ReportModel.fromJson(reportJson),
       points: pointsJson != null ? ReportPointsModel.fromJson(pointsJson) : null,
+      overallRank: overallRank,
       rawResponse: json,
     );
   }

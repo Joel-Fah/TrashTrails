@@ -5,31 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a14538a3-038d-410f-aae0-4e8c31caf270" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/crown.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/empty.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/error.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/podium.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/rank/bronze.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/rank/gold.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/rank/silver.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/assets/images/ranking.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/controllers/leaderboard_controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/services/leaderboard_service.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/leaderboard/leaderboard_list_item.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/leaderboard/leaderboard_podium.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/states/error.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/leaderboard/leaderboard.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/about/about_img.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/about/authors.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/about/cta_about.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/components/sections/about/authors.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/components/sections/about/cta.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/components/sections/about/hero.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/components/sections/about/problem.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/components/sections/about/solution.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leaderboard_service/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/leaderboard_service/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leaderboard_service/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/leaderboard_service/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/controllers/controllers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/controllers/controllers.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/models/leaderboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/models/leaderboard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/services/services.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/services/services.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/ui/pages/home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/home.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/utils/constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/utils/constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/lib/utils/routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/utils/routes.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/common/images/console.png" beforeDir="false" afterPath="$PROJECT_DIR$/static/common/images/home/console.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/common/images/cta_img.png" beforeDir="false" afterPath="$PROJECT_DIR$/static/common/images/home/cta_img.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/common/images/hero_bg.png" beforeDir="false" afterPath="$PROJECT_DIR$/static/common/images/home/hero_bg.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/common/images/logo_text/cyan.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/common/images/problem_img.png" beforeDir="false" afterPath="$PROJECT_DIR$/static/common/images/home/problem_img.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/common/images/recycle.png" beforeDir="false" afterPath="$PROJECT_DIR$/static/common/images/home/recycle.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/common/images/solution_img.png" beforeDir="false" afterPath="$PROJECT_DIR$/static/common/images/home/solution_img.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/components/sections/breaker.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/components/sections/home/breaker.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/components/sections/cta.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/components/sections/home/cta.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/components/sections/hero.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/components/sections/home/hero.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/components/sections/problem.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/components/sections/home/problem.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/components/sections/solution.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/components/sections/home/solution.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/core/about.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/core/about.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/core/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/core/home.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,8 +46,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Dockerfile" />
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -85,7 +83,7 @@
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;24.11.1&quot;,
     &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;24.10.7&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ROG STRIX/Documents/GitHub/TrashTrails/src/backend/static/common/images&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/ROG STRIX/Documents/GitHub/TrashTrails/src/backend/static/common/images/about&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -98,17 +96,18 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\about" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\trash" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\avatars" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\templates\components" />
-      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\home" />
+      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\templates\components\sections\home" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\templates\components\sections" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\templates\components" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common" />
-      <recent name="C:\Users\joelf\Documents\GitHub\TrashTrails\src\backend" />
     </key>
   </component>
   <component name="RunManager">
@@ -174,6 +173,8 @@
       <workItem from="1768461530387" duration="2163000" />
       <workItem from="1768470711638" duration="5040000" />
       <workItem from="1768492275681" duration="6744000" />
+      <workItem from="1768557278683" duration="4527000" />
+      <workItem from="1768572802271" duration="5826000" />
     </task>
     <servers />
   </component>

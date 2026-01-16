@@ -1,0 +1,56 @@
+{% load static %}
+
+<section id="solution" class="w-[90%] lg:w-[80%] mx-auto pt-8 md:pt-12 pb-16 md:pb-24">
+    <div class="grid grid-cols-12 gap-4">
+
+        {# Image Preview - 1 #}
+        <div class="col-span-8 bg-primary-50 border-8 border-white shadow-2xl rounded-[100px] overflow-hidden h-[700px]">
+            <img
+                    src="https://images.pexels.com/photos/19017632/pexels-photo-19017632.jpeg"
+                    alt="Medium trash ump in city"
+                    class="w-full h-full object-cover object-center"
+            >
+        </div>
+
+        {# Problem Definition #}
+        <div class="col-span-4 px-4 flex flex-col">
+            <div class="flex flex-col flex-grow">
+                <div class="h-24"></div>
+                <p class="mb-6">
+                    We didn't want to build just another app that sits on your phone. We wanted to build a movement.
+                </p>
+
+                <p class="mb-4">
+                    TrashTrails is a crowd-sourced mapping tool designed to turn every frustrated citizen into a
+                    <span class="font-semibold">Community Guardian</span>. Instead of just being annoyed by a dump site,
+                    you snap a photo.
+
+                <ul class="list-disc pl-5 list-inside space-y-2">
+                    <li>
+                        <span class="font-semibold">The "Proof" Factor:</span> Your report is geolocated and mapped
+                        publicly. It’s no longer just "some trash somewhere"—it's a data point that can’t be ignored.
+                    </li>
+                    <li>
+                        <span class="font-semibold">The AI Brain:</span> We don’t just see a pile of "dorty." We use
+                        Computer Vision to look closer. Our models scan your photos to find <span class="font-semibold">recyclables</span>
+                        (plastics, metals, glass) that are currently making up a huge chunk of our 600,000 annual tons
+                        of plastic waste.
+                    </li>
+                    <li>
+                        <span class="font-semibold">The Leaderboard:</span> Let’s make impact a sport. Every report
+                        earns you points. We’re gamifying the cleanup because, let’s be honest, a little competition
+                        makes the hard work of civic duty a lot more fun.
+                    </li>
+                </ul>
+                </p>
+            </div>
+
+            {# Reference source #}
+            <div class="flex-col gap-1 border-t border-primary py-2 whitespace-nowrap">
+                <p class="text-sm text-primary italic">
+                    <span class="font-semibold">Source:</span> Ministry of Environment (MINEPDED) / FairPlanet, 2022
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

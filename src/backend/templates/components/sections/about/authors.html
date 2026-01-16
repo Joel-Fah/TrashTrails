@@ -1,0 +1,26 @@
+{% load static %}
+
+<section id="cta" class="w-[90%] lg:w-[80%] mx-auto pb-16 md:pb-24">
+    <div class="flex flex-col gap-4 items-center justify-center text-center">
+        {# Info Bubble #}
+        <div class="flex justify-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 rounded-2xl">
+            <span class="text-sm text-primary">
+                Great <span class="font-semibold">Powers</span>,
+                Great <span class="font-semibold">Responsibilities</span>
+            </span>
+            </div>
+        </div>
+
+        <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-primary leading-tight">
+            TrashTrails is brought to you by
+            <span class="font-extrabold block mt-2">@joelfah & @sephora</span>
+        </h2>
+
+        <img
+                src="{% static 'common/images/about/authors.png' %}"
+                alt="Trash Trails Dev Team"
+                class="w-1/4 h-auto object-contain select-none pointer-events-none mt-8"
+        >
+    </div>
+</section>

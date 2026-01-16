@@ -5,6 +5,7 @@ import 'package:trashtrails/controllers/onboarding_controller.dart';
 import 'package:trashtrails/services/auth_service.dart';
 import 'package:trashtrails/ui/pages/auth/auth.dart';
 import 'package:trashtrails/ui/pages/home.dart';
+import 'package:trashtrails/ui/pages/leaderboard/leaderboard.dart';
 import 'package:trashtrails/ui/pages/reports/new_report.dart';
 import 'package:trashtrails/ui/pages/reports/report_points.dart';
 import 'package:trashtrails/ui/pages/onboarding/onboarding.dart';
@@ -59,6 +60,7 @@ final router = GoRouter(
     return null;
   },
   routes: [
+    // Onboarding + Auth routes
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
       name: removeLeadingSlash(OnboardingPage.routeName),
@@ -71,12 +73,16 @@ final router = GoRouter(
       path: AuthPage.routeName,
       builder: (context, state) => const AuthPage(),
     ),
+
+    // Home
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
       name: removeLeadingSlash(HomePage.routeName),
       path: HomePage.routeName,
       builder: (context, state) => const HomePage(),
     ),
+
+    // Reports routes
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
       name: removeLeadingSlash(NewReportPage.routeName),
@@ -94,6 +100,14 @@ final router = GoRouter(
       name: removeLeadingSlash(ReportsFeedPage.routeName),
       path: ReportsFeedPage.routeName,
       builder: (context, state) => const ReportsFeedPage(),
-    )
+    ),
+
+    // Leaderboard
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      name: removeLeadingSlash(LeaderboardPage.routeName),
+      path: LeaderboardPage.routeName,
+      builder: (context, state) => const LeaderboardPage(),
+    ),
   ],
 );

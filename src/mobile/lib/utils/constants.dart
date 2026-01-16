@@ -100,6 +100,12 @@ const String trash2 = 'assets/images/trash/trash2.png';
 const String trash3 = 'assets/images/trash/trash3.png';
 const String trash4 = 'assets/images/trash/trash4.png';
 
+// Rank
+const String goldImg = 'assets/images/rank/gold.png';
+const String silverImg = 'assets/images/rank/silver.png';
+const String bronzeImg = 'assets/images/rank/bronze.png';
+
+
 // Misc
 const String map = 'assets/images/map.png';
 const String report = 'assets/images/report.png';
@@ -107,6 +113,11 @@ const String authBg = 'assets/images/auth_bg.png';
 const String recycle = 'assets/images/recycle.png';
 const String recyclePaper = 'assets/images/recycle_paper.png';
 const String recycleImg = 'assets/images/recycle_img.png';
+const String errorImg = 'assets/images/error.png';
+const String emptyImg = 'assets/images/empty.png';
+const String crown = 'assets/images/crown.png';
+const String podium = 'assets/images/podium.png';
+const String ranking = 'assets/images/ranking.png';
 
 /* ----------- Widgets ----------- */
 // BorderRadii

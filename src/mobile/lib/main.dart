@@ -66,6 +66,7 @@ Future<void> main() async {
   Get.put(MapService(), permanent: true);
   Get.put(ReportService(), permanent: true);
   Get.put(PointsService(), permanent: true);
+  Get.put(LeaderboardService(), permanent: true);
 
   // ─── Initialize Controllers ──────────────────────────────────────────────
   Get.put(LocaleController());
@@ -78,6 +79,7 @@ Future<void> main() async {
   Get.put(PointsController());
   Get.put(MapController());
   Get.put(NewReportController());
+  Get.put(LeaderboardController());
 
   // locked orientation to portrait
   await SystemChrome.setPreferredOrientations([

@@ -7,3 +7,4 @@ export 'onboarding_controller.dart';
 export 'points_controller.dart';
 export 'report_controller.dart';
 export 'theme_controller.dart';
+export 'leaderboard_controller.dart';

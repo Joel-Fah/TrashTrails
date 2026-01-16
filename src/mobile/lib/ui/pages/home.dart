@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:trashtrails/ui/pages/leaderboard/leaderboard.dart';
 import 'package:trashtrails/ui/pages/reports/reports.dart';
 import 'package:trashtrails/utils/utils.dart';
 
@@ -311,7 +312,9 @@ class _TopRightActions extends StatelessWidget {
           // Leaderboard action
           LeaderboardActionWidget(
                 onTap: () {
-                  // TODO: Navigate to leaderboard page
+                  context.pushNamed(
+                    removeLeadingSlash(LeaderboardPage.routeName),
+                  );
                 },
               )
               .animate(controller: controller.actionsAnimationController)

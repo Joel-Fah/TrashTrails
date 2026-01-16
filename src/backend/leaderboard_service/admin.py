@@ -1,3 +1,4 @@
+# python
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 from django.utils.html import format_html
@@ -69,6 +70,7 @@ class ScoreTransactionAdmin(ModelAdmin):
 @admin.register(UserScore)
 class UserScoreAdmin(ModelAdmin):
     list_display = (
+        'rank_display',
         'user',
         'total_points',
         'weekly_points',
@@ -96,6 +98,28 @@ class UserScoreAdmin(ModelAdmin):
             'classes': ('collapse',),
         }),
     )
+
+    @admin.display(description='Rank', ordering='total_points')
+    def rank_display(self, obj):
+        try:
+            rank = UserScore.objects.filter(total_points__gt=obj.total_points).count() + 1
+        except Exception:
+            rank = None
+
+        if rank is None:
+            return format_html('<span style="color: #6b7280;">-</span>')
+
+        # couleurs: 1 = gold, 2 = silver, 3 = bronze, sinon gris foncé
+        if rank == 1:
+            color = '#EFBF04'  # gold
+        elif rank == 2:
+            color = '#A8A9AD'  # silver
+        elif rank == 3:
+            color = '#CD7F32'  # bronze
+        else:
+            color = '#374151'  # slate-700
+
+        return format_html('<span style="color: {}; font-weight: bold;">#{}</span>', color, rank)
 
 
 @admin.register(Endorsement)

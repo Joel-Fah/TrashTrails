@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from .services import score_service
+from .services import score_service, get_user_ranks
 from .serializers import (
     LeaderboardEntrySerializer,
     UserStatsSerializer,

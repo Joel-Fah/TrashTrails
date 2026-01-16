@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load tailwind_tags %}
+
+{# Title of the page #}
+{% block title %} Trash Trails — The makers behind the dump {% endblock %}
+
+{# Header #}
+{% block header %}
+    {% include 'components/sections/header.html' %}
+{% endblock %}
+
+{# Body of the page #}
+{% block content %}
+    {# Hero Section #}
+    {% include 'components/sections/about/hero.html' %}
+
+    {# Problem Definition Section #}
+    {% include 'components/sections/about/problem.html' %}
+    
+    {# Solution Definition Section #}
+    {% include 'components/sections/about/solution.html' %}
+    
+    {# CTA Section #}
+    {% include 'components/sections/about/cta.html' %}
+
+    {# Authors Section #}
+    {% include 'components/sections/about/authors.html' %}
+{% endblock %}
+
+{# Footer #}
+{% block footer %}
+	{% include 'components/sections/footer.html' %}
+{% endblock %}

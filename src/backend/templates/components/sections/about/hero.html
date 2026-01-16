@@ -1,0 +1,40 @@
+{% load static %}
+
+<section id="hero" class="w-[90%] lg:w-[80%] mx-auto pt-8 md:pt-12 pb-16 md:pb-24">
+
+    <div class="flex flex-col gap-4 items-center justify-center">
+        {# Info Bubble #}
+        <div class="flex justify-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 rounded-2xl">
+            <span class="text-sm text-primary">
+                Welcome to the <span class="font-semibold">Wall of Fame</span>
+            </span>
+            </div>
+        </div>
+
+        {# Headline Section #}
+        <div class="text-center">
+            {# First Line: "You complain about [trash images] Littering." #}
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-primary leading-tight">
+                <span class="block mb-2">Turning Gross into Green</span>
+                <em class="block font-extrabold">Spot it. Snap it. Sort it.</em>
+            </h1>
+        </div>
+
+        {# Description #}
+        <p class="text-center text-base md:text-lg max-w-2xl mx-auto px-4">
+            We all complain about trash. TrashTrails lets you do it productively. Instead of just shaking your head at a
+            dump site, you map it, report it, and earn your place on the leaderboard.
+        </p>
+
+        {% include 'components/button_outlined.html' with text="Continue Reading" %}
+    </div>
+
+    {# Visual Stack Section #}
+    <img
+            src="{% static 'common/images/about/about_img.png' %}"
+            alt="About Hero Image"
+            class="w-full h-auto object-contain -mt-32"
+    >
+</section>
+

@@ -3,7 +3,7 @@
 {% load tailwind_tags %}
 
 {# Title of the page #}
-{% block title %} Introducing Trash Trails — Ready to Clear the Path?{% endblock %}
+{% block title %} Introducing Trash Trails — Ready to Clear the Path? {% endblock %}
 
 {# Header #}
 {% block header %}
@@ -13,19 +13,19 @@
 {# Body of the page #}
 {% block content %}
 	{# Hero Section #}
-	{% include 'components/sections/hero.html' %}
+	{% include 'components/sections/home/hero.html' %}
 
     {# Problem Statement Section #}
-    {% include 'components/sections/problem.html' %}
+    {% include 'components/sections/home/problem.html' %}
 
     {# Ice Breaker Section #}
-    {% include 'components/sections/breaker.html' %}
+    {% include 'components/sections/home/breaker.html' %}
 
     {# Solution Section #}
-    {% include 'components/sections/solution.html' %}
+    {% include 'components/sections/home/solution.html' %}
 
     {# Call to Action Section #}
-    {% include 'components/sections/cta.html' %}
+    {% include 'components/sections/home/cta.html' %}
 {% endblock %}
 
 {# Footer #}

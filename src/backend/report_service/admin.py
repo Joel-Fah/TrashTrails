@@ -13,7 +13,8 @@ class ReportImageInline(TabularInline):
 
 @admin.register(Report)
 class ReportAdmin(ModelAdmin):
-    list_display = ('title', 'user', 'get_street_name', 'category', 'severity_display', 'status', 'created_at')
+    list_display = ('title', 'user', 'get_street_name', 'category', 'severity_display', 'status_display', 'created_at',
+                    'row_actions')
     list_filter = ('status', 'category', 'severity', 'created_at')
     search_fields = ('title', 'user__username', 'location__street_name')
     readonly_fields = ('created_at', 'slug')
@@ -28,6 +29,22 @@ class ReportAdmin(ModelAdmin):
         if obj.location and obj.location.street_name:
             return obj.location.street_name
         return '-'
+
+    @admin.display(description='Status')
+    def status_display(self, obj):
+        status_colors = {
+            Report.ReportStatus.PENDING: '#fbbf24',  # amber
+            Report.ReportStatus.VERIFIED: '#16a34a',  # green
+            Report.ReportStatus.REJECTED: '#dc2626',  # red
+            Report.ReportStatus.CLEANED: '#3b82f6',  # blue
+        }
+        color = status_colors.get(obj.status, '#6b7280')  # default gray
+
+        return format_html(
+            '<span style="color: {}; font-weight: bold;">{}</span>',
+            color,
+            obj.get_status_display()
+        )
 
     @admin.display(description='Severity')
     def severity_display(self, obj):
@@ -81,6 +98,73 @@ class ReportAdmin(ModelAdmin):
         except Exception:
             # Avoid raising from admin UI; log would be better but keep silent here
             return
+
+    def get_urls(self):
+        from django.urls import path
+        urls = super().get_urls()
+        custom_urls = [
+            path('<int:report_id>/verify/', self.admin_site.admin_view(self.verify_view), name='report_verify'),
+            path('<int:report_id>/reject/', self.admin_site.admin_view(self.reject_view), name='report_reject'),
+        ]
+        return custom_urls + urls
+
+    def verify_view(self, request, report_id, *args, **kwargs):
+        from django.shortcuts import get_object_or_404, redirect
+        from django.urls import reverse
+        from django.contrib import messages
+
+        obj = get_object_or_404(Report, pk=report_id)
+
+        if not self.has_change_permission(request, obj):
+            messages.error(request, 'Permission denied.')
+            return redirect(reverse('admin:report_service_report_changelist'))
+
+        if obj.status != Report.ReportStatus.PENDING:
+            messages.warning(request, 'Action disponible uniquement pour les rapports en attente.')
+            return redirect(request.META.get('HTTP_REFERER', reverse('admin:report_service_report_changelist')))
+
+        obj.status = Report.ReportStatus.VERIFIED
+        obj.save(update_fields=['status'])
+        messages.success(request, 'report verified.')
+        return redirect(request.META.get('HTTP_REFERER', reverse('admin:report_service_report_changelist')))
+
+    def reject_view(self, request, report_id, *args, **kwargs):
+        from django.shortcuts import get_object_or_404, redirect
+        from django.urls import reverse
+        from django.contrib import messages
+
+        obj = get_object_or_404(Report, pk=report_id)
+
+        if not self.has_change_permission(request, obj):
+            messages.error(request, 'Permission denied.')
+            return redirect(reverse('admin:report_service_report_changelist'))
+
+        if obj.status != Report.ReportStatus.PENDING:
+            messages.warning(request, 'Action available only for pending reports.')
+            return redirect(request.META.get('HTTP_REFERER', reverse('admin:report_service_report_changelist')))
+
+        obj.status = Report.ReportStatus.REJECTED
+        obj.save(update_fields=['status'])
+        messages.success(request, 'Report rejected.')
+        return redirect(request.META.get('HTTP_REFERER', reverse('admin:report_service_report_changelist')))
+
+    @admin.display(description='Actions')
+    def row_actions(self, obj):
+        from django.urls import reverse
+        from django.utils.html import format_html
+
+        if obj.status != Report.ReportStatus.PENDING:
+            return '-'
+
+        base = reverse('admin:report_service_report_changelist')
+        verify_url = f"{base}{obj.pk}/verify/"
+        reject_url = f"{base}{obj.pk}/reject/"
+
+        return format_html(
+            '<a class="button" href="{}" style="margin-right:6px;background:#10b981;border-radius:10px;padding:6px 10px;color:white;text-decoration:none;">Accept</a>'
+            '<a class="button" href="{}" style="background:#ef4444;border-radius:10px;padding:6px 10px;color:white;text-decoration:none;">Reject</a>',
+            verify_url, reject_url
+        )
 
 
 @admin.register(ReportImage)

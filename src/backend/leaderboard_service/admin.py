@@ -1,4 +1,6 @@
 # python
+import hashlib
+
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 from django.utils.html import format_html
@@ -70,8 +72,8 @@ class ScoreTransactionAdmin(ModelAdmin):
 @admin.register(UserScore)
 class UserScoreAdmin(ModelAdmin):
     list_display = (
+        'user_display',
         'rank_display',
-        'user',
         'total_points',
         'weekly_points',
         'monthly_points',
@@ -98,6 +100,56 @@ class UserScoreAdmin(ModelAdmin):
             'classes': ('collapse',),
         }),
     )
+
+    @admin.display(description='User')
+    def user_display(self, obj):
+        user = getattr(obj, 'user', None)
+        avatar_url = None
+        if user is not None:
+            profile = getattr(user, 'userprofile', None)
+            avatar_field = getattr(profile, 'avatar', None)
+            if avatar_field:
+                if hasattr(avatar_field, 'url'):
+                    try:
+                        avatar_url = avatar_field.url
+                    except Exception:
+                        avatar_url = None
+                else:
+                    if isinstance(avatar_field, str) and avatar_field.strip():
+                        avatar_url = avatar_field.strip()
+
+        if avatar_url:
+            avatar_html = format_html(
+                '<img src="{}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:8px;vertical-align:middle;">',
+                avatar_url
+            )
+        else:
+            if user and (user.first_name or user.last_name):
+                initials = (user.first_name[:1] + user.last_name[:1]).upper()
+            elif user and getattr(user, 'username', None):
+                initials = user.username[:2].upper()
+            else:
+                initials = str(getattr(obj, 'pk', ''))[:2].upper() or '-'
+            seed = (user.username if user and getattr(user, 'username', None) else str(getattr(obj, 'pk', ''))) or str(
+                obj)
+            color = '#' + hashlib.md5(seed.encode('utf-8')).hexdigest()[:6]
+            avatar_html = format_html(
+                '<span style="display:inline-flex;width:32px;height:32px;border-radius:50%;align-items:center;justify-content:center;margin-right:8px;vertical-align:middle;background-color:{};color:#fff;font-weight:600;">{}</span>',
+                color, initials
+            )
+
+        if user and user.is_superuser:
+            role_html = format_html('<span style="color: #dc2626; font-weight: bold;">&lt;superadmin&gt;</span>')
+        elif user and user.is_staff:
+            role_html = format_html('<span style="color: #2563eb; font-weight: bold;">&lt;admin&gt;</span>')
+        else:
+            role_html = ''
+
+        username = getattr(user, 'username', '') if user else ''
+        return format_html(
+            '<span style="display:inline-flex;align-items:center;white-space:nowrap;">{}<span style="vertical-align:middle;font-weight:500;margin-right:6px;">{}</span>{}</span>',
+            avatar_html, username, role_html
+        )
 
     @admin.display(description='Rank', ordering='total_points')
     def rank_display(self, obj):

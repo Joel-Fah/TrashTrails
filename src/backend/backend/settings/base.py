@@ -168,6 +168,145 @@ UNFOLD = {
     ],
     'THEME': 'light',
     'BORDER_RADIUS': "8px",
+    'SIDEBAR': {
+        'navigation': [
+            {
+                "title": "Auth Service",
+                "items": [
+                    {
+                        "title": "User Profiles",
+                        "link": "/admin/auth_service/userprofile/",
+                        "icon": "account_circle",
+                    },
+                ],
+            },
+            {
+                "title": "Auth Tokens",
+                "items": [
+                    {
+                        "title": "Auth Tokens",
+                        "link": "/admin/auth_service/authtoken/",
+                        "icon": "token",
+                    },
+                ],
+            },
+            {
+                "title": "Authentication and Authorization",
+                "items": [
+                    {
+                        "title": "Users",
+                        "link": "/admin/auth/user/",
+                        "icon": "person",
+                    },
+                    {
+                        "title": "Groups",
+                        "link": "/admin/auth/group/",
+                        "icon": "groups",
+                    },
+                ],
+            },
+            {
+                "title": "Leaderboard",
+                "items": [
+                    {
+                        "title": "Category Point Multipliers",
+                        "link": "/admin/leaderboard_service/categorypointmultiplier/",
+                        "icon": "category",
+                    },
+                    {
+                        "title": "Endorsements",
+                        "link": "/admin/leaderboard_service/endorsement/",
+                        "icon": "front_hand",
+                    },
+                    {
+                        "title": "Point Configurations",
+                        "link": "/admin/leaderboard_service/pointconfiguration/",
+                        "icon": "tune",
+                    },
+                    {
+                        "title": "Score Rules",
+                        "link": "/admin/leaderboard_service/scorerule/",
+                        "icon": "rule",
+                    },
+                    {
+                        "title": "Score Transactions",
+                        "link": "/admin/leaderboard_service/scoretransaction/",
+                        "icon": "swap_horiz",
+                    },
+                    {
+                        "title": "Severity Point Values",
+                        "link": "/admin/leaderboard_service/severitypointvalue/",
+                        "icon": "priority_high",
+                    },
+                    {
+                        "title": "User Scores",
+                        "link": "/admin/leaderboard_service/userscore/",
+                        "icon": "leaderboard",
+                    },
+                ],
+            },
+            {
+                "title": "Map Service",
+                "items": [
+                    {
+                        "title": "Locations",
+                        "link": "/admin/map_service/location/",
+                        "icon": "personal_places",
+                    },
+                ],
+            },
+            {
+                "title": "Report Service",
+                "items": [
+                    {
+                        "title": "Report Severities",
+                        "link": "/admin/report_service/reportseverity/",
+                        "icon": "android_cell_4_bar",
+                    },
+                    {
+                        "title": "Report Images",
+                        "link": "/admin/report_service/reportimage/",
+                        "icon": "art_track",
+                    },
+                    {
+                        "title": "Reports",
+                        "link": "/admin/report_service/report/",
+                        "icon": "receipt_long",
+                    },
+                    {
+                        "title": "Trash Categories",
+                        "link": "/admin/report_service/trashcategory/",
+                        "icon": "delete_sweep",
+                    },
+                ],
+            },
+            {
+                "title": "Sites",
+                "items": [
+                    {
+                        "title": "Sites",
+                        "link": "/admin/sites/site/",
+                        "icon": "language",
+                    },
+                ],
+            },
+            {
+                "title": "Token Blacklist",
+                "items": [
+                    {
+                        "title": "Blacklisted Tokens",
+                        "link": "/admin/token_blacklist/blacklistedtoken/",
+                        "icon": "block",
+                    },
+                    {
+                        "title": "Outstanding Tokens",
+                        "link": "/admin/token_blacklist/outstandingtoken/",
+                        "icon": "vpn_key",
+                    },
+                ],
+            }
+        ]
+    },
     'COLORS': {
         'base': {
             50: '246,246,246',

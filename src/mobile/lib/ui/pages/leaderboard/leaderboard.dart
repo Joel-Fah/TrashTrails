@@ -309,8 +309,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                 ).animate().fadeIn(delay: 600.ms),
               ),
 
-              const SliverToBoxAdapter(child: Gap(8.0)),
-
               // All entries list
               SliverList(
                 delegate: SliverChildBuilderDelegate(

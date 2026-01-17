@@ -1,7 +1,11 @@
 from django.contrib import admin
-from django.db import models
+from django.db import models, transaction
+from django.db.models import Sum, Value
+from django.db.models.functions import Coalesce
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin, TabularInline
+
+from leaderboard_service.models import ScoreTransaction
 from .models import Report, ReportImage, TrashCategory, ReportSeverity
 from unfold.contrib.forms.widgets import WysiwygWidget
 
@@ -14,7 +18,7 @@ class ReportImageInline(TabularInline):
 @admin.register(Report)
 class ReportAdmin(ModelAdmin):
     list_display = ('title', 'user', 'get_street_name', 'category', 'severity_display', 'status_display', 'created_at',
-                    'row_actions')
+                    'points_display', 'row_actions')
     list_filter = ('status', 'category', 'severity', 'created_at')
     search_fields = ('title', 'user__username', 'location__street_name')
     readonly_fields = ('created_at', 'slug')
@@ -45,6 +49,18 @@ class ReportAdmin(ModelAdmin):
             color,
             obj.get_status_display()
         )
+
+    @admin.display(description='Points')
+    def points_display(self, obj):
+        """
+        Retourne le total net des points liés au rapport (somme des ScoreTransaction.points).
+        Utilise une agrégation par requête pour éviter les erreurs None.
+        """
+        agg = ScoreTransaction.objects.filter(report=obj).aggregate(total=Coalesce(Sum('points'), Value(0)))
+        try:
+            return int(agg.get('total') or 0)
+        except Exception:
+            return 0
 
     @admin.display(description='Severity')
     def severity_display(self, obj):
@@ -78,26 +94,29 @@ class ReportAdmin(ModelAdmin):
 
     def save_related(self, request, form, formsets, change):
         """
-        Called after the main object and its inlines have been saved.
-        We call the score service here to ensure images added via inlines
-        are included in the initial scoring when creating from the admin.
+        Après sauvegarde des inlines, lancer le scoring uniquement lors de la création depuis l'admin
+        (évite double scoring si l'API/ frontend a déjà calculé les points).
         """
         super().save_related(request, form, formsets, change)
 
-        # Attempt to award/adjust points now that related objects (images) are saved.
-        try:
-            # Import lazily to avoid import-time DB access issues
-            from leaderboard_service.services import score_service
-        except Exception:
-            # If leaderboard service isn't available for any reason, don't break admin save
+        # n'appeler le service de score que si on crée depuis l'admin (change == False)
+        if change:
             return
 
         try:
-            obj = form.instance
-            score_service.award_report_points(obj)
+            from leaderboard_service.services import score_service
         except Exception:
-            # Avoid raising from admin UI; log would be better but keep silent here
             return
+
+        obj = form.instance
+
+        def _run_scoring():
+            try:
+                score_service.award_report_points(obj.pk)
+            except Exception:
+                return
+
+        transaction.on_commit(_run_scoring)
 
     def get_urls(self):
         from django.urls import path
@@ -169,9 +188,13 @@ class ReportAdmin(ModelAdmin):
 
 @admin.register(ReportImage)
 class ReportImageAdmin(ModelAdmin):
-    list_display = ('report', 'image', 'uploaded_at')
-    list_filter = ('uploaded_at',)
+    list_display = ('report', 'get_report_user', 'uploaded_at')
+    list_filter = ('uploaded_at', 'report__user')
     readonly_fields = ('uploaded_at',)
+
+    @admin.display(description='Uploaded by')
+    def get_report_user(self, obj):
+        return obj.report.user.username
 
 
 @admin.register(TrashCategory)

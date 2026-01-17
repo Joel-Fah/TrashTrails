@@ -69,6 +69,7 @@ class _NewReportPageState extends State<NewReportPage>
         // Set points in controller if available
         if (result.hasPoints && result.points != null) {
           final pointsController = Get.find<PointsController>();
+          print('Points JSON: ${result.points?.toJson()}');
           pointsController.setPoints(result.points!, result.overallRank!);
           // Navigate to points page
           context.pushReplacementNamed(removeLeadingSlash(ReportPointsPage.routeName));

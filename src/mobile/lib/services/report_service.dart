@@ -336,6 +336,7 @@ class ReportService extends GetxService {
       }
 
       // Add image files
+      debugPrint('ReportService: Adding ${imagePaths.length} images to form data');
       for (final path in imagePaths) {
         final file = File(path);
         if (file.existsSync()) {
@@ -348,6 +349,7 @@ class ReportService extends GetxService {
               ),
             ),
           );
+          debugPrint('ReportService: Added image: ${file.path.split('/').last}');
         } else {
           debugPrint('ReportService: Image file not found at $path');
         }
@@ -358,11 +360,25 @@ class ReportService extends GetxService {
         return null;
       }
 
+      debugPrint('ReportService: Submitting report with ${formData.files.length} images');
+
       final result = await _apiService.post<ReportCreationResult>(
         _reportsEndpoint,
         data: formData,
         parser: (responseData) {
           if (responseData is Map<String, dynamic>) {
+            debugPrint('ReportService: Raw response keys: ${responseData.keys.toList()}');
+
+            // Log points data if present
+            if (responseData.containsKey('points')) {
+              final pointsData = responseData['points'];
+              debugPrint('ReportService: Points data found: $pointsData');
+              if (pointsData is Map<String, dynamic> && pointsData.containsKey('breakdown')) {
+                final breakdown = pointsData['breakdown'];
+                debugPrint('ReportService: Breakdown data: $breakdown');
+              }
+            }
+
             return ReportCreationResult.fromJson(responseData);
           }
           throw Exception('Invalid response format');
@@ -371,17 +387,43 @@ class ReportService extends GetxService {
 
       // Save images to gallery after successful upload
       if (result.isSuccess && result.data != null) {
-        debugPrint(
-          'ReportService: Created report ${result.data!.report.id} with points: ${result.data!.hasPoints}',
-        );
+        final report = result.data!.report;
+        final points = result.data!.points;
+
+        debugPrint('ReportService: ✅ Report created successfully!');
+        debugPrint('  - Report ID: ${report.id}');
+        debugPrint('  - Images in response: ${report.images.length}');
+        debugPrint('  - Has points: ${result.data!.hasPoints}');
+
+        if (points != null) {
+          debugPrint('  - Points awarded: ${points.pointsAwarded}');
+          debugPrint('  - Total user points: ${points.totalUserPoints}');
+          debugPrint('  - User rank: ${points.userRank}');
+          debugPrint('  - Breakdown:');
+          debugPrint('    • Title: ${points.breakdown.title.points} pts - ${points.breakdown.title.reason}');
+          debugPrint('    • Severity: ${points.breakdown.severity.points} pts - ${points.breakdown.severity.reason}');
+          debugPrint('    • Category: ${points.breakdown.category.points} pts - ${points.breakdown.category.reason}');
+          debugPrint('    • Observation: ${points.breakdown.observation.points} pts - ${points.breakdown.observation.reason}');
+          debugPrint('    • Location: ${points.breakdown.location.points} pts - ${points.breakdown.location.reason}');
+          debugPrint('    • Images: ${points.breakdown.images.points} pts - ${points.breakdown.images.reason}');
+          if (points.breakdown.images.imageCount != null) {
+            debugPrint('      → Image count: ${points.breakdown.images.imageCount}');
+            debugPrint('      → First image points: ${points.breakdown.images.firstImagePoints}');
+            debugPrint('      → Additional points: ${points.breakdown.images.additionalImagePoints}');
+          }
+        } else {
+          debugPrint('  - ⚠️ No points data in response');
+        }
+
         await _saveImagesToGallery(imagePaths);
         return result.data;
       } else {
-        debugPrint('ReportService: Failed to create report - ${result.error}');
+        debugPrint('ReportService: ❌ Failed to create report - ${result.error}');
         return null;
       }
-    } catch (e) {
-      debugPrint('ReportService: Error creating report with points - $e');
+    } catch (e, stackTrace) {
+      debugPrint('ReportService: ❌ Error creating report with points - $e');
+      debugPrint('ReportService: Stack trace: $stackTrace');
       return null;
     }
   }

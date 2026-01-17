@@ -52,53 +52,92 @@ class ReportViewSet(ModelViewSet):
         Create a new report and calculate points for the user.
         Accepts multipart/form-data with images or JSON body with images as base64/list.
         """
-        # Note: DRF merges request.data and request.FILES when using MultiPartParser,
-        # so passing request.data is sufficient. The serializer's ImageListField
-        # also supports dict mapping of files.
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
+        # Save the report and all images
         self.perform_create(serializer)
 
         # Get the created report with all related data
+        # Force a fresh query to ensure all images are loaded
         report = Report.objects.select_related(
             'category', 'severity', 'location', 'user'
         ).prefetch_related('images').get(pk=serializer.instance.pk)
 
-        # Calculate and award points
+        # Log image count for debugging
+        image_count = report.images.count()
+        logger.info(f"Report {report.pk} created with {image_count} images")
+
+        # Calculate and award points AFTER all images are saved
         points_result = score_service.award_report_points(report)
+
+        logger.info(f"Points calculated for report {report.pk}: {points_result}")
 
         # Prepare response with report data and points
         response_serializer = ReportSerializer(report, context={'request': request})
         response_data = response_serializer.data
 
+        # Add user rank to response
         try:
             ranks = get_user_ranks(request.user)
-            # placer le overall rank au top-level de la response
             response_data['overall_rank'] = ranks.get('overall_rank')
-        except Exception:
-            logger.exception('Failed to compute overall rank for user=%s', getattr(request.user, 'id', None))
+            response_data['user_rank'] = ranks  # Include all ranks
+        except Exception as e:
+            logger.exception('Failed to compute ranks for user=%s: %s', getattr(request.user, 'id', None), str(e))
             response_data['overall_rank'] = None
+            response_data['user_rank'] = None
 
+        # Add points breakdown to response
         response_data['points'] = {
-            'points_awarded': points_result['points_awarded'],
-            'breakdown': points_result['breakdown'],
-            'total_user_points': points_result['total_user_points'],
+            'points_awarded': int(points_result.get('points_awarded', 0)),
+            'breakdown': points_result.get('breakdown', {}),
+            'total_user_points': int(points_result.get('total_user_points', 0)),
         }
 
-        # Include applied transaction details (if available) to clarify why points_awarded may be 0
+        # Add points breakdown to response
+        breakdown = points_result.get('breakdown', {}) or {}
+        # Somme robuste des points dans le breakdown
+        try:
+            sum_breakdown = sum(int(v.get('points', 0)) for v in breakdown.values() if isinstance(v, dict))
+        except Exception:
+            sum_breakdown = 0
+
+        # Valeur retournée par le service (peut être delta). On préfère la somme du breakdown pour la cohérence d'affichage.
+        raw_awarded = points_result.get('points_awarded')
+        try:
+            awarded = int(raw_awarded) if raw_awarded is not None else sum_breakdown
+        except Exception:
+            awarded = sum_breakdown
+
+        if awarded != sum_breakdown:
+            logger.warning(
+                "Inconsistent scoring for report %s: points_awarded=%s but breakdown sum=%s. Using breakdown sum for response.",
+                report.pk, awarded, sum_breakdown
+            )
+            awarded = sum_breakdown
+
+        response_data['points'] = {
+            'points_awarded': int(awarded),
+            'breakdown': breakdown,
+            'total_user_points': int(points_result.get('total_user_points', 0)),
+        }
+        # Include transaction details if available (inchangé)
         tx_id = points_result.get('transaction_id')
         if tx_id:
             try:
                 from leaderboard_service.models import ScoreTransaction
-                tx = ScoreTransaction.objects.filter(id=tx_id).values('id', 'points', 'transaction_type', 'created_at').first()
+                tx = ScoreTransaction.objects.filter(id=tx_id).values(
+                    'id', 'points', 'transaction_type', 'created_at'
+                ).first()
                 if tx:
-                    response_data['points']['applied_transaction'] = tx
-                    # If service returned 0 because transaction already existed, report the actual awarded points
-                    if response_data['points']['points_awarded'] == 0 and tx['transaction_type'] == ScoreTransaction.TransactionType.REPORT_CREATED:
-                        response_data['points']['points_awarded'] = tx['points']
-                        response_data['points']['note'] = 'points were awarded earlier (transaction exists)'
-            except Exception:
-                logger.exception('Failed to fetch applied transaction info for tx_id=%s', tx_id)
+                    response_data['points']['transaction'] = {
+                        'id': tx['id'],
+                        'points': int(tx['points']),
+                        'type': tx['transaction_type'],
+                        'created_at': tx['created_at'].isoformat() if tx['created_at'] else None
+                    }
+            except Exception as e:
+                logger.exception('Failed to fetch transaction info for tx_id=%s: %s', tx_id, str(e))
 
         headers = self.get_success_headers(serializer.data)
         return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)

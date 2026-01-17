@@ -150,28 +150,28 @@ class _ReportPointsPageState extends State<ReportPointsPage>
   }
 
   Widget _buildHeader() {
-    return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-          child: Row(
-            children: [
-              // Logo
-              SvgPicture.asset(cyanLogo, height: 32),
-              const Spacer(),
-              // Close button
-              IconButton(
-                onPressed: _navigateToHome,
-                icon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedCancel01,
-                  color: seedColor,
-                  size: 24,
-                ),
-              ),
-            ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      child: Row(
+        children: [
+          // Logo
+          SvgPicture.asset(cyanLogo, height: 32),
+          const Spacer(),
+          // Close button
+          IconButton(
+            onPressed: _navigateToHome,
+            icon: HugeIcon(
+              icon: HugeIcons.strokeRoundedCancel01,
+              color: seedColor,
+              size: 24,
+            ),
           ),
-        )
-        .animate(controller: _entranceAnimationController)
-        .fadeIn(duration: 400.ms)
-        .slideY(begin: -0.2, end: 0);
+        ],
+      )
+          .animate(controller: _entranceAnimationController)
+          .fadeIn(duration: 400.ms)
+          .slideY(begin: -0.2, end: 0),
+    );
   }
 
   Widget _buildSuccessIcon() {

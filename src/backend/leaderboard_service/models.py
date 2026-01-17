@@ -103,6 +103,17 @@ class ScoreTransaction(models.Model):
     Log of every point transaction for audit and history.
     """
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["report", "transaction_type"],
+                name="unique_report_created_transaction",
+                condition=models.Q(
+                    transaction_type="REPORT_CREATED"
+                )
+            )
+        ]
+
     class TransactionType(models.TextChoices):
         REPORT_CREATED = "REPORT_CREATED", "Report Created"
         REPORT_VERIFIED = "REPORT_VERIFIED", "Report Verified"

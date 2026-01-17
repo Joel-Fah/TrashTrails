@@ -54,11 +54,22 @@ class PointsBreakdownItem {
       reason: parseString(json['reason']) ?? '',
       rarity: parseString(json['rarity']),
       multiplier: parseDouble(json['multiplier']),
-      characterCount: parseInt(json['character_count']),
-      imageCount: parseInt(json['image_count']),
-      firstImagePoints: parseInt(json['first_image_points']),
-      additionalImagePoints: parseInt(json['additional_image_points']),
+      characterCount: parseInt(
+        json['character_count'] ?? json['characterCount'],
+      ),
+      imageCount: parseInt(json['image_count'] ?? json['imageCount']),
+      firstImagePoints: parseInt(
+        json['first_image_points'] ?? json['firstImagePoints'],
+      ),
+      additionalImagePoints: parseInt(
+        json['additional_image_points'] ?? json['additionalImagePoints'],
+      ),
     );
+  }
+
+  /// Creates an empty PointsBreakdownItem
+  factory PointsBreakdownItem.empty() {
+    return const PointsBreakdownItem(points: 0, reason: '');
   }
 
   /// Converts to JSON
@@ -210,7 +221,8 @@ class ReportPointsModel {
   /// Creates a ReportPointsModel from JSON
   factory ReportPointsModel.fromJson(Map<String, dynamic> json) {
     // Ensure breakdown map exists
-    final Map<String, dynamic> breakdownJson = (json['breakdown'] is Map<String, dynamic>)
+    final Map<String, dynamic> breakdownJson =
+        (json['breakdown'] is Map<String, dynamic>)
         ? json['breakdown'] as Map<String, dynamic>
         : <String, dynamic>{};
 
@@ -223,7 +235,8 @@ class ReportPointsModel {
 
     // If backend didn't provide points_awarded but breakdown has values, use the sum as fallback
     if (pointsAwarded == 0) {
-      final int sumBreakdown = breakdown.title.points +
+      final int sumBreakdown =
+          breakdown.title.points +
           breakdown.severity.points +
           breakdown.category.points +
           breakdown.observation.points +
@@ -237,9 +250,17 @@ class ReportPointsModel {
     return ReportPointsModel(
       pointsAwarded: pointsAwarded,
       breakdown: breakdown,
-      totalUserPoints: parseInt(json['total_user_points'] ?? json['total_points'] ?? json['totalUserPoints']) ?? 0,
-      userRank: parseInt(json['user_rank'] ?? json['rank'] ?? json['userRank']) ?? 0,
-      transactionId: parseInt(json['transaction_id'] ?? json['transactionId']) ?? 0,
+      totalUserPoints:
+          parseInt(
+            json['total_user_points'] ??
+                json['total_points'] ??
+                json['totalUserPoints'],
+          ) ??
+          0,
+      userRank:
+          parseInt(json['user_rank'] ?? json['rank'] ?? json['userRank']) ?? 0,
+      transactionId:
+          parseInt(json['transaction_id'] ?? json['transactionId']) ?? 0,
     );
   }
 
@@ -318,21 +339,27 @@ class ReportCreationResult {
     }
 
     // Determine report JSON
-    final Map<String, dynamic> reportJson = (payload.containsKey('report') && payload['report'] is Map<String, dynamic>)
+    final Map<String, dynamic> reportJson =
+        (payload.containsKey('report') &&
+            payload['report'] is Map<String, dynamic>)
         ? payload['report'] as Map<String, dynamic>
         : (json.containsKey('report') && json['report'] is Map<String, dynamic>)
-            ? json['report'] as Map<String, dynamic>
-            : payload;
+        ? json['report'] as Map<String, dynamic>
+        : payload;
 
     // Try multiple places for points JSON
     Map<String, dynamic>? pointsJson;
-    if (payload.containsKey('points') && payload['points'] is Map<String, dynamic>) {
+    if (payload.containsKey('points') &&
+        payload['points'] is Map<String, dynamic>) {
       pointsJson = payload['points'] as Map<String, dynamic>;
-    } else if (payload.containsKey('report_points') && payload['report_points'] is Map<String, dynamic>) {
+    } else if (payload.containsKey('report_points') &&
+        payload['report_points'] is Map<String, dynamic>) {
       pointsJson = payload['report_points'] as Map<String, dynamic>;
-    } else if (reportJson.containsKey('points') && reportJson['points'] is Map<String, dynamic>) {
+    } else if (reportJson.containsKey('points') &&
+        reportJson['points'] is Map<String, dynamic>) {
       pointsJson = reportJson['points'] as Map<String, dynamic>;
-    } else if (json.containsKey('points') && json['points'] is Map<String, dynamic>) {
+    } else if (json.containsKey('points') &&
+        json['points'] is Map<String, dynamic>) {
       pointsJson = json['points'] as Map<String, dynamic>;
     }
 
@@ -340,15 +367,17 @@ class ReportCreationResult {
     int? overallRank;
     if (payload.containsKey('overall_rank') && payload['overall_rank'] is int) {
       overallRank = payload['overall_rank'] as int;
-    } else if (payload.containsKey('overallRank') && payload['overallRank'] is int) {
+    } else if (payload.containsKey('overallRank') &&
+        payload['overallRank'] is int) {
       overallRank = payload['overallRank'] as int;
     }
-
 
     // Build result
     return ReportCreationResult(
       report: ReportModel.fromJson(reportJson),
-      points: pointsJson != null ? ReportPointsModel.fromJson(pointsJson) : null,
+      points: pointsJson != null
+          ? ReportPointsModel.fromJson(pointsJson)
+          : null,
       overallRank: overallRank,
       rawResponse: json,
     );

@@ -511,6 +511,10 @@ class NewReportController extends GetxController {
   Future<ReportCreationResult?> submitReport() async {
     if (!isFormValid) {
       debugPrint('NewReportController: Form is not valid');
+      debugPrint('  - Title: ${title.value.isNotEmpty ? "✓" : "✗"}');
+      debugPrint('  - Category: ${selectedCategory.value != null ? "✓" : "✗"}');
+      debugPrint('  - Severity: ${selectedSeverity != null ? "✓" : "✗"}');
+      debugPrint('  - Photos: ${hasPhotos ? "✓ (${capturedImages.length})" : "✗"}');
       return null;
     }
 
@@ -520,12 +524,20 @@ class NewReportController extends GetxController {
       // Get severity model
       final severity = getSeverityByLevel(selectedSeverityLevel.value);
       if (severity == null) {
-        debugPrint('NewReportController: Severity not found');
+        debugPrint('NewReportController: ❌ Severity not found for level ${selectedSeverityLevel.value}');
         return null;
       }
 
       // Get image paths for upload
       final imagePaths = capturedImages.map((file) => file.path).toList();
+
+      debugPrint('NewReportController: 📤 Submitting report...');
+      debugPrint('  - Title: ${title.value}');
+      debugPrint('  - Severity: ${severity.name} (Level ${severity.level})');
+      debugPrint('  - Category: ${selectedCategory.value!.name}');
+      debugPrint('  - Observation: ${observation.value.isNotEmpty ? "${observation.value.length} chars" : "none"}');
+      debugPrint('  - Location: ${currentLocation.value != null ? "provided" : "none"}');
+      debugPrint('  - Images: ${imagePaths.length} files');
 
       // Create report via controller with points
       final result = await _reportController.createReportWithPoints(
@@ -538,14 +550,57 @@ class NewReportController extends GetxController {
       );
 
       if (result != null) {
-        debugPrint('NewReportController: Report created successfully - ${result.report.id}, Points: ${result.points?.pointsAwarded ?? 0}');
+        debugPrint('NewReportController: ✅ Report created successfully!');
+        debugPrint('  - Report ID: ${result.report.id}');
+        debugPrint('  - Images uploaded: ${result.report.images.length}');
+        debugPrint('  - Has points data: ${result.hasPoints}');
+
+        if (result.hasPoints && result.points != null) {
+          final p = result.points!;
+          debugPrint('  - Points awarded: ${p.pointsAwarded}');
+          debugPrint('  - Total user points: ${p.totalUserPoints}');
+          debugPrint('  - User rank: ${p.userRank}');
+          debugPrint('  - Transaction ID: ${p.transactionId}');
+
+          // Verify breakdown data
+          final b = p.breakdown;
+          final totalFromBreakdown = b.title.points +
+              b.severity.points +
+              b.category.points +
+              b.observation.points +
+              b.location.points +
+              b.images.points;
+
+          debugPrint('  - Breakdown total: $totalFromBreakdown pts');
+          debugPrint('    • Title: ${b.title.points} pts');
+          debugPrint('    • Severity: ${b.severity.points} pts');
+          debugPrint('    • Category: ${b.category.points} pts');
+          debugPrint('    • Observation: ${b.observation.points} pts');
+          debugPrint('    • Location: ${b.location.points} pts');
+          debugPrint('    • Images: ${b.images.points} pts (${b.images.imageCount ?? 0} images)');
+
+          if (totalFromBreakdown != p.pointsAwarded) {
+            debugPrint('  - ⚠️ WARNING: Breakdown total ($totalFromBreakdown) != points awarded (${p.pointsAwarded})');
+          }
+        } else {
+          debugPrint('  - ⚠️ No points data in response');
+          if (result.rawResponse != null) {
+            debugPrint('  - Raw response keys: ${result.rawResponse!.keys.toList()}');
+          }
+        }
+
+        if (result.overallRank != null) {
+          debugPrint('  - Overall rank: ${result.overallRank}');
+        }
+
         return result;
       } else {
-        debugPrint('NewReportController: Failed to create report');
+        debugPrint('NewReportController: ❌ Failed to create report (result is null)');
         return null;
       }
-    } catch (e) {
-      debugPrint('NewReportController: Error submitting report - $e');
+    } catch (e, stackTrace) {
+      debugPrint('NewReportController: ❌ Error submitting report - $e');
+      debugPrint('NewReportController: Stack trace: $stackTrace');
       return null;
     } finally {
       isSubmitting.value = false;

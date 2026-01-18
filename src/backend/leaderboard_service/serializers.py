@@ -30,7 +30,7 @@ class UserScoreSerializer(serializers.ModelSerializer):
             'username',
             'full_name',
             'avatar',
-                'total_points',
+            'total_points',
             'weekly_points',
             'monthly_points',
             'yearly_points',
@@ -83,18 +83,35 @@ class LeaderboardEntrySerializer(serializers.Serializer):
     total_reports = serializers.IntegerField()
 
 
-class PointBreakdownSerializer(serializers.Serializer):
-    """Serializer for point breakdown returned after report creation."""
+class PointBreakdownItemSerializer(serializers.Serializer):
+    """Serializer for individual point breakdown item."""
     points = serializers.IntegerField()
     reason = serializers.CharField()
+    # Optional fields for specific breakdown types
+    rarity = serializers.CharField(required=False, allow_null=True)
+    multiplier = serializers.FloatField(required=False, allow_null=True)
+    character_count = serializers.IntegerField(required=False, allow_null=True)
+    image_count = serializers.IntegerField(required=False, allow_null=True)
+    first_image_points = serializers.IntegerField(required=False, allow_null=True)
+    additional_image_points = serializers.IntegerField(required=False, allow_null=True)
+
+
+class PointsBreakdownSerializer(serializers.Serializer):
+    """Serializer for complete points breakdown."""
+    title = PointBreakdownItemSerializer()
+    severity = PointBreakdownItemSerializer()
+    category = PointBreakdownItemSerializer()
+    observation = PointBreakdownItemSerializer()
+    location = PointBreakdownItemSerializer()
+    images = PointBreakdownItemSerializer()
 
 
 class ReportPointsResultSerializer(serializers.Serializer):
     """Serializer for the result of point calculation."""
     points_awarded = serializers.IntegerField()
-    breakdown = serializers.DictField(child=PointBreakdownSerializer())
+    breakdown = PointsBreakdownSerializer()
     total_user_points = serializers.IntegerField()
-    transaction_id = serializers.IntegerField()
+    transaction_id = serializers.IntegerField(allow_null=True)
 
 
 class UserStatsSerializer(serializers.Serializer):
@@ -106,3 +123,11 @@ class UserStatsSerializer(serializers.Serializer):
     total_reports = serializers.IntegerField()
     verified_reports = serializers.IntegerField()
 
+
+class UserRankSerializer(serializers.Serializer):
+    """Serializer for user rank information."""
+    overall_rank = serializers.IntegerField(allow_null=True)
+    weekly_rank = serializers.IntegerField(allow_null=True)
+    monthly_rank = serializers.IntegerField(allow_null=True)
+    yearly_rank = serializers.IntegerField(allow_null=True)
+    total_users = serializers.IntegerField()

@@ -24,7 +24,7 @@ class LeaderboardListItem extends StatelessWidget {
     final isTopThree = entry.rank <= 3;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Row(
         spacing: 16.0,
         children: [
@@ -80,8 +80,8 @@ class LeaderboardListItem extends StatelessWidget {
                           if (isCurrentUser)
                             Container(
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
+                                    horizontal: 8.0,
+                                    vertical: 4.0,
                                   ),
                                   decoration: BoxDecoration(
                                     color: seedColor,

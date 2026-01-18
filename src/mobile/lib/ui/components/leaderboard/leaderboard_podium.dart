@@ -40,43 +40,38 @@ class LeaderboardPodium extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
+        spacing: 8.0,
         children: [
           // 2nd place (Silver)
           if (second != null)
-            Expanded(
-              child: _buildPodiumItem(
-                context: context,
-                entry: second,
-                rank: 2,
-                height: 100.0,
-                delay: 200.ms,
-              ),
+            _buildPodiumItem(
+              context: context,
+              entry: second,
+              rank: 2,
+              height: 120.0,
+              delay: 200.ms,
             ),
           if (second != null) const Gap(12.0),
 
           // 1st place (Gold) - Tallest
           if (first != null)
-            Expanded(
-              child: _buildPodiumItem(
-                context: context,
-                entry: first,
-                rank: 1,
-                height: 140.0,
-                delay: 0.ms,
-              ),
+            _buildPodiumItem(
+              context: context,
+              entry: first,
+              rank: 1,
+              height: 160.0,
+              delay: 0.ms,
             ),
           if (first != null && third != null) const Gap(12.0),
 
           // 3rd place (Bronze)
           if (third != null)
-            Expanded(
-              child: _buildPodiumItem(
-                context: context,
-                entry: third,
-                rank: 3,
-                height: 80.0,
-                delay: 400.ms,
-              ),
+            _buildPodiumItem(
+              context: context,
+              entry: third,
+              rank: 3,
+              height: 80.0,
+              delay: 400.ms,
             ),
         ],
       ),
@@ -195,18 +190,20 @@ class LeaderboardPodium extends StatelessWidget {
                 borderRadius: borderRadius * 4.5,
               ),
               child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(medalImg, width: 64.0),
-                    const Gap(4.0),
-                    Text(
-                      '#$rank',
-                      style: AppTextStyles.h1.copyWith(
-                        fontVariations: [FontVariation('wght', 600)],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(child: Image.asset(medalImg, width: 64.0)),
+                      Text(
+                        '#$rank',
+                        style: AppTextStyles.h1.copyWith(
+                          fontVariations: [FontVariation('wght', 600)],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             )

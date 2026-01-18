@@ -1,6 +1,7 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.db.utils import OperationalError, ProgrammingError
+from django.db import transaction
 import logging
 
 logger = logging.getLogger(__name__)
@@ -16,7 +17,6 @@ try:
     from report_service.models import ReportImage as ReportImageModel
 except Exception:
     ReportImageModel = None
-
 
 if ReportModel is not None:
     @receiver(post_save, sender=ReportModel)
@@ -37,37 +37,20 @@ if ReportModel is not None:
         # (e.g., verification) can be handled with dedicated logic.
         return
 
+# DISABLED: Image-based point recalculation via signals
+# This causes race conditions where the API returns before signals complete.
+# Instead, the API and admin now explicitly call award_report_points() after
+# all images are saved, ensuring synchronous point calculation.
 
-# If ReportImage model exists, attach handlers to recalculate/adjust points when images change
 if ReportImageModel is not None:
-    @receiver(post_save, sender=ReportImageModel)
-    def report_image_saved(sender, instance, created, **kwargs):
-        """When an image is added to a report, recalculate points and award delta."""
-        try:
-            from leaderboard_service.models import ScoreTransaction
-            from leaderboard_service.services import score_service
-        except (OperationalError, ProgrammingError, ImportError) as e:
-            logger.debug("Skipping image-based point award: %s", e)
-            return
-        except Exception as e:
-            logger.exception("Unexpected error importing leaderboard components for image: %s", e)
-            return
-
-        report = getattr(instance, 'report', None)
-        if not report:
-            logger.debug("ReportImage %s has no report; skipping point recalculation.", getattr(instance, 'pk', None))
-            return
-
-        try:
-            score_service.award_report_points(report)
-            logger.info("Adjusted points after image save for report %s", report.pk)
-        except Exception as exc:
-            logger.exception("Failed to adjust points after image save for report %s: %s", report.pk, exc)
-
-
     @receiver(post_delete, sender=ReportImageModel)
     def report_image_deleted(sender, instance, **kwargs):
-        """When an image is removed from a report, recalculate points and apply delta (possibly penalty)."""
+        """
+        When an image is removed from a report (outside of API/admin creation flow),
+        recalculate points and apply delta (possibly penalty).
+
+        This only handles deletions after the report is already created.
+        """
         try:
             from leaderboard_service.models import ScoreTransaction
             from leaderboard_service.services import score_service
@@ -80,11 +63,17 @@ if ReportImageModel is not None:
 
         report = getattr(instance, 'report', None)
         if not report:
-            logger.debug("ReportImage deleted but no associated report found (image id=%s)", getattr(instance, 'pk', None))
+            logger.debug("ReportImage deleted but no associated report found (image id=%s)",
+                         getattr(instance, 'pk', None))
             return
 
-        try:
-            score_service.award_report_points(report)
-            logger.info("Adjusted points after image delete for report %s", report.pk)
-        except Exception as exc:
-            logger.exception("Failed to adjust points after image delete for report %s: %s", report.pk, exc)
+        def _recalculate_points():
+            """Recalculate points after transaction commits."""
+            try:
+                score_service.award_report_points(report)
+                logger.info("Adjusted points after image delete for report %s", report.pk)
+            except Exception as exc:
+                logger.exception("Failed to adjust points after image delete for report %s: %s", report.pk, exc)
+
+        # Use on_commit to ensure the deletion is committed before recalculation
+        transaction.on_commit(_recalculate_points)

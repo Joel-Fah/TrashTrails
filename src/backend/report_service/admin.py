@@ -1,7 +1,11 @@
 from django.contrib import admin
-from django.db import models
+from django.db import models, transaction
+from django.db.models import Sum, Value
+from django.db.models.functions import Coalesce
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin, TabularInline
+
+from leaderboard_service.models import ScoreTransaction
 from .models import Report, ReportImage, TrashCategory, ReportSeverity
 from unfold.contrib.forms.widgets import WysiwygWidget
 
@@ -14,7 +18,7 @@ class ReportImageInline(TabularInline):
 @admin.register(Report)
 class ReportAdmin(ModelAdmin):
     list_display = ('title', 'user', 'get_street_name', 'category', 'severity_display', 'status_display', 'created_at',
-                    'row_actions')
+                    'points_display', 'row_actions')
     list_filter = ('status', 'category', 'severity', 'created_at')
     search_fields = ('title', 'user__username', 'location__street_name')
     readonly_fields = ('created_at', 'slug')
@@ -46,18 +50,28 @@ class ReportAdmin(ModelAdmin):
             obj.get_status_display()
         )
 
+    @admin.display(description='Points')
+    def points_display(self, obj):
+        """
+        Returns the total net points related to the report (sum of ScoreTransaction.points).
+        Uses query aggregation to avoid None errors.
+        """
+        agg = ScoreTransaction.objects.filter(report=obj).aggregate(total=Coalesce(Sum('points'), Value(0)))
+        try:
+            return int(agg.get('total') or 0)
+        except Exception:
+            return 0
+
     @admin.display(description='Severity')
     def severity_display(self, obj):
         try:
             sev = obj.severity
-            # Récupère le niveau si c'est un objet ReportSeverity, sinon tente de convertir en int
             level = getattr(sev, 'level', None)
             if level is None:
                 try:
                     level = int(sev)
                 except Exception:
                     level = None
-            # Libellé à afficher : privilégie `name` si présent, sinon str()
             label = getattr(sev, 'name', str(sev))
         except Exception:
             return '-'
@@ -78,26 +92,48 @@ class ReportAdmin(ModelAdmin):
 
     def save_related(self, request, form, formsets, change):
         """
-        Called after the main object and its inlines have been saved.
-        We call the score service here to ensure images added via inlines
-        are included in the initial scoring when creating from the admin.
+        After saving inlines, award points ONLY if:
+        1. This is a new report (change == False)
+        2. AND no REPORT_CREATED transaction exists yet (wasn't created via API)
+
+        This prevents double-scoring when reports are created via API/frontend.
         """
         super().save_related(request, form, formsets, change)
 
-        # Attempt to award/adjust points now that related objects (images) are saved.
-        try:
-            # Import lazily to avoid import-time DB access issues
-            from leaderboard_service.services import score_service
-        except Exception:
-            # If leaderboard service isn't available for any reason, don't break admin save
+        # Only process new reports created in admin
+        if change:
             return
 
+        obj = form.instance
+
+        # Check if points were already awarded (e.g., via API)
         try:
-            obj = form.instance
-            score_service.award_report_points(obj)
+            from leaderboard_service.models import ScoreTransaction
+            already_awarded = ScoreTransaction.objects.filter(
+                report=obj,
+                transaction_type=ScoreTransaction.TransactionType.REPORT_CREATED
+            ).exists()
+
+            if already_awarded:
+                # Points already awarded via API, skip
+                return
         except Exception:
-            # Avoid raising from admin UI; log would be better but keep silent here
+            # If we can't check, skip to be safe
             return
+
+        # Only import and run scoring if needed
+        try:
+            from leaderboard_service.services import score_service
+        except Exception:
+            return
+
+        def _run_scoring():
+            try:
+                score_service.award_report_points(obj.pk)
+            except Exception:
+                pass
+
+        transaction.on_commit(_run_scoring)
 
     def get_urls(self):
         from django.urls import path
@@ -120,12 +156,12 @@ class ReportAdmin(ModelAdmin):
             return redirect(reverse('admin:report_service_report_changelist'))
 
         if obj.status != Report.ReportStatus.PENDING:
-            messages.warning(request, 'Action disponible uniquement pour les rapports en attente.')
+            messages.warning(request, 'Action available only for pending reports.')
             return redirect(request.META.get('HTTP_REFERER', reverse('admin:report_service_report_changelist')))
 
         obj.status = Report.ReportStatus.VERIFIED
         obj.save(update_fields=['status'])
-        messages.success(request, 'report verified.')
+        messages.success(request, 'Report verified.')
         return redirect(request.META.get('HTTP_REFERER', reverse('admin:report_service_report_changelist')))
 
     def reject_view(self, request, report_id, *args, **kwargs):
@@ -169,9 +205,13 @@ class ReportAdmin(ModelAdmin):
 
 @admin.register(ReportImage)
 class ReportImageAdmin(ModelAdmin):
-    list_display = ('report', 'image', 'uploaded_at')
-    list_filter = ('uploaded_at',)
+    list_display = ('report', 'get_report_user', 'uploaded_at')
+    list_filter = ('uploaded_at', 'report__user')
     readonly_fields = ('uploaded_at',)
+
+    @admin.display(description='Uploaded by')
+    def get_report_user(self, obj):
+        return obj.report.user.username
 
 
 @admin.register(TrashCategory)

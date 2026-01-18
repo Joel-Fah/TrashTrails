@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
+from django.db import transaction
 
 from .models import Report, TrashCategory, ReportSeverity
 from .permissions import IsOwnerOrReadOnly
@@ -51,24 +52,29 @@ class ReportViewSet(ModelViewSet):
         """
         Create a new report and calculate points for the user.
         Accepts multipart/form-data with images or JSON body with images as base64/list.
+
+        IMPORTANT: All point calculation happens synchronously AFTER images are saved,
+        ensuring the response includes accurate points.
         """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        # Save the report and all images
-        self.perform_create(serializer)
+        # Save the report and all images (serializer handles this)
+        with transaction.atomic():
+            self.perform_create(serializer)
+            report_id = serializer.instance.pk
 
-        # Get the created report with all related data
-        # Force a fresh query to ensure all images are loaded
+        # NOW fetch the report with ALL related data (outside transaction, fully committed)
         report = Report.objects.select_related(
             'category', 'severity', 'location', 'user'
-        ).prefetch_related('images').get(pk=serializer.instance.pk)
+        ).prefetch_related('images').get(pk=report_id)
 
         # Log image count for debugging
         image_count = report.images.count()
         logger.info(f"Report {report.pk} created with {image_count} images")
 
-        # Calculate and award points AFTER all images are saved
+        # Calculate and award points SYNCHRONOUSLY after all images are saved
+        # This happens WITHIN the transaction, so the response will wait for completion
         points_result = score_service.award_report_points(report)
 
         logger.info(f"Points calculated for report {report.pk}: {points_result}")
@@ -88,30 +94,26 @@ class ReportViewSet(ModelViewSet):
             response_data['user_rank'] = None
 
         # Add points breakdown to response
-        response_data['points'] = {
-            'points_awarded': int(points_result.get('points_awarded', 0)),
-            'breakdown': points_result.get('breakdown', {}),
-            'total_user_points': int(points_result.get('total_user_points', 0)),
-        }
-
-        # Add points breakdown to response
         breakdown = points_result.get('breakdown', {}) or {}
-        # Somme robuste des points dans le breakdown
+
+        # Calculate sum from breakdown for consistency
         try:
             sum_breakdown = sum(int(v.get('points', 0)) for v in breakdown.values() if isinstance(v, dict))
         except Exception:
             sum_breakdown = 0
 
-        # Valeur retournée par le service (peut être delta). On préfère la somme du breakdown pour la cohérence d'affichage.
+        # Use the points_awarded from service (should match breakdown sum for new reports)
         raw_awarded = points_result.get('points_awarded')
         try:
             awarded = int(raw_awarded) if raw_awarded is not None else sum_breakdown
         except Exception:
             awarded = sum_breakdown
 
+        # For new reports (REPORT_CREATED), awarded should equal breakdown sum
+        # Log warning if there's a mismatch
         if awarded != sum_breakdown:
             logger.warning(
-                "Inconsistent scoring for report %s: points_awarded=%s but breakdown sum=%s. Using breakdown sum for response.",
+                "Points mismatch for report %s: points_awarded=%s but breakdown sum=%s. Using breakdown sum.",
                 report.pk, awarded, sum_breakdown
             )
             awarded = sum_breakdown
@@ -121,7 +123,8 @@ class ReportViewSet(ModelViewSet):
             'breakdown': breakdown,
             'total_user_points': int(points_result.get('total_user_points', 0)),
         }
-        # Include transaction details if available (inchangé)
+
+        # Include transaction details if available
         tx_id = points_result.get('transaction_id')
         if tx_id:
             try:

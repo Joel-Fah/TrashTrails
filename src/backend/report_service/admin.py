@@ -53,8 +53,8 @@ class ReportAdmin(ModelAdmin):
     @admin.display(description='Points')
     def points_display(self, obj):
         """
-        Retourne le total net des points liés au rapport (somme des ScoreTransaction.points).
-        Utilise une agrégation par requête pour éviter les erreurs None.
+        Returns the total net points related to the report (sum of ScoreTransaction.points).
+        Uses query aggregation to avoid None errors.
         """
         agg = ScoreTransaction.objects.filter(report=obj).aggregate(total=Coalesce(Sum('points'), Value(0)))
         try:
@@ -66,14 +66,12 @@ class ReportAdmin(ModelAdmin):
     def severity_display(self, obj):
         try:
             sev = obj.severity
-            # Récupère le niveau si c'est un objet ReportSeverity, sinon tente de convertir en int
             level = getattr(sev, 'level', None)
             if level is None:
                 try:
                     level = int(sev)
                 except Exception:
                     level = None
-            # Libellé à afficher : privilégie `name` si présent, sinon str()
             label = getattr(sev, 'name', str(sev))
         except Exception:
             return '-'
@@ -94,27 +92,46 @@ class ReportAdmin(ModelAdmin):
 
     def save_related(self, request, form, formsets, change):
         """
-        Après sauvegarde des inlines, lancer le scoring uniquement lors de la création depuis l'admin
-        (évite double scoring si l'API/ frontend a déjà calculé les points).
+        After saving inlines, award points ONLY if:
+        1. This is a new report (change == False)
+        2. AND no REPORT_CREATED transaction exists yet (wasn't created via API)
+
+        This prevents double-scoring when reports are created via API/frontend.
         """
         super().save_related(request, form, formsets, change)
 
-        # n'appeler le service de score que si on crée depuis l'admin (change == False)
+        # Only process new reports created in admin
         if change:
             return
 
+        obj = form.instance
+
+        # Check if points were already awarded (e.g., via API)
+        try:
+            from leaderboard_service.models import ScoreTransaction
+            already_awarded = ScoreTransaction.objects.filter(
+                report=obj,
+                transaction_type=ScoreTransaction.TransactionType.REPORT_CREATED
+            ).exists()
+
+            if already_awarded:
+                # Points already awarded via API, skip
+                return
+        except Exception:
+            # If we can't check, skip to be safe
+            return
+
+        # Only import and run scoring if needed
         try:
             from leaderboard_service.services import score_service
         except Exception:
             return
 
-        obj = form.instance
-
         def _run_scoring():
             try:
                 score_service.award_report_points(obj.pk)
             except Exception:
-                return
+                pass
 
         transaction.on_commit(_run_scoring)
 
@@ -139,12 +156,12 @@ class ReportAdmin(ModelAdmin):
             return redirect(reverse('admin:report_service_report_changelist'))
 
         if obj.status != Report.ReportStatus.PENDING:
-            messages.warning(request, 'Action disponible uniquement pour les rapports en attente.')
+            messages.warning(request, 'Action available only for pending reports.')
             return redirect(request.META.get('HTTP_REFERER', reverse('admin:report_service_report_changelist')))
 
         obj.status = Report.ReportStatus.VERIFIED
         obj.save(update_fields=['status'])
-        messages.success(request, 'report verified.')
+        messages.success(request, 'Report verified.')
         return redirect(request.META.get('HTTP_REFERER', reverse('admin:report_service_report_changelist')))
 
     def reject_view(self, request, report_id, *args, **kwargs):

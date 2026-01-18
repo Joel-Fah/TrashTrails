@@ -1,6 +1,7 @@
 from typing import Dict, Any
-from django.db import transaction
+
 from django.contrib.auth.models import User
+from django.db import transaction
 
 from .models import (
     PointConfiguration,
@@ -380,6 +381,7 @@ class ScoreService:
             for key, val in breakdown.items()
         }
 
+        # Get existing REPORT_CREATED transaction
         existing_tx = ScoreTransaction.objects.filter(
             report=report,
             transaction_type=ScoreTransaction.TransactionType.REPORT_CREATED,
@@ -387,6 +389,7 @@ class ScoreService:
 
         user_score, _ = UserScore.objects.get_or_create(user=user)
 
+        # CASE 1: First time awarding points (no REPORT_CREATED transaction exists)
         if existing_tx is None:
             score_transaction = ScoreTransaction.objects.create(
                 user=user,
@@ -408,9 +411,11 @@ class ScoreService:
                 "transaction_id": int(score_transaction.id),
             }
 
+        # CASE 2: Update - calculate delta from original REPORT_CREATED
         old_points = int(existing_tx.points or 0)
         delta = new_total_points - old_points
 
+        # No change in points
         if delta == 0:
             return {
                 "points_awarded": int(new_total_points),
@@ -419,6 +424,7 @@ class ScoreService:
                 "transaction_id": int(existing_tx.id),
             }
 
+        # CASE 3: Points changed - create adjustment transaction
         tx_type = ScoreTransaction.TransactionType.BONUS if delta > 0 else ScoreTransaction.TransactionType.PENALTY
         description = f"Adjustment for report '{report.title}': {old_points} -> {new_total_points}"
         adjustment_breakdown = {

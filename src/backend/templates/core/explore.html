@@ -463,7 +463,7 @@
                     {% url 'core:home' as home_url %}
 
                     {% include 'components/button_outlined.html' with text="Back Home" href=home_url %}
-                    {% include 'components/button_solid.html' with text="Download App" href="" %}
+                    {% include 'components/button_solid.html' with text="Download App" href="https://github.com/Joel-Fah/TrashTrails/releases/download/v1/app-release.apk" %}
                 </div>
             </div>
             <img src="{% static 'common/images/world.png' %}" alt="Decoration"
@@ -489,7 +489,7 @@
                 <a href="{% url 'core:about' %}" class="nav-link">About</a>
                 <a href="{% url 'core:leaderboard' %}" class="nav-link">Leaderboard</a>
             </div>
-            <a href="#download" class="nav-cta">Get Started</a>
+            <a href="https://github.com/Joel-Fah/TrashTrails/releases/download/v1/app-release.apk" class="nav-cta">Get Started</a>
         </nav>
     {% endif %}
 {% endblock %}

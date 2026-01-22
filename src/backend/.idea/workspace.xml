@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a14538a3-038d-410f-aae0-4e8c31caf270" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/settings/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/settings/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/settings/development.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/settings/development.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/settings/production.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/settings/production.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,7 +91,7 @@
   <component name="RunManager">
     <configuration name="backend" type="Python.DjangoServer" factoryName="Django server">
       <module name="backend" />
-      <option name="ENV_FILES" value="$PROJECT_DIR$/prod.env" />
+      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>

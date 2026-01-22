@@ -19,7 +19,6 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(" ") if os.getenv('ALLOWED_HOST
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    # Configure a database for your production environment
     'default': dj_database_url.parse(os.getenv('SUPABASE_POSTGRESQL_URL')),
 }
 

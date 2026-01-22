@@ -6,8 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="a14538a3-038d-410f-aae0-4e8c31caf270" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/settings/development.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/settings/development.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/settings/production.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/settings/production.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/staticfiles/staticfiles.json" beforeDir="false" afterPath="$PROJECT_DIR$/staticfiles/staticfiles.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/components/sections/about/cta.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/components/sections/about/cta.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/components/sections/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/components/sections/header.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/components/sections/home/hero.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/components/sections/home/hero.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/core/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/core/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/core/explore.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/core/explore.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,8 +31,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Dockerfile" />
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -93,7 +98,7 @@
   <component name="RunManager">
     <configuration name="backend" type="Python.DjangoServer" factoryName="Django server">
       <module name="backend" />
-      <option name="ENV_FILES" value="" />
+      <option name="ENV_FILES" value="$PROJECT_DIR$/prod.env" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>

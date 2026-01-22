@@ -64,7 +64,8 @@ class NewReportController extends GetxController {
   final RxInt currentImageIndex = 0.obs;
 
   /// Search results for location
-  final RxList<LocationSearchResult> locationSearchResults = <LocationSearchResult>[].obs;
+  final RxList<LocationSearchResult> locationSearchResults =
+      <LocationSearchResult>[].obs;
 
   /// Search query for location
   final RxString locationSearchQuery = ''.obs;
@@ -84,7 +85,9 @@ class NewReportController extends GetxController {
   final RxInt selectedSeverityLevel = 2.obs;
 
   /// Selected category
-  final Rx<TrashCategoryModel?> selectedCategory = Rx<TrashCategoryModel?>(null);
+  final Rx<TrashCategoryModel?> selectedCategory = Rx<TrashCategoryModel?>(
+    null,
+  );
 
   /// Current location (coordinates)
   final Rx<LocationModel?> currentLocation = Rx<LocationModel?>(null);
@@ -95,7 +98,8 @@ class NewReportController extends GetxController {
   // ─── Form Controllers ────────────────────────────────────────────────────
   final TextEditingController titleController = TextEditingController();
   final TextEditingController observationController = TextEditingController();
-  final TextEditingController locationSearchController = TextEditingController();
+  final TextEditingController locationSearchController =
+      TextEditingController();
 
   // ─── Animation Controllers ───────────────────────────────────────────────
   AnimationController? phaseAnimationController;
@@ -112,11 +116,17 @@ class NewReportController extends GetxController {
   // ─── Getters ─────────────────────────────────────────────────────────────
 
   bool get canTakeMorePhotos => capturedImages.length < maxImages;
+
   bool get hasPhotos => capturedImages.isNotEmpty;
+
   int get remainingPhotos => maxImages - capturedImages.length;
+
   bool get isInCameraPhase => currentPhase.value == ReportCreationPhase.camera;
+
   bool get isInFormPhase => currentPhase.value == ReportCreationPhase.form;
-  bool get isInFullScreenPhase => currentPhase.value == ReportCreationPhase.fullScreenImage;
+
+  bool get isInFullScreenPhase =>
+      currentPhase.value == ReportCreationPhase.fullScreenImage;
 
   List<TrashCategoryModel> get availableCategories =>
       _reportController.categories;
@@ -129,6 +139,7 @@ class NewReportController extends GetxController {
       _reportController.isLoadingSeverities.value;
 
   bool get hasCategories => _reportController.hasCategories;
+
   bool get hasSeverities => _reportController.hasSeverities;
 
   bool get isFormValid =>
@@ -151,11 +162,11 @@ class NewReportController extends GetxController {
   /// Get the trash image based on severity level
   String get severityTrashImage {
     return switch (selectedSeverityLevel.value) {
-      1 => trash4,  // Low
-      2 => trash1,  // Medium
-      3 => trash2,  // High
-      4 => trash3,  // Critical
-      _ => trash4,  // Default Medium
+      1 => trash4, // Low
+      2 => trash1, // Medium
+      3 => trash2, // High
+      4 => trash3, // Critical
+      _ => trash4, // Default Medium
     };
   }
 
@@ -172,15 +183,16 @@ class NewReportController extends GetxController {
 
   String getSeverityImage(int level) {
     return switch (level) {
-      1 => trash4,  // Low
-      2 => trash1,  // Medium
-      3 => trash2,  // High
-      4 => trash3,  // Critical
-      _ => trash4,  // Default Medium
+      1 => trash4, // Low
+      2 => trash1, // Medium
+      3 => trash2, // High
+      4 => trash3, // Critical
+      _ => trash4, // Default Medium
     };
   }
 
-  Color get selectedSeverityColor => getSeverityColor(selectedSeverityLevel.value);
+  Color get selectedSeverityColor =>
+      getSeverityColor(selectedSeverityLevel.value);
 
   // ─── Lifecycle ───────────────────────────────────────────────────────────
 
@@ -193,7 +205,9 @@ class NewReportController extends GetxController {
 
     // Sync text controllers with observables
     titleController.addListener(() => title.value = titleController.text);
-    observationController.addListener(() => observation.value = observationController.text);
+    observationController.addListener(
+      () => observation.value = observationController.text,
+    );
     locationSearchController.addListener(_onLocationSearchChanged);
   }
 
@@ -237,7 +251,9 @@ class NewReportController extends GetxController {
       (c) => c.code.toLowerCase() == 'mixed' || c.code.toLowerCase() == 'mix',
     );
     selectedCategory.value = mixedCategory ?? availableCategories.first;
-    debugPrint('NewReportController: Default category set to ${selectedCategory.value?.name}');
+    debugPrint(
+      'NewReportController: Default category set to ${selectedCategory.value?.name}',
+    );
   }
 
   void _setDefaultSeverity() {
@@ -252,7 +268,9 @@ class NewReportController extends GetxController {
     } else if (availableSeverities.isNotEmpty) {
       selectedSeverityLevel.value = availableSeverities.first.level;
     }
-    debugPrint('NewReportController: Default severity set to level ${selectedSeverityLevel.value}');
+    debugPrint(
+      'NewReportController: Default severity set to level ${selectedSeverityLevel.value}',
+    );
   }
 
   Future<void> _initLocation() async {
@@ -264,9 +282,10 @@ class NewReportController extends GetxController {
         currentLocation.value = _locationService.currentLocation;
       }
     }
-    debugPrint('NewReportController: Location initialized - ${currentLocation.value}');
+    debugPrint(
+      'NewReportController: Location initialized - ${currentLocation.value}',
+    );
   }
-
 
   // ─── Phase Management ────────────────────────────────────────────────────
 
@@ -318,7 +337,9 @@ class NewReportController extends GetxController {
 
       if (image != null) {
         capturedImages.add(File(image.path));
-        debugPrint('NewReportController: Photo captured (${capturedImages.length}/$maxImages)');
+        debugPrint(
+          'NewReportController: Photo captured (${capturedImages.length}/$maxImages)',
+        );
 
         // Auto-transition to form after first photo for reduced friction
         // User can still add more photos from the form
@@ -347,7 +368,9 @@ class NewReportController extends GetxController {
 
       if (image != null) {
         capturedImages.add(File(image.path));
-        debugPrint('NewReportController: Added photo (${capturedImages.length}/$maxImages)');
+        debugPrint(
+          'NewReportController: Added photo (${capturedImages.length}/$maxImages)',
+        );
       }
     } catch (e) {
       debugPrint('NewReportController: Error adding photo - $e');
@@ -358,7 +381,9 @@ class NewReportController extends GetxController {
   void removeImage(int index) {
     if (index >= 0 && index < capturedImages.length) {
       capturedImages.removeAt(index);
-      debugPrint('NewReportController: Image removed, ${capturedImages.length} remaining');
+      debugPrint(
+        'NewReportController: Image removed, ${capturedImages.length} remaining',
+      );
 
       // If no photos left, go back to camera
       if (capturedImages.isEmpty && isInFormPhase) {
@@ -400,19 +425,21 @@ class NewReportController extends GetxController {
       // Build proximity parameter from current location
       String proximityParam = '';
       if (currentLocation.value != null) {
-        proximityParam = '&proximity=${currentLocation.value!.longitude},${currentLocation.value!.latitude}';
+        proximityParam =
+            '&proximity=${currentLocation.value!.longitude},${currentLocation.value!.latitude}';
       }
 
       // Cameroon bounding box: [lon_min, lat_min, lon_max, lat_max]
       const cameroonBbox = '8.4,1.6,16.2,13.1';
 
-      final url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/$encodedQuery.json'
+      final url =
+          'https://api.mapbox.com/geocoding/v5/mapbox.places/$encodedQuery.json'
           '?access_token=$_mapboxAccessToken'
           '&limit=5'
           '&types=address,poi,place,locality,neighborhood'
-          '&country=CM'  // Restrict to Cameroon
-          '&bbox=$cameroonBbox'  // Cameroon bounding box
-          '$proximityParam';  // Favor results near user's location
+          '&country=CM' // Restrict to Cameroon
+          '&bbox=$cameroonBbox' // Cameroon bounding box
+          '$proximityParam'; // Favor results near user's location
 
       final response = await _dio.get(url);
 
@@ -420,7 +447,11 @@ class NewReportController extends GetxController {
         final features = response.data['features'] as List<dynamic>?;
         if (features != null && features.isNotEmpty) {
           locationSearchResults.value = features
-              .map((f) => LocationSearchResult.fromMapboxFeature(f as Map<String, dynamic>))
+              .map(
+                (f) => LocationSearchResult.fromMapboxFeature(
+                  f as Map<String, dynamic>,
+                ),
+              )
               .toList();
         } else {
           locationSearchResults.clear();
@@ -446,11 +477,11 @@ class NewReportController extends GetxController {
     locationSearchQuery.value = ''; // Clear query to hide results
 
     // Update coordinates
-    currentLocation.value = LocationModel(
-      latitude: place.latitude,
-      longitude: place.longitude,
-      address: place.placeName,
-    );
+    // currentLocation.value = LocationModel(
+    //   latitude: place.latitude,
+    //   longitude: place.longitude,
+    //   address: place.placeName,
+    // );
 
     debugPrint('NewReportController: Location selected - ${place.placeName}');
 
@@ -514,7 +545,9 @@ class NewReportController extends GetxController {
       debugPrint('  - Title: ${title.value.isNotEmpty ? "✓" : "✗"}');
       debugPrint('  - Category: ${selectedCategory.value != null ? "✓" : "✗"}');
       debugPrint('  - Severity: ${selectedSeverity != null ? "✓" : "✗"}');
-      debugPrint('  - Photos: ${hasPhotos ? "✓ (${capturedImages.length})" : "✗"}');
+      debugPrint(
+        '  - Photos: ${hasPhotos ? "✓ (${capturedImages.length})" : "✗"}',
+      );
       return null;
     }
 
@@ -524,7 +557,9 @@ class NewReportController extends GetxController {
       // Get severity model
       final severity = getSeverityByLevel(selectedSeverityLevel.value);
       if (severity == null) {
-        debugPrint('NewReportController: ❌ Severity not found for level ${selectedSeverityLevel.value}');
+        debugPrint(
+          'NewReportController: ❌ Severity not found for level ${selectedSeverityLevel.value}',
+        );
         return null;
       }
 
@@ -535,9 +570,23 @@ class NewReportController extends GetxController {
       debugPrint('  - Title: ${title.value}');
       debugPrint('  - Severity: ${severity.name} (Level ${severity.level})');
       debugPrint('  - Category: ${selectedCategory.value!.name}');
-      debugPrint('  - Observation: ${observation.value.isNotEmpty ? "${observation.value.length} chars" : "none"}');
-      debugPrint('  - Location: ${currentLocation.value != null ? "provided" : "none"}');
+      debugPrint(
+        '  - Observation: ${observation.value.isNotEmpty ? "${observation.value.length} chars" : "none"}',
+      );
+      debugPrint(
+        '  - Location: ${currentLocation.value != null ? "provided" : "none"}',
+      );
       debugPrint('  - Images: ${imagePaths.length} files');
+
+      final location = currentLocation.value != null
+          ? LocationModel(
+              latitude: currentLocation.value!.latitude,
+              longitude: currentLocation.value!.longitude,
+              address: selectedStreetName.value.isNotEmpty
+                  ? selectedStreetName.value
+                  : currentLocation.value!.address,
+            )
+          : null;
 
       // Create report via controller with points
       final result = await _reportController.createReportWithPoints(
@@ -545,7 +594,7 @@ class NewReportController extends GetxController {
         observation: observation.value.isNotEmpty ? observation.value : null,
         severityId: severity.id,
         categoryId: selectedCategory.value!.id,
-        location: currentLocation.value,
+        location: location,
         imagePaths: imagePaths,
       );
 
@@ -564,7 +613,8 @@ class NewReportController extends GetxController {
 
           // Verify breakdown data
           final b = p.breakdown;
-          final totalFromBreakdown = b.title.points +
+          final totalFromBreakdown =
+              b.title.points +
               b.severity.points +
               b.category.points +
               b.observation.points +
@@ -577,15 +627,21 @@ class NewReportController extends GetxController {
           debugPrint('    • Category: ${b.category.points} pts');
           debugPrint('    • Observation: ${b.observation.points} pts');
           debugPrint('    • Location: ${b.location.points} pts');
-          debugPrint('    • Images: ${b.images.points} pts (${b.images.imageCount ?? 0} images)');
+          debugPrint(
+            '    • Images: ${b.images.points} pts (${b.images.imageCount ?? 0} images)',
+          );
 
           if (totalFromBreakdown != p.pointsAwarded) {
-            debugPrint('  - ⚠️ WARNING: Breakdown total ($totalFromBreakdown) != points awarded (${p.pointsAwarded})');
+            debugPrint(
+              '  - ⚠️ WARNING: Breakdown total ($totalFromBreakdown) != points awarded (${p.pointsAwarded})',
+            );
           }
         } else {
           debugPrint('  - ⚠️ No points data in response');
           if (result.rawResponse != null) {
-            debugPrint('  - Raw response keys: ${result.rawResponse!.keys.toList()}');
+            debugPrint(
+              '  - Raw response keys: ${result.rawResponse!.keys.toList()}',
+            );
           }
         }
 
@@ -595,7 +651,9 @@ class NewReportController extends GetxController {
 
         return result;
       } else {
-        debugPrint('NewReportController: ❌ Failed to create report (result is null)');
+        debugPrint(
+          'NewReportController: ❌ Failed to create report (result is null)',
+        );
         return null;
       }
     } catch (e, stackTrace) {
@@ -630,17 +688,7 @@ class NewReportController extends GetxController {
 }
 
 /// Phases of report creation
-enum ReportCreationPhase {
-  camera,
-  form,
-  fullScreenImage,
-}
+enum ReportCreationPhase { camera, form, fullScreenImage }
 
 /// Flash mode enum for camera
-enum FlashMode {
-  off,
-  auto,
-  always,
-  torch,
-}
-
+enum FlashMode { off, auto, always, torch }

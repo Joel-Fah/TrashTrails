@@ -9,12 +9,13 @@ class ErrorState extends StatelessWidget {
   const ErrorState({
     super.key,
     this.title,
+    this.image,
     this.onPressed,
     this.subtitle,
     this.ctaLabel,
   });
 
-  final String? title, subtitle, ctaLabel;
+  final String? title, subtitle, ctaLabel, image;
   final VoidCallback? onPressed;
 
   @override
@@ -38,7 +39,7 @@ class ErrorState extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Image.asset(errorImg, width: 160),
+              child: Image.asset(image ?? errorImg, width: 160.0),
             ).animate().scale(duration: 300.ms),
             const Gap(16.0),
             Text(

@@ -33,10 +33,7 @@ class UserModel {
   });
 
   /// Creates an empty UserModel (guest user)
-  factory UserModel.empty() => const UserModel(
-        id: 0,
-        email: '',
-      );
+  factory UserModel.empty() => const UserModel(id: 0, email: '');
 
   /// Creates a UserModel from JSON (snake_case from backend)
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -148,7 +145,21 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, email: $email, displayName: $displayName, points: $points, rank: $rank)';
+    return 'UserModel('
+        'id: $id, '
+        'email: $email, '
+        'firstName: $firstName, '
+        'lastName: $lastName, '
+        'avatar: $avatar, '
+        'phone: $phone, '
+        'address: $address, '
+        'points: $points, '
+        'rank: $rank, '
+        'dateJoined: $dateJoined, '
+        'lastLogin: $lastLogin, '
+        'isActive: $isActive, '
+        'isVerified: $isVerified'
+        ')';
   }
 
   @override
@@ -160,4 +171,3 @@ class UserModel {
   @override
   int get hashCode => id.hashCode ^ email.hashCode;
 }
-

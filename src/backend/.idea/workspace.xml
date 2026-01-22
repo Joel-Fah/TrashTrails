@@ -4,7 +4,38 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a14538a3-038d-410f-aae0-4e8c31caf270" name="Changes" comment="" />
+    <list default="true" id="a14538a3-038d-410f-aae0-4e8c31caf270" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/static/common/images/markers/trash1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/markers/trash2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/markers/trash3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/markers/trash4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/ranking.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/common/images/world.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/core/explore.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/core/leaderboard.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/profile.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/reports/my_reports.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth_service/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/auth_service/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth_service/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/auth_service/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth_service/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/auth_service/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/settings/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/settings/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/staticfiles/staticfiles.json" beforeDir="false" afterPath="$PROJECT_DIR$/staticfiles/staticfiles.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/components/sections/about/hero.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/components/sections/about/hero.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/components/sections/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/components/sections/header.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/components/sections/home/problem.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/components/sections/home/problem.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/controllers/auth_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/controllers/auth_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/controllers/new_report_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/controllers/new_report_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/ui/components/leaderboard/leaderboard_list_item.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/leaderboard/leaderboard_list_item.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/ui/components/leaderboard/leaderboard_podium.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/ui/components/leaderboard/leaderboard_podium.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/ui/pages/home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/home.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/ui/pages/reports/new_report.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/reports/new_report.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/ui/pages/reports/report_points.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/reports/report_points.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/ui/pages/reports/reports.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/ui/pages/reports/reports.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/lib/utils/routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/lib/utils/routes.dart" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,7 +90,7 @@
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;24.11.1&quot;,
     &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;24.10.7&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ROG STRIX/Documents/GitHub/TrashTrails/src/backend/static/common/images/about&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/ROG STRIX/Documents/GitHub/TrashTrails/src/backend/static/common/images&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -72,18 +103,18 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\about" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images" />
+      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\markers" />
+      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\about" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\trash" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\avatars" />
-      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\templates\components" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\markers" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\home" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\templates\components\sections\home" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\templates\components\sections" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\templates\components" />
-      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common" />
     </key>
   </component>
   <component name="RunManager">
@@ -153,6 +184,7 @@
       <workItem from="1768572802271" duration="5826000" />
       <workItem from="1768585534053" duration="6453000" />
       <workItem from="1768662240648" duration="7019000" />
+      <workItem from="1769023525114" duration="15353000" />
     </task>
     <servers />
   </component>

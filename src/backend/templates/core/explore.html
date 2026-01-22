@@ -1,0 +1,684 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Explore Trails — Trash Trails{% endblock %}
+
+{% block content %}
+    <style>
+        /* Reset for full viewport */
+        :root {
+            --base-color: #366a91;
+            --base-color-50: #f4f7fb;
+            --base-color-500: #4886af;
+        }
+
+        html, body {
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        /* Map Container */
+        #map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Empty State */
+        .empty-state {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .empty-state-content {
+            animation: slideUp 0.8s ease-out;
+        }
+
+        /* Floating Navigation */
+        .floating-nav {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 0.75rem 0.75rem 0.75rem 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            animation: slideUpNav 0.6s ease-out 0.3s both;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.125rem;
+        }
+
+        .nav-divider {
+            width: 1px;
+            height: 24px;
+            background: #e5e7eb;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #1d1d1d;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+            padding: 0.75rem 1.75rem;
+            border-radius: 16px;
+        }
+
+        .nav-link:hover {
+            color: var(--base-color);
+            background: var(--base-color-50);
+        }
+
+        .nav-cta {
+            background: var(--base-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            background: var(--base-color-500);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Custom Marker */
+        .custom-marker {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .custom-marker:hover {
+            transform: scale(1.15);
+        }
+
+        .custom-marker img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.25));
+        }
+
+        /* Custom Popup */
+        .mapboxgl-popup-content {
+            padding: 0 !important;
+            border-radius: 16px !important;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2) !important;
+            max-width: 340px;
+            animation: popupBounce 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .mapboxgl-popup-close-button {
+            font-size: 24px;
+            padding: 8px 12px;
+            color: white;
+            z-index: 10;
+            right: 8px;
+            top: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .mapboxgl-popup-close-button:hover {
+            background: rgba(0, 0, 0, 0.7);
+            transform: rotate(90deg);
+        }
+
+        .mapboxgl-popup-tip {
+            border-top-color: white !important;
+        }
+
+        .popup-content {
+            background: white;
+        }
+
+        .popup-carousel {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--base-color-500) 0%, var(--base-color) 100%);
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+        }
+
+        .carousel-image {
+            min-width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-controls {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 5;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .carousel-dot.active {
+            background: white;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            transition: all 0.2s;
+            z-index: 5;
+        }
+
+        .carousel-nav:hover {
+            background: rgba(0, 0, 0, 0.7);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-nav.prev {
+            left: 12px;
+        }
+
+        .carousel-nav.next {
+            right: 12px;
+        }
+
+        .no-images-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .popup-details {
+            padding: 1.25rem;
+        }
+
+        .popup-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.75rem;
+            line-height: 1.3;
+        }
+
+        .popup-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .popup-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-severity-1 {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-severity-2 {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-severity-3 {
+            background: #fed7aa;
+            color: #9a3412;
+        }
+
+        .badge-severity-4 {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .badge-category {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .popup-description {
+            font-size: 0.9rem;
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+            max-height: 80px;
+            overflow-y: auto;
+        }
+
+        .popup-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.75rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .popup-user {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .popup-user-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--base-color-500) 0%, var(--base-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUpNav {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes popupBounce {
+            0% {
+                opacity: 0;
+                transform: scale(0.7) translateY(20px);
+            }
+            50% {
+                transform: scale(1.05) translateY(-5px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .floating-nav {
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 1rem;
+                width: 90%;
+                max-width: 400px;
+            }
+
+            .nav-divider {
+                display: none;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .empty-state h1 {
+                font-size: 2rem;
+            }
+
+            .empty-state p {
+                font-size: 1rem;
+            }
+
+            .mapboxgl-popup-content {
+                max-width: 280px;
+            }
+        }
+
+        /* Hide Mapbox attribution */
+        .mapboxgl-ctrl-bottom-right,
+        .mapboxgl-ctrl-bottom-left {
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+
+        .mapboxgl-ctrl-bottom-right:hover,
+        .mapboxgl-ctrl-bottom-left:hover {
+            opacity: 1;
+        }
+    </style>
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet"/>
+
+    {% if not has_reports %}
+        <!-- Empty State -->
+        <div class="empty-state fixed inset-0 flex flex-col items-center justify-center p-8 text-center">
+            <div class="empty-state-content max-w-xl">
+                <img src="{% static 'common/images/home/cta_img.png' %}" alt="No Trails" class="w-64 mx-auto">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary leading-tight mb-4">
+                    <span class="font-semibold">Looks clean around here.</span> <span
+                        class="italic">No Trails Yet!</span>
+                </h1>
+                <p class="mb-12">
+                    The map is empty for now. Be a pioneer and start the first trail!
+                    Download our app and make a difference in your community.
+                </p>
+                <div class="flex gap-4 justify-center flex-wrap">
+                    {# Build home url #}
+                    {% url 'core:home' as home_url %}
+
+                    {% include 'components/button_outlined.html' with text="Back Home" href=home_url %}
+                    {% include 'components/button_solid.html' with text="Download App" href="" %}
+                </div>
+            </div>
+            <img src="{% static 'common/images/world.png' %}" alt="Decoration"
+                 class="absolute -z-10 top-0 bottom-0 right-0 left-0 w-full h-full pointer-events-none select-none opacity-10 -rotate-6 scale-125">
+        </div>
+
+        {# Footer #}
+        <div class="fixed bottom-0 w-full">
+            {% include 'components/sections/footer.html' %}
+        </div>
+    {% else %}
+        <!-- Map with Reports -->
+        <div id="map"></div>
+
+        <!-- Floating Navigation -->
+        <nav class="floating-nav">
+            <div class="nav-brand">
+                <img src="{% static 'common/images/logo_text/cyan.svg' %}" alt="Trash Trails" class="w-28 h-auto">
+            </div>
+            <div class="nav-divider"></div>
+            <div class="nav-links">
+                <a href="{% url 'core:home' %}" class="nav-link">Home</a>
+                <a href="{% url 'core:about' %}" class="nav-link">About</a>
+                <a href="{% url 'core:leaderboard' %}" class="nav-link">Leaderboard</a>
+            </div>
+            <a href="#download" class="nav-cta">Get Started</a>
+        </nav>
+    {% endif %}
+{% endblock %}
+
+{% block javascript %}
+    {% if has_reports %}
+        <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+        <script>
+            (function () {
+                const MAPBOX_TOKEN = "{{ mapbox_access_token }}";
+                if (!MAPBOX_TOKEN) {
+                    console.error("Mapbox token missing");
+                    return;
+                }
+
+                mapboxgl.accessToken = MAPBOX_TOKEN;
+
+                const markerImages = {{ marker_images_json|safe }};
+                const reportsGeoJson = {{ reports_geojson|safe }};
+
+                const map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v12',
+                    center: [0, 0],
+                    zoom: 2,
+                    pitch: 45,
+                    bearing: 0,
+                    attributionControl: true
+                });
+
+                // Add navigation controls
+                map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+                // Add geolocate control
+                const geolocate = new mapboxgl.GeolocateControl({
+                    positionOptions: {enableHighAccuracy: true},
+                    trackUserLocation: true,
+                    showUserHeading: true
+                });
+                map.addControl(geolocate, 'top-right');
+
+                function createCarousel(images) {
+                    if (!images || images.length === 0) {
+                        return '<div class="no-images-placeholder">📸</div>';
+                    }
+
+                    const carouselId = 'carousel-' + Math.random().toString(36).substr(2, 9);
+
+                    let html = `
+            <div class="popup-carousel">
+                <div class="carousel-track" id="${carouselId}-track">
+                    ${images.map(img => `<img src="${img}" class="carousel-image" alt="Report image">`).join('')}
+                </div>
+        `;
+
+                    if (images.length > 1) {
+                        html += `
+                <button class="carousel-nav prev" data-carousel="${carouselId}" data-dir="-1">‹</button>
+                <button class="carousel-nav next" data-carousel="${carouselId}" data-dir="1">›</button>
+                <div class="carousel-controls">
+                    ${images.map((_, i) => `<div class="carousel-dot ${i === 0 ? 'active' : ''}" data-carousel="${carouselId}" data-index="${i}"></div>`).join('')}
+                </div>
+            `;
+                    }
+
+                    html += '</div>';
+                    return html;
+                }
+
+                function createPopupContent(props) {
+                    const carousel = createCarousel(props.images);
+                    const hasAvatarUrl = props.avatar_url && props.avatar_url.trim() !== '';
+                    const userInitial = props.username ? props.username.charAt(0).toUpperCase() : 'U';
+
+                    return `
+            <div class="popup-content">
+                ${carousel}
+                <div class="popup-details">
+                    <h3 class="popup-title">${props.title}</h3>
+                    <div class="popup-meta">
+                        <span class="popup-badge badge-severity-${props.severity_level}">${props.severity_name}</span>
+                        ${props.category ? `<span class="popup-badge badge-category">${props.category}</span>` : ''}
+                    </div>
+                    ${props.observation ? `<div class="popup-description">${props.observation}</div>` : ''}
+                    <div class="popup-footer">
+                        <div class="popup-user">
+                            ${hasAvatarUrl
+                                ? `<div class="popup-user-avatar"><img src="${props.avatar_url}" alt="User avatar" class="w-full h-full object-cover rounded-full"></div>`
+                                : `<div class="popup-user-avatar">${userInitial}</div>`
+                            }
+                            <span>${props.username}</span>
+                        </div>
+                        <span>${props.created_at}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+                }
+
+                function handleCarouselInteraction(e) {
+                    const target = e.target;
+                    const carouselId = target.dataset.carousel;
+                    if (!carouselId) return;
+
+                    const track = document.getElementById(carouselId + '-track');
+                    if (!track) return;
+
+                    const images = track.querySelectorAll('.carousel-image');
+                    const dots = document.querySelectorAll(`.carousel-dot[data-carousel="${carouselId}"]`);
+
+                    let currentIndex = parseInt(track.dataset.currentIndex || '0');
+
+                    if (target.classList.contains('carousel-nav')) {
+                        const dir = parseInt(target.dataset.dir);
+                        currentIndex = (currentIndex + dir + images.length) % images.length;
+                    } else if (target.classList.contains('carousel-dot')) {
+                        currentIndex = parseInt(target.dataset.index);
+                    }
+
+                    track.dataset.currentIndex = currentIndex;
+                    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+                    dots.forEach((dot, i) => {
+                        dot.classList.toggle('active', i === currentIndex);
+                    });
+                }
+
+                map.on('load', () => {
+                    // Trigger geolocate after a short delay
+                    setTimeout(() => geolocate.trigger(), 500);
+
+                    if (!reportsGeoJson || !reportsGeoJson.features || reportsGeoJson.features.length === 0) {
+                        console.warn('No reports to display');
+                        return;
+                    }
+
+                    const bounds = new mapboxgl.LngLatBounds();
+
+                    reportsGeoJson.features.forEach(feature => {
+                        const coords = feature.geometry.coordinates;
+                        const props = feature.properties;
+
+                        // Create custom marker element
+                        const el = document.createElement('div');
+                        el.className = 'custom-marker';
+                        el.innerHTML = `<img src="${props.marker_url}" alt="marker">`;
+
+                        // Create popup
+                        const popup = new mapboxgl.Popup({
+                            offset: 25,
+                            closeButton: true,
+                            closeOnClick: true,
+                            maxWidth: 'none'
+                        }).setHTML(createPopupContent(props));
+
+                        // Add event delegation for carousel
+                        popup.on('open', () => {
+                            const popupContent = document.querySelector('.mapboxgl-popup-content');
+                            if (popupContent) {
+                                popupContent.addEventListener('click', handleCarouselInteraction);
+                            }
+                        });
+
+                        popup.on('close', () => {
+                            const popupContent = document.querySelector('.mapboxgl-popup-content');
+                            if (popupContent) {
+                                popupContent.removeEventListener('click', handleCarouselInteraction);
+                            }
+                        });
+
+                        // Add marker
+                        new mapboxgl.Marker(el)
+                            .setLngLat(coords)
+                            .setPopup(popup)
+                            .addTo(map);
+
+                        bounds.extend(coords);
+                    });
+
+                    // Fit map to show all markers with nice padding
+                    if (!bounds.isEmpty()) {
+                        map.fitBounds(bounds, {
+                            padding: {top: 100, bottom: 150, left: 100, right: 100},
+                            maxZoom: 14,
+                            duration: 1500
+                        });
+                    }
+                });
+            })();
+        </script>
+    {% endif %}
+{% endblock %}

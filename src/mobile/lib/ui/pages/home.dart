@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:trashtrails/ui/pages/leaderboard/leaderboard.dart';
+import 'package:trashtrails/ui/pages/profile.dart';
 import 'package:trashtrails/ui/pages/reports/reports.dart';
 import 'package:trashtrails/utils/utils.dart';
 
@@ -261,7 +262,10 @@ class _TopLeftControls extends StatelessWidget {
                     name: isGuest ? 'Guest' : user?.displayName ?? 'User',
                     imageUrl: user?.avatar,
                     onTap: () {
-                      // TODO: Navigate to profile page
+                      HapticFeedback.mediumImpact();
+                      context.pushNamed(
+                        removeLeadingSlash(ProfilePage.routeName),
+                      );
                     },
                     showBorder: true,
                     borderColor: lightColor,
@@ -312,6 +316,7 @@ class _TopRightActions extends StatelessWidget {
           // Leaderboard action
           LeaderboardActionWidget(
                 onTap: () {
+                  HapticFeedback.mediumImpact();
                   context.pushNamed(
                     removeLeadingSlash(LeaderboardPage.routeName),
                   );
@@ -324,6 +329,7 @@ class _TopRightActions extends StatelessWidget {
           // Trash Trails action
           TrashTrailsActionWidget(
                 onTap: () {
+                  HapticFeedback.mediumImpact();
                   context.pushNamed(
                     removeLeadingSlash(ReportsFeedPage.routeName),
                   );
@@ -395,6 +401,7 @@ class _BottomSheet extends StatelessWidget {
                       ),
                       NewReportActionWidget(
                             onTap: () {
+                              HapticFeedback.mediumImpact();
                               context.push(NewReportPage.routeName);
                             },
                           )
@@ -432,7 +439,7 @@ class _BottomSheet extends StatelessWidget {
                       numberOfCardsDisplayed: reportController
                           .nearbyReports
                           .length
-                          .clamp(1, 3),
+                          .clamp(1, 5),
                       scale: 0.9,
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       allowedSwipeDirection:
@@ -488,6 +495,7 @@ class _BottomSheet extends StatelessWidget {
                                 report,
                               ),
                               onTap: () {
+                                HapticFeedback.mediumImpact();
                                 // TODO: Navigate to report details
                               },
                             );

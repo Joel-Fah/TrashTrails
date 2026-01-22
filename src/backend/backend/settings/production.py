@@ -61,8 +61,6 @@ STORAGES = {
 # Static and Media files
 # Configure your static and media files for production
 
-# STORAGES = {}
-
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 SWAGGER_ENABLED = False

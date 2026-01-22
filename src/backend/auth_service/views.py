@@ -69,6 +69,8 @@ class GoogleAuthView(APIView):
                 "avatar": profile.avatar,
                 "phone": profile.phone_number,
                 "address": profile.address,
+                "date_joined": user.date_joined,
+                "last_login": user.last_login,
             }
         })
 

@@ -3,30 +3,29 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:trashtrails/controllers/controllers.dart';
 import 'package:trashtrails/ui/components/metadata_chip.dart';
+import 'package:trashtrails/ui/components/states/error.dart';
 import 'package:trashtrails/ui/components/user_avatar.dart';
 import 'package:trashtrails/utils/constants.dart';
 import 'package:trashtrails/utils/utils.dart';
 
 import '../../components/read_more_text.dart';
 
-class ReportsFeedPage extends StatefulWidget {
-  const ReportsFeedPage({super.key});
+class MyReportsFeedPage extends StatefulWidget {
+  const MyReportsFeedPage({super.key});
 
-  static const String routeName = '/reports';
+  static const String routeName = '/my-reports';
 
   @override
-  State<ReportsFeedPage> createState() => _ReportsFeedPageState();
+  State<MyReportsFeedPage> createState() => _MyReportsFeedPageState();
 }
 
-class _ReportsFeedPageState extends State<ReportsFeedPage> {
+class _MyReportsFeedPageState extends State<MyReportsFeedPage> {
   // GetX Controllers
   final ReportController reportController = Get.find<ReportController>();
   final AuthController authController = Get.find<AuthController>();
@@ -44,15 +43,9 @@ class _ReportsFeedPageState extends State<ReportsFeedPage> {
   @override
   void initState() {
     super.initState();
-    _pageControllers = List.generate(
-      reportController.nearbyReports.length,
-      (_) => PageController(),
-    );
-    _currentImageIndex = List.generate(
-      reportController.nearbyReports.length,
-      (_) => 0,
-    );
-
+    _pageControllers = [];
+    _currentImageIndex = [];
+    _loadReports();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
@@ -61,23 +54,33 @@ class _ReportsFeedPageState extends State<ReportsFeedPage> {
     });
   }
 
-  Future<void> _loadMore() async {
-    await reportController.loadMoreReports().then((value) {
-      setState(() {
-        // Only add controllers for new items
-        int oldLength = _pageControllers.length;
-        int newLength = reportController.nearbyReports.length;
-        if (newLength > oldLength) {
-          _pageControllers.addAll(
-            List.generate(newLength - oldLength, (_) => PageController()),
-          );
-          _currentImageIndex.addAll(
-            List.generate(newLength - oldLength, (_) => 0),
-          );
-        }
-      });
-    });
+  Future<void> _loadReports() async {
+    await reportController.loadMyReports();
+    _syncControllers();
   }
+
+  void _syncControllers() {
+    final len = reportController.userReports.length;
+    // Ajuste la taille des listes
+    if (_pageControllers.length < len) {
+      _pageControllers.addAll(
+        List.generate(len - _pageControllers.length, (_) => PageController()),
+      );
+      _currentImageIndex.addAll(
+        List.generate(len - _currentImageIndex.length, (_) => 0),
+      );
+    } else if (_pageControllers.length > len) {
+      _pageControllers = _pageControllers.sublist(0, len);
+      _currentImageIndex = _currentImageIndex.sublist(0, len);
+    }
+    setState(() {});
+  }
+
+  Future<void> _loadMore() async {
+    await reportController.loadMoreMyReports();
+    _syncControllers();
+  }
+
 
   @override
   void dispose() {
@@ -91,14 +94,13 @@ class _ReportsFeedPageState extends State<ReportsFeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: SvgPicture.asset(cyanLogo, width: 100.0),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: Text("My Reports")),
       body: Obx(() {
+        WidgetsBinding.instance.addPostFrameCallback((_) => _syncControllers());
+
         // Loading state
-        if (reportController.isLoadingReports.value &&
-            reportController.nearbyReports.isEmpty) {
+        if (reportController.isLoadingMyReports.value &&
+            reportController.userReports.isEmpty) {
           return Center(
             child: Column(
               spacing: 16.0,
@@ -109,7 +111,7 @@ class _ReportsFeedPageState extends State<ReportsFeedPage> {
                   size: 56.0,
                 ),
                 Text(
-                  "Reports on the way, hang tight!",
+                  "Your reports are on the way, hang tight!",
                   style: AppTextStyles.body.copyWith(color: greyColor),
                 ),
               ],
@@ -117,8 +119,19 @@ class _ReportsFeedPageState extends State<ReportsFeedPage> {
           );
         }
 
+        // Empty State
+        if (!reportController.hasUserReports) {
+          return ErrorState(
+            title: "No Reports Yet!",
+            subtitle:
+                "No worries, you'll definitely find some trash dump around one day. Then, report it here on TrashTrails",
+            onPressed: () => reportController.refreshMyReports(),
+            ctaLabel: "Refresh Though",
+          );
+        }
+
         return RefreshIndicator(
-          onRefresh: () => reportController.refreshReports(),
+          onRefresh: () => reportController.refreshMyReports(),
           child:
               ListView.separated(
                     controller: _scrollController,
@@ -126,7 +139,7 @@ class _ReportsFeedPageState extends State<ReportsFeedPage> {
                     padding: EdgeInsets.symmetric(vertical: 16.0).copyWith(
                       bottom: MediaQuery.paddingOf(context).bottom + 16.0,
                     ),
-                    itemCount: reportController.nearbyReports.length,
+                    itemCount: reportController.userReports.length,
                     separatorBuilder: (context, index) => Gap(24.0),
                     itemBuilder: (context, index) {
                       // Show loading indicator
@@ -144,9 +157,9 @@ class _ReportsFeedPageState extends State<ReportsFeedPage> {
                               Text(
                                 "Loading more reports ...",
                                 style: AppTextStyles.body.copyWith(
-                                    fontSize: 14.0,
-                                    fontStyle: FontStyle.italic,
-                                    color: greyColor
+                                  fontSize: 14.0,
+                                  fontStyle: FontStyle.italic,
+                                  color: greyColor
                                 ),
                               )
                             ],
@@ -154,7 +167,14 @@ class _ReportsFeedPageState extends State<ReportsFeedPage> {
                         );
                       }
 
-                      final report = reportController.nearbyReports[index];
+                      if (index >= reportController.userReports.length ||
+                          index >= _pageControllers.length ||
+                          index >= _currentImageIndex.length) {
+                        return const SizedBox.shrink();
+                      }
+
+
+                      final report = reportController.userReports[index];
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -359,13 +379,13 @@ class _ReportsFeedPageState extends State<ReportsFeedPage> {
                                     FeedReportAction(
                                       tooltip: 'Endorse',
                                       icon: HugeIcons.strokeRoundedWavingHand02,
-                                      label: formatCount(Random().nextInt(999999)),
+                                      label: formatCount(5775),
                                       onPressed: () {},
                                     ),
                                     FeedReportAction(
                                       tooltip: 'Share',
                                       icon: HugeIcons.strokeRoundedShare08,
-                                      label: formatCount(Random().nextInt(10000)),
+                                      label: formatCount(1389),
                                       onPressed: () {},
                                     ),
                                     FeedReportAction(

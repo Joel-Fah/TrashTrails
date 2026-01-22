@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:trashtrails/ui/pages/leaderboard/leaderboard.dart';
 import 'package:trashtrails/utils/utils.dart';
 
 import '../../../controllers/points_controller.dart';
@@ -83,9 +84,14 @@ class _ReportPointsPageState extends State<ReportPointsPage>
     context.go(HomePage.routeName);
   }
 
+  void _navigateToLeaderboard() {
+    _pointsController.clearPoints();
+    context.pushReplacementNamed(removeLeadingSlash(LeaderboardPage.routeName));
+  }
+
   void _navigateToNewReport() {
     _pointsController.clearPoints();
-    context.pushReplacement(NewReportPage.routeName);
+    context.pushReplacementNamed(removeLeadingSlash(NewReportPage.routeName));
   }
 
   @override
@@ -249,47 +255,51 @@ class _ReportPointsPageState extends State<ReportPointsPage>
           final rank = _pointsController.userRank.value;
           final totalPoints = _pointsController.totalUserPoints.value;
 
-          return Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 10.0,
-            ),
-            decoration: BoxDecoration(
-              color: seedPalette.shade100,
-              borderRadius: borderRadius * 2.25,
-              border: Border.all(color: seedColor.withValues(alpha: 0.2)),
-            ),
-            child: IntrinsicHeight(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  HugeIcon(
-                    icon: HugeIcons.strokeRoundedRanking,
-                    color: seedColor,
-                    size: 20.0,
-                  ),
-                  const Gap(8),
-                  Text(
-                    'Rank #$rank',
-                    style: AppTextStyles.body.copyWith(
+          return InkWell(
+            onTap: _navigateToLeaderboard,
+            borderRadius: borderRadius * 2.25,
+            child: Ink(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 10.0,
+              ),
+              decoration: BoxDecoration(
+                color: seedPalette.shade100,
+                borderRadius: borderRadius * 2.25,
+                border: Border.all(color: seedColor.withValues(alpha: 0.2)),
+              ),
+              child: IntrinsicHeight(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    HugeIcon(
+                      icon: HugeIcons.strokeRoundedRanking,
                       color: seedColor,
-                      fontWeight: FontWeight.w600,
+                      size: 20.0,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: VerticalDivider(
-                      color: seedColor.withValues(alpha: 0.3),
+                    const Gap(8),
+                    Text(
+                      'Rank #$rank',
+                      style: AppTextStyles.body.copyWith(
+                        color: seedColor,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  Text(
-                    '${addThousandSeparator(totalPoints.toString())} pts total',
-                    style: AppTextStyles.body.copyWith(
-                      color: seedColor,
-                      fontWeight: FontWeight.w500,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: VerticalDivider(
+                        color: seedColor.withValues(alpha: 0.3),
+                      ),
                     ),
-                  ),
-                ],
+                    Text(
+                      '${addThousandSeparator(totalPoints.toString())} pts total',
+                      style: AppTextStyles.body.copyWith(
+                        color: seedColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

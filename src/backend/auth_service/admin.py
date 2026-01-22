@@ -23,7 +23,7 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
     change_password_form = AdminPasswordChangeForm
-    list_display = ('username_with_role', 'email', 'first_name', 'last_name', 'is_staff')
+    list_display = ('username_with_role', 'email', 'first_name', 'last_name', 'is_staff', 'date_joined')
 
     @admin.display(description='Username')
     def username_with_role(self, obj):

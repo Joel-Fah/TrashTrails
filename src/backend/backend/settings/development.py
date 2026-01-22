@@ -1,13 +1,11 @@
 # Local development settings for TrashTrails
 import dj_database_url
-from dotenv import load_dotenv
-from datetime import timedelta
 
 from .base import *
 
 # Load prod env file
 load_dotenv(
-    os.path.join(BASE_DIR, '.env')
+    os.path.join(BASE_DIR, 'dev.env')
 )
 
 # Quick-start development settings - unsuitable for production
@@ -32,7 +30,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    # 'supabase': dj_database_url.parse(os.getenv('SUPABASE_POSTGRESQL_URL')),
+    'supabase': dj_database_url.parse(os.getenv('SUPABASE_POSTGRESQL_URL')),
 }
 
 # Static files (CSS, JavaScript, Images)

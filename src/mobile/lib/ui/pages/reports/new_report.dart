@@ -1060,7 +1060,7 @@ class _LocationSearch extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text('Location', style: AppTextStyles.h4),
+              Text('Street name', style: AppTextStyles.h4),
               const Spacer(),
               // Current location indicator
               Obx(() {

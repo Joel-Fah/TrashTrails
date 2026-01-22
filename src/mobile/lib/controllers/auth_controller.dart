@@ -152,7 +152,7 @@ To fix:
   }
 
   /// Sign out
-  Future<void> signOut() async {
+  Future<bool> signOut() async {
     _isLoading.value = true;
 
     try {
@@ -161,8 +161,10 @@ To fix:
 
       // Sign out from backend
       await _authService.logout();
+      return true;
     } catch (e) {
       debugPrint('AuthController: Sign out error - $e');
+      return false;
     } finally {
       _isLoading.value = false;
     }

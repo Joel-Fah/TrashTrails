@@ -44,34 +44,40 @@ class LeaderboardPodium extends StatelessWidget {
         children: [
           // 2nd place (Silver)
           if (second != null)
-            _buildPodiumItem(
-              context: context,
-              entry: second,
-              rank: 2,
-              height: 120.0,
-              delay: 200.ms,
+            Expanded(
+              child: _buildPodiumItem(
+                context: context,
+                entry: second,
+                rank: 2,
+                height: 160.0,
+                delay: 200.ms,
+              ),
             ),
           if (second != null) const Gap(12.0),
 
           // 1st place (Gold) - Tallest
           if (first != null)
-            _buildPodiumItem(
-              context: context,
-              entry: first,
-              rank: 1,
-              height: 160.0,
-              delay: 0.ms,
+            Expanded(
+              child: _buildPodiumItem(
+                context: context,
+                entry: first,
+                rank: 1,
+                height: 200.0,
+                delay: 0.ms,
+              ),
             ),
           if (first != null && third != null) const Gap(12.0),
 
           // 3rd place (Bronze)
           if (third != null)
-            _buildPodiumItem(
-              context: context,
-              entry: third,
-              rank: 3,
-              height: 80.0,
-              delay: 400.ms,
+            Expanded(
+              child: _buildPodiumItem(
+                context: context,
+                entry: third,
+                rank: 3,
+                height: 120.0,
+                delay: 400.ms,
+              ),
             ),
         ],
       ),

@@ -72,10 +72,16 @@ class LeaderboardListItem extends StatelessWidget {
                       title: Row(
                         spacing: 8.0,
                         children: [
-                          Text(
-                            entry.displayName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          Expanded(
+                            child: Text(
+                              entry.displayName,
+                              style: AppTextStyles.body.copyWith(
+                                color: seedColor,
+                                fontVariations: [FontVariation('wght', 500)]
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                           if (isCurrentUser)
                             Container(

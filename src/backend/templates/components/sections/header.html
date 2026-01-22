@@ -32,6 +32,20 @@ Responsive navbar with logo, nav tabs, and CTA button
                         About
                     </a>
 
+                    <a
+                            href="{% if url_name == 'explore' %} #hero {% else %} {% url 'core:explore' %} {% endif %}"
+                            class="px-8 py-4 rounded-3xl text-darkColor transition-all duration-300 ease-in-out hover:bg-primary-50 hover:text-primary {% if url_name == 'explore' %}bg-primary-50 text-primary{% endif %}"
+                    >
+                        Explore
+                    </a>
+
+                    <a
+                            href="{% if url_name == 'leaderboard' %} #hero {% else %} {% url 'core:leaderboard' %} {% endif %}"
+                            class="px-8 py-4 rounded-3xl text-darkColor transition-all duration-300 ease-in-out hover:bg-primary-50 hover:text-primary {% if url_name == 'leaderboard' %}bg-primary-50 text-primary{% endif %}"
+                    >
+                        Leaderboard
+                    </a>
+
                     {# CTA Button #}
                     <div class="ml-4">
                         {% include 'components/button_outlined.html' with href='#' text='Get Started' %}
@@ -70,6 +84,22 @@ Responsive navbar with logo, nav tabs, and CTA button
                             class="flex items-center justify-between px-8 py-4 rounded-3xl text-darkColor font-medium transition-all duration-300 ease-in-out hover:bg-primary-50 hover:text-primary {% if url_name == 'about' %}bg-primary-50 text-primary{% endif %}"
                     >
                         About
+                        {% include 'components/icons/arrow_up_right.html' %}
+                    </a>
+
+                    <a
+                            href="{% if url_name == 'explore' %} #hero {% else %} {% url 'core:explore' %} {% endif %}"
+                            class="flex items-center justify-between px-8 py-4 rounded-3xl text-darkColor font-medium transition-all duration-300 ease-in-out hover:bg-primary-50 hover:text-primary {% if url_name == 'explore' %}bg-primary-50 text-primary{% endif %}"
+                    >
+                        Explore
+                        {% include 'components/icons/arrow_up_right.html' %}
+                    </a>
+
+                    <a
+                            href="{% if url_name == 'leaderboard' %} #hero {% else %} {% url 'core:leaderboard' %} {% endif %}"
+                            class="flex items-center justify-between px-8 py-4 rounded-3xl text-darkColor font-medium transition-all duration-300 ease-in-out hover:bg-primary-50 hover:text-primary {% if url_name == 'leaderboard' %}bg-primary-50 text-primary{% endif %}"
+                    >
+                        Leaderboard
                         {% include 'components/icons/arrow_up_right.html' %}
                     </a>
 

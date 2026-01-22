@@ -27,14 +27,14 @@
             dump site, you map it, report it, and earn your place on the leaderboard.
         </p>
 
-        {% include 'components/button_outlined.html' with text="Continue Reading" %}
+        {% include 'components/button_outlined.html' with text="Continue Reading" href="#problem" %}
     </div>
 
     {# Visual Stack Section #}
     <img
             src="{% static 'common/images/about/about_img.png' %}"
             alt="About Hero Image"
-            class="w-full h-auto object-contain -mt-32"
+            class="w-full h-auto object-contain -mt-32 pointer-events-none select-none"
     >
 </section>
 

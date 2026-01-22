@@ -1,6 +1,5 @@
 # Local development settings for TrashTrails
 import dj_database_url
-from dotenv import load_dotenv
 
 from .base import *
 
@@ -35,7 +34,7 @@ CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(" ")
 # Configure your storage settings for production
 STORAGES = {
     "staticfiles": {
-        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "BACKEND": "storages.backends.s3.S3Storage",
         "OPTIONS": {
             "access_key": os.environ.get("SUPABASE_S3_ACCESS_KEY_ID"),
             "secret_key": os.environ.get("SUPABASE_S3_SECRET_ACCESS_KEY"),
@@ -60,8 +59,6 @@ STORAGES = {
 
 # Static and Media files
 # Configure your static and media files for production
-
-# STORAGES = {}
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'

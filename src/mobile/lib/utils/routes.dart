@@ -6,11 +6,13 @@ import 'package:trashtrails/services/auth_service.dart';
 import 'package:trashtrails/ui/pages/auth/auth.dart';
 import 'package:trashtrails/ui/pages/home.dart';
 import 'package:trashtrails/ui/pages/leaderboard/leaderboard.dart';
+import 'package:trashtrails/ui/pages/profile.dart';
 import 'package:trashtrails/ui/pages/reports/new_report.dart';
 import 'package:trashtrails/ui/pages/reports/report_points.dart';
 import 'package:trashtrails/ui/pages/onboarding/onboarding.dart';
 import 'package:trashtrails/utils/utils.dart';
 
+import '../ui/pages/reports/my_reports.dart';
 import '../ui/pages/reports/reports.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -101,6 +103,12 @@ final router = GoRouter(
       path: ReportsFeedPage.routeName,
       builder: (context, state) => const ReportsFeedPage(),
     ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      name: removeLeadingSlash(MyReportsFeedPage.routeName),
+      path: MyReportsFeedPage.routeName,
+      builder: (context, state) => const MyReportsFeedPage(),
+    ),
 
     // Leaderboard
     GoRoute(
@@ -109,5 +117,13 @@ final router = GoRouter(
       path: LeaderboardPage.routeName,
       builder: (context, state) => const LeaderboardPage(),
     ),
+
+    // Profile
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      name: removeLeadingSlash(ProfilePage.routeName),
+      path: ProfilePage.routeName,
+      builder: (context, state) => const ProfilePage(),
+    )
   ],
 );

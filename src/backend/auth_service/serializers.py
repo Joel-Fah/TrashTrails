@@ -15,7 +15,7 @@ class UserPublicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'avatar']
+        fields = ['id', 'username', 'first_name', 'last_name', 'avatar', 'date_joined', 'last_login', 'is_active']
         ref_name = 'AuthUserPublic'
 
     def get_avatar(self, obj):
@@ -38,6 +38,9 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name',
             'avatar',
             'profile',
+            'date_joined',
+            'last_login',
+            'is_active',
         ]
 
     def get_avatar(self, obj):

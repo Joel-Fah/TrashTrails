@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a14538a3-038d-410f-aae0-4e8c31caf270" name="Changes" comment="" />
+    <list default="true" id="a14538a3-038d-410f-aae0-4e8c31caf270" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,7 +61,7 @@
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;24.11.1&quot;,
     &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;24.10.7&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ROG STRIX/Documents/GitHub/TrashTrails/src/backend/static/common/images/about&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/ROG STRIX/Documents/GitHub/TrashTrails/src/backend/static/common/images&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -72,18 +74,18 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\about" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images" />
+      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\markers" />
+      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\about" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\trash" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\avatars" />
-      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\templates\components" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\markers" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common\images\home" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\templates\components\sections\home" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\templates\components\sections" />
       <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\templates\components" />
-      <recent name="C:\Users\ROG STRIX\Documents\GitHub\TrashTrails\src\backend\static\common" />
     </key>
   </component>
   <component name="RunManager">
@@ -153,6 +155,7 @@
       <workItem from="1768572802271" duration="5826000" />
       <workItem from="1768585534053" duration="6453000" />
       <workItem from="1768662240648" duration="7019000" />
+      <workItem from="1769023525114" duration="15353000" />
     </task>
     <servers />
   </component>

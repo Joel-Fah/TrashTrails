@@ -1,0 +1,547 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load tailwind_tags %}
+
+{# Title of the page #}
+{% block title %} Introducing Leaderboard — The ones who dared to clear the path {% endblock %}
+
+{% block extra_styles %}
+    <style>
+        /* === Base Animations === */
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            50% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.6s ease-out forwards;
+        }
+
+        .animate-slide-up {
+            animation: slide-up 0.8s ease-out forwards;
+        }
+
+        .animate-bounce {
+            animation: bounce 2s infinite;
+        }
+
+        /* === Mobile-Specific Improvements === */
+        @media (max-width: 768px) {
+            /* Podium stacks vertically on mobile */
+            .podium-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .podium-container > div {
+                width: 100%;
+                max-width: 320px;
+                margin-bottom: 1rem;
+            }
+
+            /* Smaller crown on mobile */
+            .crown-mobile {
+                font-size: 3rem;
+            }
+
+            /* Period selector wraps better */
+            .period-selector {
+                flex-wrap: wrap;
+            }
+
+            /* Rankings list more compact */
+            .ranking-row {
+                padding: 0.75rem 1rem;
+            }
+
+            /* Hide secondary stats on very small screens */
+            @media (max-width: 480px) {
+                .stats-secondary {
+                    display: none;
+                }
+            }
+        }
+
+        /* === Performance Optimizations === */
+        @media (prefers-reduced-motion: reduce) {
+            .animate-fade-in,
+            .animate-slide-up,
+            .animate-bounce,
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* === Hover Effects (Desktop Only) === */
+        @media (hover: hover) {
+            .podium-card:hover {
+                transform: translateY(-8px);
+            }
+
+            .ranking-row:hover {
+                background-color: rgb(249, 250, 251);
+            }
+
+            .period-tab:hover:not(.active) {
+                background-color: rgb(249, 250, 251);
+            }
+        }
+
+        /* === Touch Feedback (Mobile) === */
+        @media (hover: none) {
+            .podium-card:active {
+                transform: scale(0.98);
+            }
+
+            .ranking-row:active {
+                background-color: rgb(243, 244, 246);
+            }
+
+            .period-tab:active:not(.active) {
+                background-color: rgb(243, 244, 246);
+            }
+        }
+
+        /* === Smooth Scrolling === */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* === Better Text Rendering === */
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* === Loading State (Optional) === */
+        .skeleton {
+            background: linear-gradient(
+                    90deg,
+                    #f0f0f0 0%,
+                    #e0e0e0 50%,
+                    #f0f0f0 100%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s ease-in-out infinite;
+        }
+
+        @keyframes skeleton-loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* === Focus States for Accessibility === */
+        .period-tab:focus-visible,
+        .ranking-row:focus-visible {
+            outline: 2px solid rgb(59, 130, 246);
+            outline-offset: 2px;
+            border-radius: 0.5rem;
+        }
+
+        /* === Print Styles === */
+        @media print {
+            .period-selector,
+            .back-button {
+                display: none;
+            }
+
+            .podium-card,
+            .ranking-row {
+                break-inside: avoid;
+            }
+        }
+    </style>
+{% endblock %}
+
+{# Header #}
+{% block header %}
+    {% include 'components/sections/header.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+
+            <!-- Header Section -->
+            <div class="text-center mb-12 animate-fade-in">
+                {# Info Bubble #}
+                <div class="flex justify-center mb-8 md:mb-10">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 rounded-2xl">
+                    <span class="text-sm text-primary">
+                        <span class="font-semibold">81%</span> of all littering is done with <span
+                            class="font-semibold">"notable intent"</span>
+                    </span>
+                    </div>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary leading-tight mb-4">
+                    Leaderboard of <span class="line-through font-semibold italic text-primary-400">Champions</span>
+                    <br>
+                    Ultimate <span class="italic">Trailers</span>
+                </h1>
+
+                <p class="mb-12">
+                    Celebrating our community champions making a real difference
+                </p>
+            </div>
+
+            {% if not has_users %}
+                <!-- Period Selector -->
+                <div class="flex justify-center mb-12 animate-slide-up" style="animation-delay: 0.1s;">
+                    <div class="inline-flex gap-2 bg-white rounded-3xl p-1.5 shadow-md border border-gray-200">
+                        <a href="?period=weekly"
+                           class="px-6 py-2.5 rounded-2xl text-sm transition-all duration-300 {% if current_period == 'weekly' %}bg-primary text-white shadow-md{% else %}text-gray-600 hover:text-gray-900 hover:bg-slate-100{% endif %}">
+                            This Week
+                        </a>
+                        <a href="?period=monthly"
+                           class="px-6 py-2.5 rounded-2xl text-sm transition-all duration-300 {% if current_period == 'monthly' %}bg-primary text-white shadow-md{% else %}text-gray-600 hover:text-gray-900 hover:bg-slate-100{% endif %}">
+                            This Month
+                        </a>
+                        <a href="?period=yearly"
+                           class="px-6 py-2.5 rounded-2xl text-sm transition-all duration-300 {% if current_period == 'yearly' %}bg-primary text-white shadow-md{% else %}text-gray-600 hover:text-gray-900 hover:bg-slate-100{% endif %}">
+                            This Year
+                        </a>
+                        <a href="?period=all"
+                           class="px-6 py-2.5 rounded-2xl text-sm transition-all duration-300 {% if current_period == 'all' %}bg-primary text-white shadow-md{% else %}text-gray-600 hover:text-gray-900 hover:bg-slate-100{% endif %}">
+                            All Time
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if not has_users %}
+                <!-- Empty State -->
+                <div class="text-center animate-fade-in">
+                    <div class="flex flex-col gap-2 mb-8">
+                        <img src="{% static 'common/images/ranking.png' %}" alt="Leaderboard ranking"
+                             class="w-auto mx-auto">
+                        <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-primary leading-tight">
+                            No Rankings Yet
+                        </h2>
+                        <p class="text-gray-600 mb-8 max-w-xl mx-auto">
+                            The wall of fame is empty. Be the first to make an impact! Start reporting trash and climb
+                            to the top. Download our app and make a difference in your community.
+                        </p>
+
+                        <div class="flex gap-4 justify-center flex-wrap">
+                            {# Build home url #}
+                            {% url 'core:home' as home_url %}
+
+                            {% include 'components/button_outlined.html' with text="Back Home" href=home_url %}
+                            {% include 'components/button_solid.html' with text="Download App" href="" %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <!-- Podium (Top 3) -->
+                {% if top_three %}
+                    <div class="relative mb-16">
+                        <div class="flex justify-center items-end gap-4 md:gap-8 max-w-4xl mx-auto px-4">
+                            <!-- 2nd Place -->
+                            {% if top_three|length > 1 %}
+                                <div class="flex-1 max-w-xs animate-slide-up" style="animation-delay: 0.3s;">
+                                    <div class="relative top-10 min-w-72 bg-white -rotate-6 rounded-[32px] shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden border-2 border-gray-200">
+                                        <!-- Rank Badge -->
+                                        <div class="bg-gradient-to-r from-gray-300 to-gray-400 px-4 py-2 text-center">
+                                            <span class="flex items-center justify-center text-2xl font-bold text-white">🥈 <span
+                                                    class="text-base text-gray-200 font-medium">silver trailer</span>
+                                            </span>
+                                        </div>
+
+                                        <!-- User Info -->
+                                        <div class="p-6 text-center">
+                                            <!-- Avatar -->
+                                            <div class="relative inline-block mb-4">
+                                                {% if top_three.1.avatar %}
+                                                    <img src="{{ top_three.1.avatar }}" alt="{{ top_three.1.username }}"
+                                                         class="w-20 h-20 rounded-full border-4 border-gray-300 object-cover">
+                                                {% else %}
+                                                    <div class="w-20 h-20 rounded-full border-4 border-gray-300 bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center">
+                                                        <span class="text-2xl font-bold text-white">{{ top_three.1.username|slice:":1"|upper }}</span>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center border-2 border-white shadow-md">
+                                                    <span class="text-white font-bold text-sm">#2</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Name -->
+                                            <h3 class="font-bold text-lg mb-1 truncate">{{ top_three.1.full_name }}</h3>
+                                            <p class="text-xs text-gray-500 mb-4">@{{ top_three.1.username }}</p>
+
+                                            <!-- Points -->
+                                            <div class="bg-gray-50 rounded-3xl p-4">
+                                                <div class="text-3xl font-extrabold text-gray-700 mb-1">{{ top_three.1.points|floatformat:0|intcomma }}</div>
+                                                <div class="text-xs text-gray-500 uppercase tracking-wide">Points</div>
+                                            </div>
+
+                                            <!-- Stats -->
+                                            <div class="mt-4 flex justify-center gap-4 text-xs text-gray-600">
+                                                <div>
+                                                    <div class="font-semibold">{{ top_three.1.total_reports }}</div>
+                                                    <div>Reports</div>
+                                                </div>
+                                                <div class="w-px bg-gray-200"></div>
+                                                <div>
+                                                    <div class="font-semibold text-green-600">{{ top_three.1.verified_reports }}</div>
+                                                    <div>Verified</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- 1st Place (Taller) -->
+                            <div class="flex-1 max-w-xs animate-slide-up" style="animation-delay: 0.2s;">
+                                <div class="bg-white min-w-72 rounded-[32px] shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 overflow-hidden border-2 border-yellow-400 relative">
+
+                                    <!-- Rank Badge -->
+                                    <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 px-4 py-3 text-center">
+                                        <span class="flex items-center justify-center text-3xl font-bold text-white">🥇
+                                        <span class="text-base text-yellow-100 font-medium">goldy trailer</span></span>
+                                    </div>
+
+                                    <!-- User Info -->
+                                    <div class="p-6 text-center">
+                                        <!-- Avatar -->
+                                        <div class="relative inline-block mb-4">
+                                            {% if top_three.0.avatar %}
+                                                <img src="{{ top_three.0.avatar }}" alt="{{ top_three.0.username }}"
+                                                     class="w-24 h-24 rounded-full border-4 border-yellow-400 object-cover">
+                                            {% else %}
+                                                <div class="w-24 h-24 rounded-full border-4 border-yellow-400 bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+                                                    <span class="text-3xl font-bold text-white">{{ top_three.0.username|slice:":1"|upper }}</span>
+                                                </div>
+                                            {% endif %}
+                                            <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
+                                                <span class="text-white font-bold">#1</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Name -->
+                                        <h3 class="font-bold text-xl mb-1 truncate">{{ top_three.0.full_name }}</h3>
+                                        <p class="text-xs text-gray-500 mb-4">@{{ top_three.0.username }}</p>
+
+                                        <!-- Points -->
+                                        <div class="bg-gradient-to-br from-yellow-50/50 to-yellow-100/50 rounded-3xl p-4">
+                                            <div class="text-4xl font-extrabold text-yellow-700 mb-1">{{ top_three.0.points|floatformat:0|intcomma }}</div>
+                                            <div class="text-xs text-yellow-600 uppercase tracking-wide font-semibold">
+                                                Points
+                                            </div>
+                                        </div>
+
+                                        <!-- Stats -->
+                                        <div class="mt-4 flex justify-center gap-4 text-xs text-gray-600">
+                                            <div>
+                                                <div class="font-semibold">{{ top_three.0.total_reports }}</div>
+                                                <div>Reports</div>
+                                            </div>
+                                            <div class="w-px bg-gray-200"></div>
+                                            <div>
+                                                <div class="font-semibold text-green-600">{{ top_three.0.verified_reports }}</div>
+                                                <div>Verified</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 3rd Place -->
+                            {% if top_three|length > 2 %}
+                                <div class="flex-1 max-w-xs animate-slide-up" style="animation-delay: 0.4s;">
+                                    <div class="relative top-20 min-w-72 bg-white rotate-6 rounded-[32px] shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden border-2 border-orange-300">
+                                        <!-- Rank Badge -->
+                                        <div class="bg-gradient-to-r from-orange-300 to-orange-400 px-4 py-2 text-center">
+                                            <span class="text-2xl font-bold text-white">🥉
+                                            <span class="text-base text-orange-100 font-medium">bronze trailer</span></span>
+                                        </div>
+
+                                        <!-- User Info -->
+                                        <div class="p-6 text-center">
+                                            <!-- Avatar -->
+                                            <div class="relative inline-block mb-4">
+                                                {% if top_three.2.avatar %}
+                                                    <img src="{{ top_three.2.avatar }}" alt="{{ top_three.2.username }}"
+                                                         class="w-20 h-20 rounded-full border-4 border-orange-300 object-cover">
+                                                {% else %}
+                                                    <div class="w-20 h-20 rounded-full border-4 border-orange-300 bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center">
+                                                        <span class="text-2xl font-bold text-white">{{ top_three.2.username|slice:":1"|upper }}</span>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-orange-400 rounded-full flex items-center justify-center border-2 border-white shadow-md">
+                                                    <span class="text-white font-bold text-sm">#3</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Name -->
+                                            <h3 class="font-bold text-lg mb-1 truncate">{{ top_three.2.full_name }}</h3>
+                                            <p class="text-xs text-gray-500 mb-4">@{{ top_three.2.username }}</p>
+
+                                            <!-- Points -->
+                                            <div class="bg-orange-50 rounded-3xl p-4">
+                                                <div class="text-3xl font-extrabold text-orange-600 mb-1">{{ top_three.2.points|floatformat:0 }}</div>
+                                                <div class="text-xs text-orange-500 uppercase tracking-wide">Points
+                                                </div>
+                                            </div>
+
+                                            <!-- Stats -->
+                                            <div class="mt-4 flex justify-center gap-4 text-xs text-gray-600">
+                                                <div>
+                                                    <div class="font-semibold">{{ top_three.2.total_reports }}</div>
+                                                    <div>Reports</div>
+                                                </div>
+                                                <div class="w-px bg-gray-200"></div>
+                                                <div>
+                                                    <div class="font-semibold text-green-600">{{ top_three.2.verified_reports }}</div>
+                                                    <div>Verified</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Rest of Leaderboard -->
+                {% if rest %}
+                    <section id="table" class="w-[90%] lg:w-[80%] mx-auto pt-8 md:pt-12 pb-16 md:pb-24">
+                        <div class="max-w-4xl mx-auto">
+                            <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-primary leading-tight mb-6 animate-slide-up"
+                                style="animation-delay: 0.5s;">
+                                Rankings
+                            </h2>
+
+                            <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-primary-200 animate-slide-up"
+                                 style="animation-delay: 0.6s;">
+                                <div class="divide-y divide-gray-100">
+                                    {% for user in rest %}
+                                        <div class="px-6 py-4 hover:bg-gray-50 transition-colors duration-200 group">
+                                            <div class="flex items-center justify-between gap-4">
+                                                <!-- Rank & User Info -->
+                                                <div class="flex items-center gap-4 flex-1 min-w-0">
+                                                    <!-- Rank -->
+                                                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                                                        <span class="font-bold text-gray-700">{{ user.rank }}</span>
+                                                    </div>
+
+                                                    <!-- Avatar -->
+                                                    {% if user.avatar %}
+                                                        <img src="{{ user.avatar }}" alt="{{ user.username }}"
+                                                             class="w-12 h-12 rounded-full border-2 border-gray-200 object-cover flex-shrink-0">
+                                                    {% else %}
+                                                        <div class="w-12 h-12 rounded-full border-2 border-gray-200 bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center flex-shrink-0">
+                                                            <span class="text-lg font-bold text-white">{{ user.username|slice:":1"|upper }}</span>
+                                                        </div>
+                                                    {% endif %}
+
+                                                    <!-- Name & Username -->
+                                                    <div class="flex-1 min-w-0">
+                                                        <h4 class="font-semibold truncate">{{ user.full_name }}</h4>
+                                                        <p class="text-sm text-gray-500 truncate">
+                                                            @{{ user.username }}</p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Stats -->
+                                                <div class="flex items-center gap-6 flex-shrink-0">
+                                                    <!-- Reports -->
+                                                    <div class="hidden sm:flex items-center gap-2 text-sm text-gray-600">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                             viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                  stroke-width="2"
+                                                                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                                        </svg>
+                                                        <span class="font-medium">{{ user.total_reports }}</span>
+                                                    </div>
+
+                                                    <!-- Points -->
+                                                    <div class="flex items-center gap-2">
+                                                        <div class="text-right">
+                                                            <div class="text-lg font-bold text-primary">{{ user.points|floatformat:0 }}</div>
+                                                            <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                                                pts
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{# Footer #}
+{% block footer %}
+    {% include 'components/sections/footer.html' %}
+{% endblock %}
+
+{% block javascript %}
+    <!-- Enhanced mobile version of period selector -->
+    <script>
+        // Optional: Smooth scroll to top when changing period
+        document.addEventListener('DOMContentLoaded', function () {
+            const periodLinks = document.querySelectorAll('.period-tab');
+
+            periodLinks.forEach(link => {
+                link.addEventListener('click', function () {
+                    // Smooth scroll to top on period change
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                });
+            });
+
+            // Optional: Add loading state
+            let isLoading = false;
+            periodLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    if (!isLoading) {
+                        isLoading = true;
+                        // Add loading spinner or indicator here
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

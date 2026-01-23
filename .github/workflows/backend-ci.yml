@@ -26,10 +26,10 @@ jobs:
           --health-retries=5
 
     env:
-      DJANGO_SETTINGS_MODULE: config.settings.test
+      DJANGO_SETTINGS_MODULE: backend.settings.test
       PYTHONPATH: src/backend
       DATABASE_URL: postgres://testuser:testpass@localhost:5432/testdb
-      SECRET_KEY: test-secret
+      SECRET_KEY: github-actions-test-secret-key
       DEBUG: "False"
 
     steps:

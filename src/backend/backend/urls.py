@@ -40,6 +40,8 @@ urlpatterns = [
     path('api/ml/', include('ml_service.urls', namespace='ml')),
     path('api/leaderboard/', include('leaderboard_service.urls', namespace='leaderboard')),
     path('api/reports/', include('report_service.urls', namespace='reports')),
+    path("api/health/", health_check)
+
 ]
 
 if settings.SWAGGER_ENABLED:

@@ -4,9 +4,10 @@ import os
 from django.shortcuts import render
 from django.templatetags.static import static
 from django.views.generic import TemplateView
+from django.http import JsonResponse
 
 from leaderboard_service.models import UserScore
-from report_service.models import Report, ReportImage, ReportSeverity
+from report_service.models import Report
 
 
 # Create your views here.
@@ -80,7 +81,8 @@ class ExploreView(TemplateView):
                 'status': report.get_status_display(),
                 'location_name': getattr(report.location, 'street_name', '') or 'Location',
                 'username': report.user.get_full_name() or report.user.username,
-                'avatar_url': self.request.build_absolute_uri(report.user.userprofile.avatar) if report.user.userprofile.avatar else '',
+                'avatar_url': self.request.build_absolute_uri(
+                    report.user.userprofile.avatar) if report.user.userprofile.avatar else '',
                 'created_at': report.created_at.strftime('%B %d, %Y'),
                 'images': images,
                 'marker_url': marker_images.get(str(severity_level), marker_images['1'])
@@ -185,9 +187,15 @@ class LeaderboardView(TemplateView):
 
         return context
 
+
+def health_check(request):
+    return JsonResponse({"status": "ok"})
+
+
 # Handlers for custom error pages
 def handler404(request, exception):
     return render(request, 'core/errors/404.html', status=404)
+
 
 def handler500(request):
     return render(request, 'core/errors/500.html', status=500)

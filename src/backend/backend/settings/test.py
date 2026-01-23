@@ -31,7 +31,7 @@ AWS_S3_ENDPOINT_URL = ""
 # Local storage only
 STORAGES = {
     "staticfiles": {
-        "BACKEND": "django.core.files.storage.StaticFilesStorage",
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",

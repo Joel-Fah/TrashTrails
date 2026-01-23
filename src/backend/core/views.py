@@ -184,3 +184,10 @@ class LeaderboardView(TemplateView):
         }.get(period, 'All Time')
 
         return context
+
+# Handlers for custom error pages
+def handler404(request, exception):
+    return render(request, 'core/errors/404.html', status=404)
+
+def handler500(request):
+    return render(request, 'core/errors/500.html', status=500)

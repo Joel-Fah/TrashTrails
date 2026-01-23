@@ -1,0 +1,50 @@
+{% load static tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Page Not Found (404) - Trailing the wrong side</title>
+
+    {# Meta Data #}
+    {% block meta_data %}
+        {% include 'components/meta.html' %}
+    {% endblock %}
+
+    {# Tailwind CSS #}
+    {% tailwind_css v='' %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {# AOS CSS #}
+    <link href="{% static 'aos/aos.css' %}" rel="stylesheet">
+
+    {# Font: General Sans #}
+    <link href="https://api.fontshare.com/v2/css?f[]=general-sans@1,2&display=swap" rel="stylesheet">
+
+</head>
+<body class="">
+<main class="min-h-screen flex-1 flex flex-col justify-center items-center text-center relative z-10">
+    <div class="w-full max-w-2xl mx-auto px-4 py-12 z-10">
+        <img src="{% static 'common/images/clean.png' %}"
+             alt="Decoration Image"
+             class="w-32 mx-auto object-contain pointer-events-none select-none">
+        <div class="inline-flex gap-2 px-4 py-2 bg-primary-50 rounded-2xl mb-6 animate-fadeIn">
+            <span class="text-sm text-primary"><span class="font-semibold">404</span> — Page Not Found</span>
+        </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold text-primary mb-4 animate-slideUp">
+            Well… This Page Took a Day Off
+        </h1>
+        <p class="text-gray-600 mb-8 animate-fadeIn">
+            We looked everywhere, even behind the digital couch, but this page doesn’t exist.
+            Maybe it was moved, deleted, or never existed in the first place. Deep.
+        </p>
+        <div class="flex flex-wrap gap-4 justify-center mb-8 animate-fadeIn">
+            {% url 'core:home' as home_url %}
+            {% url 'core:explore' as explore_url %}
+
+            {% include 'components/button_solid.html' with text="Retour à l’accueil" href=home_url %}
+            {% include 'components/button_outlined.html' with text="Explorer la carte" href=explore_url %}
+        </div>
+    </div>
+</main>
+</body>
+</html>

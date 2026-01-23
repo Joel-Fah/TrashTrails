@@ -30,7 +30,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    'supabase': dj_database_url.parse(os.environ.get('SUPABASE_POSTGRESQL_URL')),
+    'supabase': dj_database_url.config(
+        default=os.getenv('SUPABASE_POSTGRESQL_URL'),
+        conn_max_age=600,
+    ),
 }
 
 # Static files (CSS, JavaScript, Images)

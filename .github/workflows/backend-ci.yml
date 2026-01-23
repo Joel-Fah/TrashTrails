@@ -27,6 +27,7 @@ jobs:
 
     env:
       DJANGO_SETTINGS_MODULE: config.settings.test
+      PYTHONPATH: src/backend
       DATABASE_URL: postgres://testuser:testpass@localhost:5432/testdb
       SECRET_KEY: test-secret
       DEBUG: "False"

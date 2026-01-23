@@ -1,0 +1,85 @@
+name: Backend CI & Docker Build
+
+on:
+  push:
+    branches: [web-release]
+  pull_request:
+    branches: [web-release]
+
+jobs:
+  backend-verify:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_DB: testdb
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings.test
+      DATABASE_URL: postgres://testuser:testpass@localhost:5432/testdb
+      SECRET_KEY: test-secret
+      DEBUG: "false"
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Setup Python Environment
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          cd src/backend
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Validate Django Setup
+      - name: Run Django System Checks
+        run: |
+          cd src/backend
+          python manage.py check
+
+      - name: Run Migrations
+        run: |
+          cd src/backend
+          python manage.py migrate
+
+      - name: Run Tests
+        run: |
+          cd src/backend
+          python manage.py test
+
+      # Launch Django Server
+      - name: Start Django Server
+        run: |
+          cd src/backend
+          nohup python manage.py runserver 0.0.0.0:8000 &
+          sleep 10
+
+      # API Health Checks
+      - name: Health Check - Root
+        run: |
+          curl -f http://localhost:8000/ || exit 1
+
+      - name: Health Check - API
+        run: |
+          curl -f http://localhost:8000/api/health/ || exit 1
+
+      # Build Docker Image
+      - name: Build Docker Image
+        run: |
+          docker build -t trashtrails-backend ./src/backend

@@ -1,6 +1,6 @@
 {% load static %}
 
-<section id="hero" class="w-[90%] lg:w-[80%] mx-auto pt-8 md:pt-12 pb-16 md:pb-24">
+<section id="hero" class="w-[90%] lg:w-[80%] mx-auto pt-8 md:pt-12 pb-8 md:pb-24">
 
     <div class="flex flex-col gap-4 items-center justify-center">
         {# Info Bubble #}
@@ -30,11 +30,10 @@
         {% include 'components/button_outlined.html' with text="Continue Reading" href="#problem" %}
     </div>
 
-    {# Visual Stack Section #}
     <img
             src="{% static 'common/images/about/about_img.png' %}"
             alt="About Hero Image"
-            class="w-full h-auto object-contain -mt-32 pointer-events-none select-none"
+            class="w-full h-auto object-contain scale-110 md:scale-100 mt-8 md:-mt-32 pointer-events-none select-none"
     >
 </section>
 

@@ -1,7 +1,6 @@
 # TrashTrails Backend
 
 A Django 5 backend that powers TrashTrails. This guide is scoped to the backend folder only and walks new contributors through installing dependencies, wiring environment variables, running the dev server, compiling Tailwind assets, testing, and preparing for production deploys.
-
 ---
 
 ## Contents

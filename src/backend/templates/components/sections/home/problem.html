@@ -1,7 +1,7 @@
 {% load static %}
 
-<section class="w-[90%] lg:w-[80%] h-screen mx-auto pt-8 md:pt-12 pb-16 md:pb-24">
-    <div class="relative flex items-start">
+<section class="w-[90%] lg:w-[80%] h-auto md:h-screen mx-auto pt-8 md:pt-12 pb-8 md:pb-24">
+    <div class="relative flex flex-col md:flex-col items-center md:items-start">
         {# Content #}
         <div class="flex flex-col gap-4 max-w-lg items-start">
             <div class="flex justify-center">
@@ -24,8 +24,10 @@
             </p>
 
             <p class="text-sm">
-                <span class="font-semibold">The old way?</span> Chaos, missed recycling ops, and zero street-level insight. <br>
-                <span class="font-semibold">The new way?</span> Well, keep reading ... because we're about to change the game.
+                <span class="font-semibold">The old way?</span> Chaos, missed recycling ops, and zero street-level
+                insight. <br>
+                <span class="font-semibold">The new way?</span> Well, keep reading ... because we're about to change the
+                game.
             </p>
         </div>
 
@@ -33,7 +35,7 @@
         <img
                 src="{% static 'common/images/home/problem_img.png' %}"
                 alt="Problem Illustration"
-                class="absolute z-0 top-1/3 left-20 w-full h-auto object-contain select-none pointer-events-none"
+                class="static md:absolute z-0 top-1/3 left-20 w-full h-auto object-contain select-none pointer-events-none"
         >
     </div>
 </section>

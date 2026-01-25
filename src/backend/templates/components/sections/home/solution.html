@@ -1,8 +1,8 @@
 {% load static %}
 
-<section class="w-[90%] lg:w-[80%] h-screen mx-auto pt-8 md:pt-12 pb-16 md:pb-24">
+<section class="w-[90%] lg:w-[80%] h-auto md:h-screen mx-auto md:pt-12 pb-16 md:pb-24">
 
-    <div class="relative flex items-end">
+    <div class="relative flex flex-col md:flex-col items-end">
         {# Content #}
         <div class="flex flex-col gap-4 max-w-lg ms-auto items-start">
             <div class="flex justify-center">
@@ -27,11 +27,11 @@
         <img
                 src="{% static 'common/images/home/solution_img.png' %}"
                 alt="Problem Illustration"
-                class="absolute z-0 top-8 right-20 w-full h-auto object-contain select-none pointer-events-none"
+                class="static md:absolute z-0 top-8 right-20 w-full h-auto object-contain select-none pointer-events-none"
         >
     </div>
 
-    <div class="flex gap-10 justify-between mt-80">
+    <div class="flex flex-col md:flex-row gap-5 md:gap-10 justify-between md:mt-80">
         <div class="flex gap-4">
             <div class="flex items-center justify-center p-4 h-min rounded-3xl bg-primary-100 border border-primary text-primary">
                 {% include 'components/icons/hold_phone.html' %}

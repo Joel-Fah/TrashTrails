@@ -1,12 +1,12 @@
 {% load static %}
 
-<section id="problem" class="w-[90%] lg:w-[80%] mx-auto pt-8 md:pt-12 pb-16 md:pb-24 -mt-48">
+<section id="problem" class="w-[90%] lg:w-[80%] mx-auto pt-8 md:pt-12 pb-16 md:pb-24 md:-mt-48">
     <div class="grid grid-cols-12 gap-4">
 
         {# Problem Definition #}
-        <div class="col-span-4 px-4 flex flex-col">
+        <div class="col-span-12 md:col-span-4 px-4 flex flex-col">
             <div class="flex flex-col flex-grow">
-                <div class="h-24"></div>
+                <div class="md:h-24"></div>
                 <p class="mb-6">
                     Every morning in Yaoundé, nearly <span class="font-semibold">3,000 tons</span> of waste are
                     generated.
@@ -34,15 +34,15 @@
             </div>
 
             {# Reference source #}
-            <div class="flex-col gap-1 border-t border-primary py-2 whitespace-nowrap">
-                <p class="text-sm text-primary italic">
+            <div class="flex-col gap-1 border-t border-primary py-2 whitespace-nowrap mt-4 md:mt-0">
+                <p class="text-xs md:text-sm text-primary italic">
                     <span class="font-semibold">Source:</span> MINEPDED Urban Report, 2023; Veolia Foundation, 2025
                 </p>
             </div>
         </div>
 
         {# Image Preview - 1 #}
-        <div class="col-span-4 bg-primary-50 border-8 border-white shadow-2xl rounded-[100px] overflow-hidden h-[600px]">
+        <div class="col-span-12 md:col-span-4 bg-primary-50 border-8 border-white shadow-2xl rounded-[50px] md:rounded-[100px] overflow-hidden h-[300px] md:h-[600px] rotate-2 md:rotate-0">
             <img
                     src="https://images.pexels.com/photos/29348622/pexels-photo-29348622.jpeg"
                     alt="Medium trash ump in city"
@@ -51,7 +51,7 @@
         </div>
 
         {# Image Preview - 2 #}
-        <div class="col-span-4 bg-primary-200 border-8 border-white shadow-2xl rounded-[100px] overflow-hidden h-[600px] mt-48">
+        <div class="col-span-12 md:col-span-4 bg-primary-50 border-8 border-white shadow-2xl rounded-[50px] md:rounded-[100px] overflow-hidden h-[300px] md:h-[600px] -rotate-3 md:rotate-0 -mt-10 md:mt-48">
             <img
                     src="https://images.pexels.com/photos/15847992/pexels-photo-15847992.jpeg"
                     alt="Low trash dump in urban area"

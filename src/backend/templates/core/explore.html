@@ -47,12 +47,24 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 28px;
-            padding: 0.75rem 0.75rem 0.75rem 1.5rem;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            animation: slideUpNav 0.6s ease-out 0.3s both;
+            transition: height 0.5s cubic-bezier(0.68, -0.35, 0.265, 1.35);
+        }
+
+        .nav-fixed-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem 0.75rem 1.5rem;
+            gap: 1.5rem;
+        }
+
+        .nav-desktop-content {
             display: flex;
             align-items: center;
             gap: 1.5rem;
-            animation: slideUpNav 0.6s ease-out 0.3s both;
+            flex: 1;
         }
 
         .nav-brand {
@@ -77,11 +89,14 @@
         }
 
         .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             color: #1d1d1d;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: normal;
             font-size: 0.9rem;
-            transition: color 0.2s ease;
+            transition: all 0.2s ease;
             padding: 0.75rem 1.75rem;
             border-radius: 16px;
         }
@@ -101,12 +116,72 @@
             text-decoration: none;
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            display: inline-block;
         }
 
         .nav-cta:hover {
             transform: translateY(-2px);
             background: var(--base-color-500);
             box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Mobile Navigation Styles */
+        .nav-mobile-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .hamburger-line {
+            width: 24px;
+            height: 2.5px;
+            background: #1d1d1d;
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .nav-mobile-toggle.active .hamburger-line:nth-child(1) {
+            transform: translateY(7.5px) rotate(45deg);
+        }
+
+        .nav-mobile-toggle.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .nav-mobile-toggle.active .hamburger-line:nth-child(3) {
+            transform: translateY(-7.5px) rotate(-45deg);
+        }
+
+        .nav-mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0 1rem 1rem 1.5rem;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.68, -0.35, 0.265, 1.35);
+        }
+
+        .nav-mobile-menu.active {
+            max-height: 350px;
+            opacity: 1;
+            padding-top: 0.75rem;
+        }
+
+        .nav-mobile-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin-bottom: 0.5rem;
         }
 
         /* Custom Marker */
@@ -402,19 +477,40 @@
         /* Responsive */
         @media (max-width: 768px) {
             .floating-nav {
-                flex-direction: column;
-                gap: 0.75rem;
-                padding: 1rem;
                 width: 90%;
-                max-width: 400px;
+                max-width: 90%;
             }
 
-            .nav-divider {
+            .nav-fixed-header {
+                padding: 0.875rem 1rem 0.875rem 1.5rem;
+            }
+
+            .nav-brand img {
+                width: 6rem;
+            }
+
+            .nav-desktop-content {
                 display: none;
             }
 
-            .nav-links {
-                display: none;
+            .nav-mobile-toggle {
+                display: flex;
+            }
+
+            .nav-mobile-menu {
+                display: flex;
+            }
+
+            .nav-mobile-menu .nav-link {
+                padding: 0.875rem 1rem;
+                text-align: left;
+                width: 100%;
+            }
+
+            .nav-mobile-menu .nav-cta {
+                width: 100%;
+                text-align: center;
+                margin-top: 0.25rem;
             }
 
             .empty-state h1 {
@@ -480,16 +576,49 @@
 
         <!-- Floating Navigation -->
         <nav class="floating-nav">
-            <div class="nav-brand">
-                <img src="{% static 'common/images/logo_text/cyan.svg' %}" alt="Trash Trails" class="w-28 h-auto">
+            <div class="nav-fixed-header">
+                <div class="nav-brand">
+                    <img src="{% static 'common/images/logo_text/cyan.svg' %}" alt="Trash Trails" class="w-28 h-auto">
+                </div>
+
+                <!-- Desktop Content -->
+                <div class="nav-desktop-content">
+                    <div class="nav-divider"></div>
+                    <div class="nav-links">
+                        <a href="{% url 'core:home' %}" class="nav-link">Home</a>
+                        <a href="{% url 'core:about' %}" class="nav-link">About</a>
+                        <a href="{% url 'core:leaderboard' %}" class="nav-link">Leaderboard</a>
+                    </div>
+                    <a href="https://github.com/Joel-Fah/TrashTrails/releases/download/v1/app-release.apk"
+                       class="nav-cta">Get Started</a>
+                </div>
+
+                <!-- Mobile Toggle -->
+                <button class="nav-mobile-toggle" id="mobileMenuToggle" aria-label="Toggle menu" aria-expanded="false">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
             </div>
-            <div class="nav-divider"></div>
-            <div class="nav-links">
-                <a href="{% url 'core:home' %}" class="nav-link">Home</a>
-                <a href="{% url 'core:about' %}" class="nav-link">About</a>
-                <a href="{% url 'core:leaderboard' %}" class="nav-link">Leaderboard</a>
+
+            <!-- Mobile Menu -->
+            <div class="nav-mobile-menu" id="mobileMenu">
+                <div class="nav-mobile-divider"></div>
+                <a href="{% url 'core:home' %}" class="nav-link">
+                    Home
+                    {% include 'components/icons/arrow_up_right.html' %}
+                </a>
+                <a href="{% url 'core:about' %}" class="nav-link">
+                    About
+                    {% include 'components/icons/arrow_up_right.html' %}
+                </a>
+                <a href="{% url 'core:leaderboard' %}" class="nav-link">
+                    Leaderboard
+                    {% include 'components/icons/arrow_up_right.html' %}
+                </a>
+                <a href="https://github.com/Joel-Fah/TrashTrails/releases/download/v1/app-release.apk" class="nav-cta">Get
+                    Started</a>
             </div>
-            <a href="https://github.com/Joel-Fah/TrashTrails/releases/download/v1/app-release.apk" class="nav-cta">Get Started</a>
         </nav>
     {% endif %}
 {% endblock %}
@@ -499,6 +628,28 @@
         <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
         <script>
             (function () {
+                // Mobile Menu Toggle
+                const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+                const mobileMenu = document.getElementById('mobileMenu');
+
+                if (mobileMenuToggle && mobileMenu) {
+                    mobileMenuToggle.addEventListener('click', function () {
+                        const isActive = this.classList.toggle('active');
+                        mobileMenu.classList.toggle('active');
+                        this.setAttribute('aria-expanded', isActive);
+                    });
+
+                    // Close menu when clicking a link
+                    const menuLinks = mobileMenu.querySelectorAll('.nav-link, .nav-cta');
+                    menuLinks.forEach(link => {
+                        link.addEventListener('click', () => {
+                            mobileMenuToggle.classList.remove('active');
+                            mobileMenu.classList.remove('active');
+                            mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                        });
+                    });
+                }
+
                 const MAPBOX_TOKEN = "{{ mapbox_access_token }}";
                 if (!MAPBOX_TOKEN) {
                     console.error("Mapbox token missing");
@@ -577,9 +728,9 @@
                     <div class="popup-footer">
                         <div class="popup-user">
                             ${hasAvatarUrl
-                                ? `<div class="popup-user-avatar"><img src="${props.avatar_url}" alt="User avatar" class="w-full h-full object-cover rounded-full"></div>`
-                                : `<div class="popup-user-avatar">${userInitial}</div>`
-                            }
+                        ? `<div class="popup-user-avatar"><img src="${props.avatar_url}" alt="User avatar" class="w-full h-full object-cover rounded-full"></div>`
+                        : `<div class="popup-user-avatar">${userInitial}</div>`
+                    }
                             <span>${props.username}</span>
                         </div>
                         <span>${props.created_at}</span>

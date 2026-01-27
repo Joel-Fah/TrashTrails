@@ -52,17 +52,46 @@
 
         /* === Mobile-Specific Improvements === */
         @media (max-width: 768px) {
-            /* Podium stacks vertically on mobile */
-            .podium-container {
-                flex-direction: column;
-                align-items: center;
+            /* Podium section wrapper - enable horizontal scroll */
+            .podium-section {
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+                scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
             }
 
-            .podium-container > div {
-                width: 100%;
-                max-width: 320px;
-                margin-bottom: 1rem;
+            /* Webkit scrollbar styling */
+            .podium-section::-webkit-scrollbar {
+                height: 6px;
             }
+
+            .podium-section::-webkit-scrollbar-track {
+                background: transparent;
+                margin: 0 1rem;
+            }
+
+            .podium-section::-webkit-scrollbar-thumb {
+                background: rgba(59, 130, 246, 0.3);
+                border-radius: 3px;
+            }
+
+            .podium-section::-webkit-scrollbar-thumb:hover {
+                background: rgba(59, 130, 246, 0.5);
+            }
+
+            /* Keep podium container horizontal */
+            .podium-container {
+                flex-direction: row;
+                min-width: max-content;
+                padding: 0 1rem 1rem 1rem;
+            }
+
+            /* Maintain card sizes on mobile */
+            .podium-container > div {
+                flex-shrink: 0;
+            }
+
 
             /* Smaller crown on mobile */
             .crown-mobile {
@@ -267,8 +296,8 @@
             {% else %}
                 <!-- Podium (Top 3) -->
                 {% if top_three %}
-                    <div class="relative mb-16">
-                        <div class="flex justify-center items-end gap-4 md:gap-8 max-w-4xl mx-auto px-4">
+                    <div class="relative mb-16 podium-section">
+                        <div class="flex justify-center items-center lg:items-end gap-4 md:gap-8 max-w-4xl mx-auto px-4 h-[6e00px] lg:h-auto podium-container">
                             <!-- 2nd Place -->
                             {% if top_three|length > 1 %}
                                 <div class="flex-1 max-w-xs animate-slide-up" style="animation-delay: 0.3s;">
@@ -441,12 +470,12 @@
                 {% if rest %}
                     <section id="table" class="w-[90%] lg:w-[80%] mx-auto pt-8 md:pt-12 pb-16 md:pb-24">
                         <div class="max-w-4xl mx-auto">
-                            <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-primary leading-tight mb-6 animate-slide-up"
+                            <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold px-4 text-primary leading-tight mb-6 animate-slide-up"
                                 style="animation-delay: 0.5s;">
                                 Rankings
                             </h2>
 
-                            <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-primary-200 animate-slide-up"
+                            <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-primary-200 animate-slide-up"
                                  style="animation-delay: 0.6s;">
                                 <div class="divide-y divide-gray-100">
                                     {% for user in rest %}
@@ -455,8 +484,8 @@
                                                 <!-- Rank & User Info -->
                                                 <div class="flex items-center gap-4 flex-1 min-w-0">
                                                     <!-- Rank -->
-                                                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                                                        <span class="font-bold text-gray-700">{{ user.rank }}</span>
+                                                    <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center">
+                                                        <span class="font-bold text-gray-700">#{{ user.rank }}</span>
                                                     </div>
 
                                                     <!-- Avatar -->
@@ -472,7 +501,7 @@
                                                     <!-- Name & Username -->
                                                     <div class="flex-1 min-w-0">
                                                         <h4 class="font-semibold truncate">{{ user.full_name }}</h4>
-                                                        <p class="text-sm text-gray-500 truncate">
+                                                        <p class="text-xs text-gray-500 truncate">
                                                             @{{ user.username }}</p>
                                                     </div>
                                                 </div>
@@ -480,20 +509,15 @@
                                                 <!-- Stats -->
                                                 <div class="flex items-center gap-6 flex-shrink-0">
                                                     <!-- Reports -->
-                                                    <div class="hidden sm:flex items-center gap-2 text-sm text-gray-600">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                             viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                  stroke-width="2"
-                                                                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                                        </svg>
+                                                    <div class="hidden sm:flex items-center justify-center gap-2 text-sm text-gray-600 px-4 py-2.5 rounded-3xl bg-gray-100 group-hover:bg-gray-200 transition-colors duration-200">
+                                                        {% include 'components/icons/invoice.html' with class='size-4' %}
                                                         <span class="font-medium">{{ user.total_reports }}</span>
                                                     </div>
 
                                                     <!-- Points -->
-                                                    <div class="flex items-center gap-2">
+                                                    <div class="flex items-center">
                                                         <div class="text-right">
-                                                            <div class="text-lg font-bold text-primary">{{ user.points|floatformat:0 }}</div>
+                                                            <div class="text-lg font-bold text-primary">{{ user.points|floatformat:0|intcomma }}</div>
                                                             <div class="text-xs text-gray-500 uppercase tracking-wide">
                                                                 pts
                                                             </div>

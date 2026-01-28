@@ -221,3 +221,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+*.pyc
+/media/
+/staticfiles/
+.DS_Store
+gunicorn.pid
+logs/

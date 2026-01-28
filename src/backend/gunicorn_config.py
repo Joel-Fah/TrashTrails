@@ -13,8 +13,8 @@ timeout = 30
 keepalive = 2
 
 # Logging
-accesslog = '/var/www/TrashTrails/logs/gunicorn_access.log'
-errorlog = '/var/www/TrashTrails/logs/gunicorn_error.log'
+accesslog = '/var/www/TrashTrails/src/backend/logs/gunicorn_access.log'
+errorlog = '/var/www/TrashTrails/src/backend/logs/gunicorn_error.log'
 loglevel = 'info'
 access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
 
@@ -23,7 +23,7 @@ proc_name = 'geox_gunicorn'
 
 # Server mechanics
 daemon = False
-pidfile = '/var/www/TrashTrails/gunicorn.pid'
+pidfile = '/var/www/TrashTrails/src/backend/gunicorn.pid'
 umask = 0
 user = None
 group = None

@@ -6,7 +6,7 @@
 echo "Starting deployment..."
 
 # Set project directory
-PROJECT_DIR="/var/www/TrashTrails"
+PROJECT_DIR="/var/www/TrashTrails/src/backend"
 cd $PROJECT_DIR
 
 # Create virtual environment if it doesn't exist
